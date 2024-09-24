@@ -17,6 +17,7 @@ interface SnapApi {
         @Part("image") image: RequestBody,
         @Part("title") title: String,
         @Part("source") source: String,
+        @Part("date-taken") dateTaken: String
     )
 
     @GET("/snap/send") // snap 조회
