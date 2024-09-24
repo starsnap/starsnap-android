@@ -34,12 +34,16 @@ class NetworkModule {
     @Provides
     fun provideOkHttpClient(
         loggerInterceptor: HttpLoggingInterceptor,
+        authAuthenticator: AuthAuthenticator,
+        authInterceptor: AuthInterceptor
     ): OkHttpClient {
         return OkHttpClient().newBuilder().apply {
             connectTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
             addInterceptor(loggerInterceptor)
+            addInterceptor(authInterceptor)
+            authenticator(authAuthenticator)
         }.build()
     }
 }
