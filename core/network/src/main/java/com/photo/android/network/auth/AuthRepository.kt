@@ -14,6 +14,6 @@ interface AuthRepository {
     fun login(loginDto: LoginDto): TokenDto
     fun signup(signupDto: SignupDto): StatusDto
     fun delete(): StatusDto
-    fun reissueToken(refreshToken: String, accessToken: String): TokenDto
+    fun reissueToken(refreshToken: String, accessToken: String): retrofit2.Response<TokenDto>
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
 }

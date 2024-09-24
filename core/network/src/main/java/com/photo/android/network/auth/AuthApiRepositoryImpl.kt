@@ -36,7 +36,7 @@ class AuthApiRepositoryImpl @Inject constructor(
     override fun reissueToken(
         refreshToken: String,
         accessToken: String,
-    ): TokenDto {
+    ): retrofit2.Response<TokenDto> {
         return authApi.reissueToken(refreshToken, accessToken)
     }
 

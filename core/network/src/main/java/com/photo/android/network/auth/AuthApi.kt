@@ -40,7 +40,7 @@ interface AuthApi {
     fun reissueToken(
         @Header("refresh-token") refreshToken: String,
         @Header("access-token") accessToken: String,
-    ): TokenDto
+    ): retrofit2.Response<TokenDto>
 
     @PATCH("/auth/pw-change") // 비밀번호 변경
     @Headers("Auth: false")
