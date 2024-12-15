@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:auth"))
+    implementation(project(":feature:main"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
