@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "459410978730",
+    "project_id": "starsnap-edb93",
+    "storage_bucket": "starsnap-edb93.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459410978730:android:88347ed447249349ce1dd3",
+        "android_client_info": {
+          "package_name": "com.photo.starsnap.main"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459410978730-v5durju00nnrjb5dtneqq64234h7r8v3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.photo.starsnap.main",
+            "certificate_hash": "b816ed2737ad0659cef27aea00cc339b90f50ad4"
+          }
+        },
+        {
+          "client_id": "459410978730-hrpa8ihqpln55vrrgr8i5u19q6jj6qu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABefGndKonU0-FbCcUFvWbx8taQEiiPZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459410978730-7hurn6ihcbp8ep3bgk7502g1d21j5get.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
