@@ -1,6 +1,6 @@
-package com.photo.starsnap.auth.constant
+package com.photo.starsnap.main.constant
 
-import com.photo.starsnap.auth.dto.KeyCredential
+import com.photo.starsnap.main.dto.KeyCredential
 
 object PasskeysData {
     const val RP_ID = "starsnap.com"

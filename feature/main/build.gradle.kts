@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.services)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
@@ -33,7 +34,7 @@ android {
         jvmTarget = "17"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     buildFeatures {
@@ -42,6 +43,8 @@ android {
 }
 
 dependencies {
+
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -52,6 +55,15 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.auth)
+
+    implementation(libs.google.gms.services)
+    implementation(libs.google.android.gms.auth)
+
+    implementation(libs.google.identity.googleid)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

@@ -1,4 +1,4 @@
-package com.photo.starsnap.auth.dto
+package com.photo.starsnap.main.dto
 
 import kotlinx.serialization.Serializable
 
