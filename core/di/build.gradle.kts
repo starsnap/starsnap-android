@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.photo.android.di"
+    namespace = "com.photo.starsnap.di"
     compileSdk = 34
 
     defaultConfig {
@@ -19,6 +19,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packaging {
+        resources {
+            excludes += "META-INF/gradle/incremental.annotation.processors"
+        }
     }
 }
 

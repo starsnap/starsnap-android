@@ -8,7 +8,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Starsnapandroid">
         <activity
-            android:name=".MainActivity"
+            android:name="com.photo.starsnap.main.MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

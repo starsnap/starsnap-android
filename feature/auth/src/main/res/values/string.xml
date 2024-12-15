@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_client_id">459410978730-7hurn6ihcbp8ep3bgk7502g1d21j5get.apps.googleusercontent.com</string>
+
+    <string name="asset_statements" translatable="false">
+[{
+  \"include\": \"http://127.0.0.1:8080/.well-known/assetlinks.json\"
+}]
+</string>
+</resources>
