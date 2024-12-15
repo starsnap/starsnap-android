@@ -30,6 +30,5 @@ include(
     ":core:designsystem",
     ":core:datastore",
     ":feature",
-    ":feature:auth",
     ":feature:main"
 )
