@@ -1,10 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.services)
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
-    namespace = "com.photo.android.auth"
+    namespace = "com.photo.starsnap.auth"
     compileSdk = 34
 
     defaultConfig {
@@ -28,14 +31,46 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
+    }
+
+    buildFeatures {
+        compose = true
     }
 }
 
 dependencies {
-
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    kapt(libs.hilt.compiler)
+
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.auth)
+
+    implementation(libs.google.gms.services)
+    implementation(libs.google.android.gms.auth)
+
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.auth)
+
+    implementation(libs.google.identity.googleid)
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.photo.android.datastore"
+    namespace = "com.photo.starsnap.datastore"
     compileSdk = 34
 
     defaultConfig {
@@ -19,6 +19,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    packaging {
+        resources {
+            excludes += "META-INF/gradle/incremental.annotation.processors"
+        }
+    }
 }
 
 dependencies {
@@ -26,4 +32,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
