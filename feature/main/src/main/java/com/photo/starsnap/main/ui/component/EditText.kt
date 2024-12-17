@@ -28,16 +28,47 @@ import androidx.compose.ui.unit.dp
 import com.photo.starsnap.designsystem.gray
 import com.photo.starsnap.designsystem.container
 
-enum class EditTextType {
-    PASSWORD,
-    ID
+@Composable
+fun EditText(hint: String) {
+    var text by remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        BasicTextField(value = text,
+            onValueChange = { input ->
+                text = input
+            },
+            modifier = Modifier
+                .height(50.dp)
+                .background(container, shape = RoundedCornerShape(size = 8.dp)),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            singleLine = true,
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 0.dp, end = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(19.dp))
+                    Box {
+                        innerTextField()
+                        if (text.isEmpty()) {
+                            Text(hint, color = gray)
+                        }
+                    }
+                }
+            })
+    }
 }
 
 @Composable
-fun EditText(hint: String, type: EditTextType) {
+fun PasswordEditText() {
     var text by remember { mutableStateOf("") }
+    var checkState by remember { mutableStateOf(false) }
     val visualTransformation =
-        if (type == EditTextType.ID) VisualTransformation.None else PasswordVisualTransformation()
+        if (!checkState) PasswordVisualTransformation() else VisualTransformation.None
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,15 +94,11 @@ fun EditText(hint: String, type: EditTextType) {
                     Box {
                         innerTextField()
                         if (text.isEmpty()) {
-                            Text(hint, color = gray)
+                            Text("비밀번호", color = gray)
                         }
-
-
                     }
-                    if (type == EditTextType.PASSWORD){
-                        Spacer(modifier = Modifier.weight(1f))
-
-                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    PasswordEyeCheckBox { checkState = it }
                 }
             })
     }
@@ -80,11 +107,11 @@ fun EditText(hint: String, type: EditTextType) {
 @Preview
 @Composable
 fun PreviewEditText() {
-    EditText("아이디", EditTextType.ID)
+    EditText("아이디")
 }
 
 @Preview
 @Composable
 fun PreviewPasswordEditText() {
-    EditText("비밀번호", EditTextType.PASSWORD)
+    PasswordEditText()
 }
