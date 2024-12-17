@@ -1,5 +1,9 @@
 package com.photo.starsnap.di
 
+import com.photo.starsnap.network.auth.AuthApi
+import com.photo.starsnap.network.report.ReportApi
+import com.photo.starsnap.network.snap.SnapApi
+import com.photo.starsnap.network.user.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +18,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReportApi(retrofit: Retrofit): ReportApi = retrofit.create(ReportApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSnapApi(retrofit: Retrofit): SnapApi = retrofit.create(SnapApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
