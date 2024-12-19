@@ -1,9 +1,9 @@
 package com.photo.starsnap.main.ui.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,12 +33,12 @@ fun CustomCheckBox(
 
     ) {
         if (checkState) {
-            Icon(
+            Image(
                 painter = onPainter,
                 contentDescription = "on",
             )
         } else {
-            Icon(
+            Image(
                 painter = offPainter,
                 contentDescription = "off",
             )
