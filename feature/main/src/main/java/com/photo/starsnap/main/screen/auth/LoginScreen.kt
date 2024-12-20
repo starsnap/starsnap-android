@@ -53,9 +53,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             stringResource(R.string.id), Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp)
         ) { username = it }
         PasswordEditText { password = it }
-        AutoLoginOption {
-            isAutoLogin = it
-        }
+        Spacer(Modifier.height(20.dp))
         LoginButton({ loginViewModel.login(username, password) }, isClickable)
         Spacer(Modifier.height(24.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
