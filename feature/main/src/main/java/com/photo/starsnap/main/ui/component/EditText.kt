@@ -23,21 +23,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.photo.starsnap.designsystem.gray
 import com.photo.starsnap.designsystem.container
 
 @Composable
-fun EditText(hint: String) {
+fun EditText(hint: String, modifier: Modifier = Modifier, username: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         BasicTextField(value = text,
             onValueChange = { input ->
                 text = input
+                username(input)
             },
             modifier = Modifier
                 .height(50.dp)
@@ -64,18 +64,19 @@ fun EditText(hint: String) {
 }
 
 @Composable
-fun PasswordEditText() {
+fun PasswordEditText(modifier: Modifier = Modifier, password: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     var checkState by remember { mutableStateOf(false) }
     val visualTransformation =
         if (!checkState) PasswordVisualTransformation() else VisualTransformation.None
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         BasicTextField(value = text,
             onValueChange = { input ->
                 text = input
+                password(input)
             },
             modifier = Modifier
                 .height(50.dp)
@@ -102,16 +103,4 @@ fun PasswordEditText() {
                 }
             })
     }
-}
-
-@Preview
-@Composable
-fun PreviewEditText() {
-    EditText("아이디")
-}
-
-@Preview
-@Composable
-fun PreviewPasswordEditText() {
-    PasswordEditText()
 }
