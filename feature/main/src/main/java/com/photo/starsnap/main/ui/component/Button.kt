@@ -55,7 +55,7 @@ fun AppleLoginButton() {
             .background(Color.Black, RoundedCornerShape(12.dp))
     ) {
         Image(painterResource(R.drawable.apple_icon), "", Modifier.padding(start = 25.dp).align(Alignment.CenterStart))
-        Text("Apple로 로그인", Modifier.align(Alignment.Center), Color.White)
+        Text(stringResource(R.string.apple_login_button_text), Modifier.align(Alignment.Center), Color.White)
     }
 }
 
@@ -69,6 +69,6 @@ fun GoogleLoginButton() {
             .border(width = 1.dp, shape = RoundedCornerShape(12.dp), color = Color.Black)
     ) {
         Image(painterResource(R.drawable.google_icon), "", Modifier.padding(start = 25.dp).align(Alignment.CenterStart))
-        Text("Apple로 로그인", Modifier.align(Alignment.Center))
+        Text(stringResource(R.string.google_login_button_text), Modifier.align(Alignment.Center))
     }
 }
