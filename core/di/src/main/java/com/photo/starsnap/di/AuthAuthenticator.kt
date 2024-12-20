@@ -2,6 +2,7 @@ package com.photo.starsnap.di
 
 import android.util.Log
 import com.photo.starsnap.datastore.TokenManager
+import com.photo.starsnap.di.Url.BASE_URL
 import com.photo.starsnap.network.auth.AuthApi
 import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +62,7 @@ class AuthAuthenticator @Inject constructor(
         val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("127.0.0.1:8080")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
