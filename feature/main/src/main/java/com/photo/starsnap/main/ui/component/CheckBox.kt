@@ -23,26 +23,19 @@ fun CustomCheckBox(
     var checkState by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.clickable(onClick = {
-            checkState = !checkState
-            onCheckedChange(checkState)
-        }, interactionSource = remember {
-            MutableInteractionSource()
-        }, indication = null
+        modifier = Modifier.clickable(
+            onClick = {
+                checkState = !checkState // 상태 변경
+                onCheckedChange(checkState) // 변경된 상태 전달
+            },
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
         )
-
     ) {
-        if (checkState) {
-            Image(
-                painter = onPainter,
-                contentDescription = "on",
-            )
-        } else {
-            Image(
-                painter = offPainter,
-                contentDescription = "off",
-            )
-        }
+        Image(
+            painter = if (checkState) onPainter else offPainter,
+            contentDescription = if (checkState) "Checked" else "Unchecked"
+        )
     }
 }
 
@@ -52,6 +45,15 @@ fun PasswordEyeCheckBox(checkState: (Boolean) -> Unit) {
     CustomCheckBox(
         onPainter = painterResource(R.drawable.eye_open),
         offPainter = painterResource(R.drawable.eye_close),
+        onCheckedChange = checkState
+    )
+}
+
+@Composable
+fun AutoLoginCheckBox(checkState: (Boolean) -> Unit) {
+    CustomCheckBox(
+        onPainter = painterResource(R.drawable.check_box_true),
+        offPainter = painterResource(R.drawable.check_box_false),
         onCheckedChange = checkState
     )
 }
