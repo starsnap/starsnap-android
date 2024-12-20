@@ -1,5 +1,6 @@
 package com.photo.starsnap.di
 
+import com.photo.starsnap.di.Url.BASE_URL
 import com.photo.starsnap.network.auth.AuthApi
 import com.photo.starsnap.network.report.ReportApi
 import com.photo.starsnap.network.snap.SnapApi
@@ -14,6 +15,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
+object Url {
+    const val BASE_URL = "http://192.168.0.141"
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -44,7 +49,7 @@ class NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("127.0.0.1:8080/api")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
