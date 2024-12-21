@@ -17,13 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.main.ui.component.AppIcon
 import com.photo.starsnap.main.ui.component.AppleLoginButton
-import com.photo.starsnap.main.ui.component.AutoLoginOption
 import com.photo.starsnap.main.ui.component.EditText
 import com.photo.starsnap.main.ui.component.GoogleLoginButton
 import com.photo.starsnap.main.ui.component.LoginButton
@@ -43,15 +41,13 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             .fillMaxSize()
             .padding(horizontal = 30.dp),
     ) {
-        var isAutoLogin by remember { mutableStateOf(false) }
         AppIcon(
             Modifier
                 .padding(vertical = 70.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        EditText(
-            stringResource(R.string.id), Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp)
-        ) { username = it }
+        EditText(stringResource(R.string.id)) { username = it }
+        Spacer(Modifier.height(15.dp))
         PasswordEditText { password = it }
         Spacer(Modifier.height(20.dp))
         LoginButton({ loginViewModel.login(username, password) }, isClickable)
@@ -64,18 +60,11 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             TextButton(stringResource(R.string.signup)) { }
         }
         Spacer(Modifier.weight(1F))
-        Column(
-            Modifier.padding(bottom = 40.dp)
-        ) {
+        Column {
             GoogleLoginButton()
             Spacer(Modifier.height(10.dp))
             AppleLoginButton()
+            Spacer(Modifier.height(30.dp))
         }
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewLoginScreen() {
-    LoginScreen()
 }
