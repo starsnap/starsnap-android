@@ -12,7 +12,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface SnapApi {
-    @POST("/snap/create") // snap 생성
+    @POST("/api/snap/create") // snap 생성
     fun createSnap(
         @Part("image") image: RequestBody,
         @Part("title") title: String,
@@ -20,11 +20,11 @@ interface SnapApi {
         @Part("date-taken") dateTaken: String
     )
 
-    @GET("/snap/send") // snap 조회
+    @GET("/api/snap/send") // snap 조회
     @Headers("Auth: false")
     fun sendSnap(@Query("size") size: Int, @Query("page") page: Int)
 
-    @PATCH("/snap/fix") // snap 수정
+    @PATCH("/api/snap/fix") // snap 수정
     fun fixSnap(
         @Part("snap-id") snapId: String,
         @Part("image") image: RequestBody?,
@@ -34,7 +34,7 @@ interface SnapApi {
     ): SnapDto
 
 
-    @DELETE("/snap/delete") // snap 삭제
+    @DELETE("/api/snap/delete") // snap 삭제
     fun deleteSnap(
         @Query("snap-id") snapId: String,
     ): StatusDto

@@ -16,33 +16,33 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AuthApi {
-    @POST("/auth/email/send") // 이메일 인증번호 전송
+    @POST("/api/auth/email/send") // 이메일 인증번호 전송
     @Headers("Auth: false")
     suspend fun send(@Query("email") email: String): StatusDto
 
-    @POST("/auth/verify") // 인증번호 확인
+    @POST("/api/auth/verify") // 인증번호 확인
     @Headers("Auth: false")
     suspend fun verify(@Body verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
 
-    @POST("/auth/login") // 로그인
+    @POST("/api/auth/login") // 로그인
     @Headers("Auth: false")
     suspend fun login(@Body loginDto: LoginDto): TokenDto
 
-    @POST("/auth/signup") // 회원가입
+    @POST("/api/auth/signup") // 회원가입
     @Headers("Auth: false")
     suspend fun signup(@Body signupDto: SignupDto): StatusDto
 
-    @DELETE("/auth") // 유저 삭제
+    @DELETE("/api/auth") // 유저 삭제
     suspend fun delete(): StatusDto
 
-    @PATCH("/auth/refresh") // 토큰 제발급
+    @PATCH("/api/auth/refresh") // 토큰 제발급
     @Headers("Auth: false")
     suspend fun reissueToken(
         @Header("refresh-token") refreshToken: String,
         @Header("access-token") accessToken: String,
     ): retrofit2.Response<TokenDto>
 
-    @PATCH("/auth/pw-change") // 비밀번호 변경
+    @PATCH("/api/auth/pw-change") // 비밀번호 변경
     @Headers("Auth: false")
     suspend fun changePassword(
         @Body changePasswordDto: ChangePasswordDto,

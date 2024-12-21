@@ -11,19 +11,19 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ReportApi {
-    @POST("/report/snap") // snap 신고
+    @POST("/api/report/snap") // snap 신고
     fun snapReport(@Body snapReportCreateDto: SnapReportCreateDto)
 
-    @POST("/report/user") // user 신고
+    @POST("/api/report/user") // user 신고
     fun userReport(@Body userReportCreateDto: UserReportCreateDto)
 
-    @GET("/report/snap") // snap 신고 조회
+    @GET("/api/report/snap") // snap 신고 조회
     fun getSnapReport(
         @Query("size") size: Int,
         @Query("page") page: Int
     ): SliceResponseDto<SnapReportDto>
 
-    @GET("/report/user") // user 신고 조회
+    @GET("/api/report/user") // user 신고 조회
     fun getUserReport(
         @Query("size") size: Int,
         @Query("page") page: Int

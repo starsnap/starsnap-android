@@ -12,23 +12,23 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface UserApi {
-    @POST("/user/follow") // 팔로우
+    @POST("/api/user/follow") // 팔로우
     fun follow(@Query("user-id") userId: String): StatusDto
 
-    @POST("/user/unfollow") // 언팔로우
+    @POST("/api/user/unfollow") // 언팔로우
     fun unfollow(@Query("user-id") userId: String): StatusDto
 
 
-    @GET("/user/follow") // 팔로우 정보 확인
+    @GET("/api/user/follow") // 팔로우 정보 확인
     fun getFollowData(@Query("page") page: Int, @Query("size") size: Int): SliceResponseDto<Follow>
 
-    @GET("/user/follower") // 팔로워 정보 확인
+    @GET("/api/user/follower") // 팔로워 정보 확인
     fun getFollowerData(@Query("page") page: Int, @Query("size") size: Int): SliceResponseDto<Follow>
 
 
-    @PATCH("/user/change-username") // 유저 이름 변경
+    @PATCH("/api/user/change-username") // 유저 이름 변경
     fun changeUsername(@Query("username") username: String): StatusDto
 
-    @PATCH("/user/change-profile-image") // 유저 프로필 사진 변경
+    @PATCH("/api/user/change-profile-image") // 유저 프로필 사진 변경
     fun changeProfileImage(@Part("image") image: MultipartBody.Part): StatusDto
 }
