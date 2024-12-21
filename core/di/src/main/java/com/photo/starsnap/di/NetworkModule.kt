@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 object Url {
-    const val BASE_URL = "http://192.168.0.141"
+    const val BASE_URL = "http://192.168.0.141:8080"
 }
 
 @Module
