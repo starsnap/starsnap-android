@@ -9,11 +9,11 @@ import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
 
 interface AuthRepository {
-    fun send(email: String): StatusDto
-    fun verify(verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
-    fun login(loginDto: LoginDto): TokenDto
-    fun signup(signupDto: SignupDto): StatusDto
-    fun delete(): StatusDto
-    fun reissueToken(refreshToken: String, accessToken: String): retrofit2.Response<TokenDto>
-    fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
+    suspend fun send(email: String): StatusDto
+    suspend fun verify(verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
+    suspend fun login(loginDto: LoginDto): TokenDto
+    suspend fun signup(signupDto: SignupDto): StatusDto
+    suspend fun delete(): StatusDto
+    suspend fun reissueToken(refreshToken: String, accessToken: String): retrofit2.Response<TokenDto>
+    suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
 }

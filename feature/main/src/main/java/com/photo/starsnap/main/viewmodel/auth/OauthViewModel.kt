@@ -1,4 +1,4 @@
-package com.photo.android.auth.viewmodel
+package com.photo.starsnap.main.viewmodel.auth
 
 import android.util.Log
 import androidx.credentials.CustomCredential
@@ -16,7 +16,7 @@ class OAuthViewModel @Inject constructor() : ViewModel() {
         const val TAG = "OauthViewModel"
     }
 
-    suspend fun handleSignIn(result: GetCredentialResponse) {
+    fun handleSignIn(result: GetCredentialResponse) {
         val credential = result.credential
         when (credential) {
             is CustomCredential -> {

@@ -2,7 +2,9 @@ package com.photo.starsnap.di
 
 import android.util.Log
 import com.photo.starsnap.datastore.TokenManager
-import com.photo.starsnap.network.auth.AuthRepository
+import com.photo.starsnap.di.Url.BASE_URL
+import com.photo.starsnap.network.auth.AuthApi
+import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -18,7 +20,6 @@ import javax.inject.Inject
 
 class AuthAuthenticator @Inject constructor(
     private val tokenManager: TokenManager,
-    private val authRepository: AuthRepository
 ) : Authenticator {
 
     companion object {
@@ -30,8 +31,7 @@ class AuthAuthenticator @Inject constructor(
         val refreshToken = runBlocking { tokenManager.getRefreshToken().first() }
         val accessToken = runBlocking { tokenManager.getAccessToken().first() }
         return runBlocking {
-            val reissueToken = authRepository.reissueToken(refreshToken, accessToken)
-//            val reissueToken = reissueToken(refreshToken, accessToken)
+            val reissueToken = reissueToken(refreshToken, accessToken)
 
             if (!reissueToken.isSuccessful || reissueToken.body() == null) {
                 Log.d(TAG, "Refresh Token 만료")
@@ -53,21 +53,21 @@ class AuthAuthenticator @Inject constructor(
         }
     }
 
-//    private suspend fun reissueToken(
-//        refreshToken: String,
-//        accessToken: String
-//    ): retrofit2.Response<RefreshResponseDto> {
-//        val loggingInterceptor = HttpLoggingInterceptor()
-//        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-//        val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
-//
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .client(okHttpClient)
-//            .build()
-//        val service = retrofit.create(AuthApi::class.java)
-//        return service.reissueToken(refreshToken, accessToken)
-//    }
+    private suspend fun reissueToken(
+        refreshToken: String,
+        accessToken: String
+    ): retrofit2.Response<TokenDto> {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+        val service = retrofit.create(AuthApi::class.java)
+        return service.reissueToken(refreshToken, accessToken)
+    }
 
 }

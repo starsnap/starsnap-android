@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_icon">app_icon</string>
+
+    <string name="auto_login">자동 로그인</string>
+    <string name="login">로그인</string>
+    <string name="signup">회원가입</string>
+    <string name="id">아이디</string>
+    <string name="password">비밀번호</string>
+    <string name="find_username">아이디 찾기</string>
+    <string name="find_password">비밀번호 찾기</string>
+    <string name="google_login_button_text">Google로 로그인</string>
+    <string name="apple_login_button_text">Appple로 로그인</string>
+</resources>

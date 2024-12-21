@@ -1,4 +1,4 @@
-package com.photo.starsnap.main.screen
+package com.photo.starsnap.main.screen.auth
 
 import android.content.Context
 import android.content.Intent
@@ -14,17 +14,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.credentials.CreatePublicKeyCredentialRequest
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.photo.android.auth.viewmodel.OAuthViewModel
+import com.photo.starsnap.main.viewmodel.auth.OAuthViewModel
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialRequest.Builder
-import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.NoCredentialException
-import com.google.android.gms.fido.Fido
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

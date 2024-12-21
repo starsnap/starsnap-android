@@ -11,36 +11,36 @@ import javax.inject.Inject
 
 
 class AuthApiRepositoryImpl @Inject constructor(
-    val authApi: AuthApi
+    private val authApi: AuthApi
 ): AuthRepository {
-    override fun send(email: String): StatusDto {
+    override suspend fun send(email: String): StatusDto {
         return authApi.send(email)
     }
 
-    override fun verify(verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto {
+    override suspend fun verify(verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto {
         return authApi.verify(verifyEmailRequestDto)
     }
 
-    override fun login(loginDto: LoginDto): TokenDto {
+    override suspend fun login(loginDto: LoginDto): TokenDto {
         return authApi.login(loginDto)
     }
 
-    override fun signup(signupDto: SignupDto): StatusDto {
+    override suspend fun signup(signupDto: SignupDto): StatusDto {
         return authApi.signup(signupDto)
     }
 
-    override fun delete(): StatusDto {
+    override suspend fun delete(): StatusDto {
         return authApi.delete()
     }
 
-    override fun reissueToken(
+    override suspend fun reissueToken(
         refreshToken: String,
         accessToken: String,
     ): retrofit2.Response<TokenDto> {
         return authApi.reissueToken(refreshToken, accessToken)
     }
 
-    override fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
+    override suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
         return authApi.changePassword(changePasswordDto)
     }
 }
