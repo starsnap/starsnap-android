@@ -30,7 +30,10 @@ import com.photo.starsnap.main.ui.component.TextButton
 import com.photo.starsnap.main.viewmodel.auth.LoginViewModel
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    moveSignupNavigation: () -> Unit,
+) {
     var isClickable by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -57,7 +60,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             Spacer(Modifier.width(30.dp))
             TextButton(stringResource(R.string.find_password)) { }
             Spacer(Modifier.width(30.dp))
-            TextButton(stringResource(R.string.signup)) { }
+            TextButton(stringResource(R.string.signup)) { moveSignupNavigation() }
         }
         Spacer(Modifier.weight(1F))
         Column {
