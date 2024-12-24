@@ -10,8 +10,10 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,11 +28,12 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import com.photo.starsnap.main.R
+import com.photo.starsnap.main.ui.component.SignupAppBar
 import java.security.MessageDigest
 import java.util.UUID
 
 @Composable
-fun SignupScreen(oauthViewModel: OAuthViewModel = hiltViewModel()) {
+fun SignupScreen(oauthViewModel: OAuthViewModel = hiltViewModel(), onNavigateToLogin: () -> Unit) {
 
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -40,23 +43,24 @@ fun SignupScreen(oauthViewModel: OAuthViewModel = hiltViewModel()) {
             // Once the account has been added, do sign in again.
             doGoogleSignIn(context, coroutineScope, oauthViewModel, null)
         }
+    Scaffold(topBar = { SignupAppBar() }) { innerPadding ->
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
+            Button(onClick = {
+                doGoogleSignIn(
+                    context, coroutineScope, oauthViewModel, startAddAccountIntentLauncher
+                )
+            }, content = {
+                Text(text = "구글 로그인")
+            })
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Button(onClick = {
-            doGoogleSignIn(
-                context, coroutineScope, oauthViewModel, startAddAccountIntentLauncher
-            )
-        }, content = {
-            Text(text = "Hello")
-        })
-
-        Button(onClick = {
-//            createPassKey(
-//                context, coroutineScope, oauthViewModel, "", true
-//            )
-        }, content = {
-            Text(text = "PassKey")
-        })
+            Button(onClick = {
+                onNavigateToLogin()
+            }, content = {
+                Text(text = "뒤로가기")
+            })
+        }
     }
 }
 

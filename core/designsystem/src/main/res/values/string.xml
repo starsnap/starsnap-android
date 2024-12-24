@@ -11,4 +11,5 @@
     <string name="find_password">비밀번호 찾기</string>
     <string name="google_login_button_text">Google로 로그인</string>
     <string name="apple_login_button_text">Appple로 로그인</string>
+    <string name="signup_top_bar_title">회원가입</string>
 </resources>
