@@ -67,6 +67,9 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
 
+    implementation(libs.androidx.lifecycle.livedata.core)
+
+
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth)
 
