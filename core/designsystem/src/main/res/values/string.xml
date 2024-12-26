@@ -12,4 +12,12 @@
     <string name="google_login_button_text">Google로 로그인</string>
     <string name="apple_login_button_text">Appple로 로그인</string>
     <string name="signup_top_bar_title">회원가입</string>
+    <string name="signup_edit_text_username_hint">아이디</string>
+    <string name="signup_edit_text_password_hint">비밀번호</string>
+    <string name="signup_edit_text_email_hint">이메일</string>
+    <string name="signup_edit_text_code_hint">인증번호</string>
+    <string name="signup_submit_button_text_send">코드 전송</string>
+
+    <string name="google_client_id">459410978730-7hurn6ihcbp8ep3bgk7502g1d21j5get.apps.googleusercontent.com</string>
+
 </resources>
