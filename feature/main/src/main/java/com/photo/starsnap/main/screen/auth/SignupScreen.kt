@@ -1,116 +1,71 @@
 package com.photo.starsnap.main.screen.auth
 
-import android.content.Context
-import android.content.Intent
-import android.provider.Settings
-import android.util.Log
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.photo.starsnap.main.viewmodel.auth.OAuthViewModel
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialRequest.Builder
-import androidx.credentials.exceptions.NoCredentialException
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import com.photo.starsnap.main.R
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.main.ui.component.EditText
 import com.photo.starsnap.main.ui.component.SignupAppBar
-import java.security.MessageDigest
-import java.util.UUID
+import com.photo.starsnap.main.ui.component.MainButton
+import com.photo.starsnap.main.ui.component.PasswordEditText
+import com.photo.starsnap.main.ui.component.SubmitButton
+import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
-fun SignupScreen(oauthViewModel: OAuthViewModel = hiltViewModel(), onNavigateToLogin: () -> Unit) {
-
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val startAddAccountIntentLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
-            // Once the account has been added, do sign in again.
-            doGoogleSignIn(context, coroutineScope, oauthViewModel, null)
-        }
-    Scaffold(topBar = { SignupAppBar() }) { innerPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
-            Button(onClick = {
-                doGoogleSignIn(
-                    context, coroutineScope, oauthViewModel, startAddAccountIntentLauncher
-                )
-            }, content = {
-                Text(text = "구글 로그인")
-            })
-
-            Button(onClick = {
-                onNavigateToLogin()
-            }, content = {
-                Text(text = "뒤로가기")
-            })
-        }
-    }
-}
-
-private fun doGoogleSignIn(
-    context: Context,
-    coroutineScope: CoroutineScope,
-    oauthViewModel: OAuthViewModel,
-    startAddAccountIntentLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>?,
+fun SignupScreen(
+    signupViewModel: SignupViewModel = hiltViewModel(),
+    onNavigateToLogin: () -> Unit
 ) {
-    val credentialManager = CredentialManager.create(context)
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var token by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf("") }
+    Scaffold(topBar = { SignupAppBar(onNavigateToLogin) }) { innerPadding ->
+        var loginButtonEnabled by remember { mutableStateOf(false) }
+        var emailSendButtonEnabled by remember { mutableStateOf(false) }
 
-    val rawNonce = UUID.randomUUID().toString()
-    val bytes = rawNonce.toByteArray()
-    val md = MessageDigest.getInstance("SHA-256")
-    val digest = md.digest(bytes)
-    val hashedNonce = digest.fold("") { str, it ->
-        str + "%02x".format(it)
-    }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding(), start = 30.dp, end = 30.dp)
+        ) {
 
-    val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(false)
-        .setServerClientId(context.getString(R.string.google_client_id))
-        .setAutoSelectEnabled(false)
-        .setNonce(hashedNonce)
-        .build()
+            EditText(stringResource(R.string.signup_edit_text_username_hint)) { username = it }
+            Spacer(Modifier.height(10.dp))
+            PasswordEditText { password = it }
+            Spacer(Modifier.height(10.dp))
+            Row {
+                EditText(stringResource(R.string.signup_edit_text_email_hint)) { email = it }
+                SubmitButton(
+                    buttonText = stringResource(R.string.signup_edit_text_email_hint),
+                    enabled = emailSendButtonEnabled,
+                    onClick = {})
+            }
+            Spacer(Modifier.height(10.dp))
+            EditText(stringResource(R.string.signup_edit_text_code_hint)) { code = it }
 
-    val request: GetCredentialRequest = Builder()
-        .addCredentialOption(googleIdOption)
-        .build()
-
-    coroutineScope.launch {
-        try {
-            val result = credentialManager.getCredential(
-                // Use an activity-based context to avoid undefined system UI
-                // launching behavior.
-                context = context,
-                request = request
+            Spacer(Modifier.weight(1F))
+            MainButton(
+                { signupViewModel.signup(username, password, email, token) },
+                loginButtonEnabled,
+                stringResource(R.string.signup)
             )
-            oauthViewModel.handleSignIn(result)
-        } catch (e: NoCredentialException) {
-            startAddAccountIntentLauncher?.launch(getAddGoogleAccountIntent())
-            Log.d("SignupScreen", e.toString())
+            Spacer(Modifier.height(30.dp))
         }
+
     }
-
-
-}
-
-fun getAddGoogleAccountIntent(): Intent {
-    val intent = Intent(Settings.ACTION_ADD_ACCOUNT)
-    intent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, arrayOf("com.google"))
-    return intent
 }
