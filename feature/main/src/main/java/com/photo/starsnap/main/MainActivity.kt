@@ -16,6 +16,7 @@ import com.photo.starsnap.main.screen.auth.LoginScreen
 import com.photo.starsnap.main.screen.auth.SignupScreen
 import com.photo.starsnap.main.utils.NavigationRoute.AUTH_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.LOGIN_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.MAIN_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_ROUTE
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         val splashscreen = installSplashScreen()
 
         setContent {
-            val splashScreenState = remember { mutableStateOf(true) }
-            splashscreen.setKeepOnScreenCondition { splashScreenState.value }
+//            val splashScreenState = remember { mutableStateOf(true) }
+//            splashscreen.setKeepOnScreenCondition { splashScreenState.value }
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "AUTH") {
                 navigation(startDestination = LOGIN_ROUTE, route = AUTH_ROUTE) {
@@ -37,9 +38,11 @@ class MainActivity : AppCompatActivity() {
                     * */
                     composable(
                         LOGIN_ROUTE,
-                        enterTransition = { return@composable slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.End, tween(300)
-                        ) },
+                        enterTransition = {
+                            return@composable slideIntoContainer(
+                                AnimatedContentTransitionScope.SlideDirection.End, tween(300)
+                            )
+                        },
                         exitTransition = {
                             return@composable slideOutOfContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Start, tween(300)
@@ -48,6 +51,10 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         LoginScreen(moveSignupNavigation = {
                             navController.navigate(SIGNUP_ROUTE)
+                        }, moveMainNavigation = {
+                            navController.navigate(MAIN_ROUTE) {
+                                popUpTo(LOGIN_ROUTE) { inclusive = true }
+                            }
                         })
                     }
                     composable(SIGNUP_ROUTE) {

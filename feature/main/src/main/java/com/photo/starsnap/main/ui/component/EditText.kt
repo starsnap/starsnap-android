@@ -24,8 +24,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.photo.starsnap.designsystem.gray
-import com.photo.starsnap.designsystem.container
+import com.photo.starsnap.designsystem.CustomColor.gray
+import com.photo.starsnap.designsystem.CustomColor.container
 
 @Composable
 fun EditText(hint: String, modifier: Modifier = Modifier, username: (String) -> Unit) {
