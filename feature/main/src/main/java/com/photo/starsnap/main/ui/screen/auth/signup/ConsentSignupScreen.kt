@@ -37,10 +37,13 @@ fun ConsentSignupScreen(viewModel: SignupViewModel, navController: NavController
 
 
             Spacer(Modifier.weight(1F))
-            // 다음 버튼
+            // 회원가입 버튼
             NextButton(
-                event = { navController.navigate("EMAIL") },
-                buttonText = "다음",
+                event = {
+                    viewModel.signup()
+                    navController.navigate(SIGNUP_LOADING_ROUTE)
+                },
+                buttonText = "회원가입",
                 enabled = uiState.consentButtonState
             )
         }
