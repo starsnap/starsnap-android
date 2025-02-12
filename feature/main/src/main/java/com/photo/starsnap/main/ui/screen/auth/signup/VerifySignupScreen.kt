@@ -16,6 +16,7 @@ import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.main.ui.component.NextButton
 import com.photo.starsnap.main.ui.component.SignupAppBar
+import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_CONSENT_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
@@ -39,7 +40,7 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
             Spacer(Modifier.weight(1F))
             // 다음 버튼
             NextButton(
-                event = { navController.navigate("CONSENT") },
+                event = { navController.navigate(SIGNUP_CONSENT_ROUTE) },
                 buttonText = "다음",
                 enabled = uiState.verifyButtonState
             )
