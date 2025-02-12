@@ -16,6 +16,7 @@ import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.main.ui.component.NextButton
 import com.photo.starsnap.main.ui.component.SignupAppBar
+import com.photo.starsnap.main.utils.EditTextType
 import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_VERIFY_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
