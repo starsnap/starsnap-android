@@ -43,4 +43,12 @@ class AuthApiRepositoryImpl @Inject constructor(
     override suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
         return authApi.changePassword(changePasswordDto)
     }
+
+    override suspend fun checkValidUserName(username: String): StatusDto {
+        return authApi.checkValidUsername(username)
+    }
+
+    override suspend fun checkValidEmail(email: String): StatusDto {
+        return authApi.checkValidEmail(email)
+    }
 }
