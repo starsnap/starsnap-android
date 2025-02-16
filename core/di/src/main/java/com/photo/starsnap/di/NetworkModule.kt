@@ -1,5 +1,7 @@
 package com.photo.starsnap.di
 
+import android.content.Context
+import com.photo.starsnap.datastore.TokenManager
 import com.photo.starsnap.di.Url.BASE_URL
 import com.photo.starsnap.network.auth.AuthApi
 import com.photo.starsnap.network.report.ReportApi
@@ -8,6 +10,7 @@ import com.photo.starsnap.network.user.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,7 +20,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 object Url {
-    const val BASE_URL = "http://192.168.0.141:8080"
+    const val BASE_URL = "http://192.168.0.146:8080/"
 }
 
 @Module
@@ -44,6 +47,24 @@ class NetworkModule {
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor(tokenManager)
+
+    @Provides
+    @Singleton
+    fun provideAuthAuthenticator(
+        tokenManager: TokenManager
+    ): AuthAuthenticator =
+        AuthAuthenticator(tokenManager)
+
+    @Singleton
+    @Provides
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager =
+        TokenManager(context)
+
 
     @Provides
     @Singleton
