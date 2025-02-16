@@ -130,6 +130,28 @@ fun SubmitButton(onClick: () -> Unit, buttonText: String, enabled: Boolean) {
                 indication = null
             )
     ) {
-        Text(buttonText, Modifier.align(Alignment.Center))
+        Text(buttonText, Modifier.align(Alignment.Center), style = title2)
+    }
+}
+
+
+@Composable
+fun NextButton(event: () -> Unit, enabled: Boolean, buttonText: String) {
+    val buttonBackground = if (enabled) yellow_400 else yellow_100
+
+    Box(
+        Modifier
+            .clickable(onClick = {
+                if (enabled) {
+                    event()
+                }
+            }, interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            )
+            .height(60.dp)
+            .fillMaxWidth()
+            .background(buttonBackground)
+    ) {
+        Text(buttonText, Modifier.align(Alignment.Center), style = TitleLarge)
     }
 }
