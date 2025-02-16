@@ -9,9 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,14 +25,24 @@ import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
 fun PasswordSignupScreen(viewModel: SignupViewModel, navController: NavController) {
-    Scaffold(topBar = { SignupAppBar { navController.popBackStack() } }) { innerPadding ->
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
+        topBar = { SignupAppBar { navController.popBackStack() } },
+        bottomBar = {
+            // 다음 버튼
+            NextButton(
+                event = { navController.navigate(SIGNUP_EMAIL_ROUTE) },
+                buttonText = "다음",
+                enabled = uiState.passwordButtonState
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(horizontal = 35.dp)
                 .padding(innerPadding)
         ) {
-            val uiState by viewModel.uiState.collectAsState()
-            var password by remember { mutableStateOf("") }
 
             Text(
                 stringResource(R.string.signup_password_screen_title),
@@ -45,16 +52,18 @@ fun PasswordSignupScreen(viewModel: SignupViewModel, navController: NavControlle
 
             CheckPasswordStatusMessage(viewModel)
 
-            BaseEditText("비밀번호", { password = it }, EditTextType.Password)
+            BaseEditText(
+                defaultText = viewModel.password,
+                hint = "비밀번호",
+                inputText = { viewModel.password = it },
+                editTextType = EditTextType.Password
+            )
             Spacer(Modifier.height(10.dp))
-            BaseEditText("비밀번호 확인", { password = it }, EditTextType.Password)
-
-            Spacer(Modifier.weight(1F))
-            // 다음 버튼
-            NextButton(
-                event = { navController.navigate(SIGNUP_EMAIL_ROUTE) },
-                buttonText = "다음",
-                enabled = uiState.passwordButtonState
+            BaseEditText(
+                defaultText = viewModel.confirmPassword,
+                hint = "비밀번호 확인",
+                inputText = { viewModel.confirmPassword = it },
+                editTextType = EditTextType.Password
             )
         }
     }

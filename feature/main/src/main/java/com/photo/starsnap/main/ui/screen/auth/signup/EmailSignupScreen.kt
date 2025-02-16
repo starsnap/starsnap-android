@@ -9,9 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,15 +24,27 @@ import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_VERIFY_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
-fun EmailSignupScreen(viewModel: SignupViewModel, navController: NavController){
-    Scaffold(topBar = { SignupAppBar { navController.popBackStack() } }) { innerPadding ->
+fun EmailSignupScreen(viewModel: SignupViewModel, navController: NavController) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
+        topBar = { SignupAppBar { navController.popBackStack() } },
+        bottomBar = {
+            // 다음 버튼
+            NextButton(
+                event = { navController.navigate(SIGNUP_VERIFY_ROUTE)
+                    viewModel.sendEmail()
+                        },
+                buttonText = "인증번호 전송",
+                enabled = uiState.emailSendButtonState
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(horizontal = 35.dp)
                 .padding(innerPadding)
         ) {
-            val uiState by viewModel.uiState.collectAsState()
-            var email by remember { mutableStateOf("") }
 
             Text(
                 stringResource(R.string.signup_email_screen_title),
@@ -47,18 +56,14 @@ fun EmailSignupScreen(viewModel: SignupViewModel, navController: NavController){
 
             Spacer(Modifier.height(55.dp))
 
-
-            BaseEditText("이메일", { email = it }, EditTextType.Text)
-
-
+            BaseEditText(
+                viewModel.email,
+                "이메일",
+                { viewModel.email = it },
+                editTextType = EditTextType.Email
+            )
 
             Spacer(Modifier.weight(1F))
-            // 다음 버튼
-            NextButton(
-                event = { navController.navigate(SIGNUP_VERIFY_ROUTE) },
-                buttonText = "인증번호 전송",
-                enabled = uiState.emailSendButtonState
-            )
         }
     }
 }
