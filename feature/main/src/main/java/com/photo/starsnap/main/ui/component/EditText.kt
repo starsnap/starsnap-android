@@ -103,4 +103,49 @@ fun PasswordEditText(modifier: Modifier = Modifier, password: (String) -> Unit) 
                 }
             })
     }
+@Composable
+fun VerifyCodeEditText(verifyCode: (String) -> Unit) {
+    var code by remember { mutableStateOf("") }
+    BasicTextField(value = code,
+        onValueChange = { input ->
+            if (4 >= input.length) {
+                code = input
+                Log.d("VerifyCodeEditText",input)
+                verifyCode(input)
+            }
+        },
+        modifier = Modifier
+            .height(70.dp)
+            .fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        visualTransformation = VisualTransformation.None,
+        singleLine = true,
+        decorationBox = {
+            Row(
+                modifier = Modifier
+                    .padding(start = 0.dp, end = 15.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row {
+                    repeat(4) { index ->
+                        Spacer(Modifier.width(if (index == 0) 0.dp else 10.dp))
+                        VerifyCodeEditText(code.getOrNull(index)?.toString() ?: "")
+                    }
+                }
+            }
+        })
+}
+
+@Composable
+fun VerifyCodeEditText(code: String) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .height(70.dp)
+            .width(55.dp)
+            .border(1.dp, button, shape = RoundedCornerShape(size = 8.dp))
+    ) {
+        Text(text = code)
+    }
+}
 }
