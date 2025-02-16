@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
 
+    implementation(libs.airbnb.android.lottie.compose)
+
     kapt(libs.hilt.compiler)
 
     implementation(libs.material)
