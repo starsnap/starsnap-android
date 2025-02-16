@@ -3,7 +3,7 @@ package com.photo.starsnap.main.viewmodel.auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-ㅎimport com.photo.starsnap.main.utils.TextPattern
+import com.photo.starsnap.main.utils.TextPattern
 import com.photo.starsnap.network.auth.AuthRepository
 import com.photo.starsnap.network.auth.dto.rq.SignupDto
 import com.photo.starsnap.network.auth.dto.rq.VerifyEmailRequestDto
@@ -24,103 +24,182 @@ class SignupViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> get() = _uiState
 
-    // 회원가입
-    fun signup() =
-        viewModelScope.launch {
-            val currentState = _uiState.value
-            _uiState.value = _uiState.value.copy(signupState = State.LOADING)
-            runCatching {
-                authRepository.signup(
-                    SignupDto(
-                        currentState.username,
-                        currentState.password,
-                        currentState.email,
-                        currentState.token
-                    )
-                )
-            }.onSuccess {
-                Log.d(TAG, it.toString())
-                _uiState.value = _uiState.value.copy(signupState = State.SUCCESS)
-            }.onFailure { e ->
-                Log.d(TAG, e.message.toString())
-                _uiState.value = _uiState.value.copy(signupState = State.ERROR)
-            }
+    var username: String
+        get() = _uiState.value.username
+        set(value) {
+            checkValidUserName(value)
+            _uiState.value = _uiState.value.copy(username = value)
         }
 
-    // 닉네임 유효성 검사
-    fun checkValidUserName(username: String) = viewModelScope.launch {
+    var password: String
+        get() = _uiState.value.password
+        set(value) {
+            checkValidPassword(value, confirmPassword)
+            _uiState.value =
+                _uiState.value.copy(password = value, confirmPassword = confirmPassword)
+        }
+
+    var confirmPassword: String
+        get() = _uiState.value.confirmPassword
+        set(value) {
+            checkValidPassword(password, value)
+            _uiState.value = _uiState.value.copy(confirmPassword = value, password = password)
+        }
+
+
+    var email: String
+        get() = _uiState.value.email
+        set(value) {
+            checkValidEmail(value)
+            _uiState.value = _uiState.value.copy(email = value)
+        }
+
+    var verifyCode: String
+        get() = _uiState.value.verifyCode
+        set(value) {
+            _uiState.value = _uiState.value.copy(
+                verifyCode = value,
+                verifyButtonState = value.length == 4
+            )
+            Log.d(TAG, "${value.length} verifyButtonState: ${_uiState.value.verifyButtonState}")
+        }
+
+    // 회원가입
+    fun signup() = viewModelScope.launch {
+        val currentState = _uiState.value
+        _uiState.value = _uiState.value.copy(signupState = State.LOADING)
         runCatching {
-            authRepository.checkValidUserName(username)
-            _uiState.value = _uiState.value.copy(usernameValidState = State.LOADING)
+            authRepository.signup(
+                SignupDto(
+                    currentState.username,
+                    currentState.password,
+                    currentState.email,
+                    currentState.token
+                )
+            )
         }.onSuccess {
-            _uiState.value = _uiState.value.copy(username = username)
-            _uiState.value = _uiState.value.copy(usernameButtonState = true)
-            _uiState.value = _uiState.value.copy(usernameValidState = State.SUCCESS)
             Log.d(TAG, it.toString())
+            _uiState.value = _uiState.value.copy(signupState = State.SUCCESS)
         }.onFailure { e ->
-            _uiState.value = _uiState.value.copy(usernameButtonState = false)
-            _uiState.value = _uiState.value.copy(usernameValidState = State.ERROR)
             Log.d(TAG, e.message.toString())
+            _uiState.value = _uiState.value.copy(signupState = State.ERROR)
+        }
+    }
+
+    // 닉네임 유효성 검사
+    private fun checkValidUserName(username: String) = viewModelScope.launch {
+        val isUserNameValid = TextPattern.USER_NAME.toPattern().matcher(username).matches()
+        if (username.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                usernameButtonState = false,
+                usernameValidState = ValidState.DEFAULT,
+            )
+        } else if (isUserNameValid) {
+            _uiState.value = _uiState.value.copy(usernameValidState = ValidState.LOADING)
+            runCatching {
+                authRepository.checkValidUserName(username)
+            }.onSuccess {
+                _uiState.value = _uiState.value.copy(
+                    usernameButtonState = true,
+                    usernameValidState = ValidState.SUCCESS
+                )
+                Log.d(TAG, it.status.toString())
+            }.onFailure { e ->
+                // 닉네임 중복일때 어떤 애러 메시지 나오는지 확인 뒤 EXIST 처리 필요
+                _uiState.value =
+                    _uiState.value.copy(
+                        usernameButtonState = false,
+                        usernameValidState = ValidState.EXIST,
+                    )
+                Log.d(TAG, e.message.toString())
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(
+                usernameButtonState = false,
+                usernameValidState = ValidState.ERROR,
+            )
         }
     }
 
     // 이메일 유효성 검사
-    fun checkValidEmail(email: String) = viewModelScope.launch {
-        runCatching {
-            authRepository.checkValidEmail(email)
-            _uiState.value = _uiState.value.copy(emailSendValidState = State.LOADING)
-        }.onSuccess {
-            _uiState.value = _uiState.value.copy(email = email)
-            _uiState.value = _uiState.value.copy(emailSendValidState = State.SUCCESS)
-            _uiState.value = _uiState.value.copy(emailSendButtonState = true)
-            Log.d(TAG, it.toString())
-        }.onFailure { e ->
-            _uiState.value = _uiState.value.copy(emailSendButtonState = false)
-            _uiState.value = _uiState.value.copy(emailSendValidState = State.ERROR)
-            Log.d(TAG, e.message.toString())
+    private fun checkValidEmail(email: String) = viewModelScope.launch {
+        val isEmailValid = TextPattern.EMAIL.toPattern().matcher(email).matches()
+
+        if (email.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                emailSendButtonState = false,
+                emailValidState = ValidState.DEFAULT,
+            )
+        } else if (isEmailValid) {
+            runCatching {
+                authRepository.checkValidEmail(email)
+                _uiState.value = _uiState.value.copy(
+                    emailSendButtonState = false, emailValidState = ValidState.LOADING
+                )
+            }.onSuccess {
+                _uiState.value = _uiState.value.copy(
+                    emailValidState = ValidState.SUCCESS, emailSendButtonState = true
+                )
+            }.onFailure { e ->
+                _uiState.value = _uiState.value.copy(
+                    emailSendButtonState = false, emailValidState = ValidState.EXIST
+                )
+                Log.d(TAG, e.message.toString())
+            }
+        } else {
+            _uiState.value = _uiState.value.copy(
+                emailSendButtonState = false, emailValidState = ValidState.ERROR
+            )
         }
     }
 
     // 인증 번호 발송
     fun sendEmail() = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(emailSendValidState = State.LOADING)
+        _uiState.value = _uiState.value.copy(validCodeState = State.LOADING)
         runCatching {
             authRepository.send(_uiState.value.email)
         }.onSuccess {
-            _uiState.value = _uiState.value.copy(emailSendValidState = State.SUCCESS)
+            _uiState.value = _uiState.value.copy(validCodeState = State.SUCCESS)
             Log.d(TAG, it.toString())
         }.onFailure { e ->
             Log.d(TAG, e.message.toString())
-            _uiState.value = _uiState.value.copy(emailSendValidState = State.ERROR)
+            _uiState.value = _uiState.value.copy(validCodeState = State.ERROR)
         }
     }
 
     // 인증 번호 확인
-    fun verify(email: String, verifyCode: String) = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(verifyState = State.LOADING)
+    fun checkVerifyCode(verifyCode: String) = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(verifyCodeState = State.LOADING, verifyButtonState = false)
         runCatching {
             authRepository.verify(VerifyEmailRequestDto(email, verifyCode))
         }.onSuccess {
             Log.d(TAG, it.toString())
-            _uiState.value = _uiState.value.copy(token = it.token)
-            _uiState.value = _uiState.value.copy(verifyState = State.SUCCESS)
+            _uiState.value = _uiState.value.copy(
+                token = it.token, verifyButtonState = true, verifyCodeState = State.SUCCESS
+            )
         }.onFailure { e ->
             Log.d(TAG, e.message.toString())
-            _uiState.value = _uiState.value.copy(verifyState = State.ERROR)
+            _uiState.value =
+                _uiState.value.copy(verifyCodeState = State.ERROR, verifyButtonState = false)
         }
     }
 
     // 비밀번호 유효성 검사
-    fun checkValidPassword(password: String) {
-        if (TextPattern.PASSWORD.toPattern().matcher(password).matches()) {
-            _uiState.value = _uiState.value.copy(password = password)
-            _uiState.value = _uiState.value.copy(passwordButtonState = true)
-            _uiState.value = _uiState.value.copy(passwordValidState = State.SUCCESS)
-        } else {
-            _uiState.value = _uiState.value.copy(password = "")
-            _uiState.value = _uiState.value.copy(passwordButtonState = false)
-            _uiState.value = _uiState.value.copy(passwordValidState = State.ERROR)
+    private fun checkValidPassword(password: String, confirmPassword: String) {
+        val isPasswordValid = TextPattern.PASSWORD.toPattern().matcher(password).matches()
+        Log.d(TAG, "비밀번호: $password, 비밀번호 확인: $confirmPassword")
+
+        val passwordState = when {
+            password.isEmpty() -> PasswordState.DEFAULT
+            !isPasswordValid -> PasswordState.ERROR
+            password != confirmPassword -> PasswordState.INVALID_CONFIRM
+            else -> PasswordState.SUCCESS
         }
+
+        _uiState.value = _uiState.value.copy(
+            passwordButtonState = passwordState == PasswordState.SUCCESS,
+            passwordValidState = passwordState
+        )
     }
 }
 
@@ -130,22 +209,42 @@ data class SignupUiState(
     val email: String = "", // 이메일
     val verifyCode: String = "", // 인증번호
     val token: String = "", // 회원가입 토큰
+
     val usernameButtonState: Boolean = false,
-    val usernameValidState: State = State.DEFAULT,
+    val usernameValidState: ValidState = ValidState.DEFAULT,
+
+    val confirmPassword: String = "",
     val passwordButtonState: Boolean = false,
-    val passwordValidState: State = State.DEFAULT,
+    val passwordValidState: PasswordState = PasswordState.DEFAULT, // 비밀번호 상태
+
     val emailSendButtonState: Boolean = false,
-    val emailSendValidState: State = State.DEFAULT,
+    val emailValidState: ValidState = ValidState.DEFAULT,
+    val validCodeState: State = State.DEFAULT,
+
     val verifyButtonState: Boolean = false,
-    val verifyState: State = State.DEFAULT,
+    val verifyCodeState: State = State.DEFAULT,
+
     val consentButtonState: Boolean = false,
     val signupButtonState: Boolean = false,
-    val signupState: State = State.DEFAULT,
+
+    val signupState: State = State.DEFAULT
 )
 
 enum class State {
-    SUCCESS,
-    LOADING,
-    ERROR,
-    DEFAULT
+    SUCCESS, LOADING, ERROR, DEFAULT
+}
+
+enum class PasswordState {
+    SUCCESS,          // 비밀번호 정규식 일치 + 비밀번호 확인과 동일
+    ERROR,            // 비밀번호 정규식 불일치
+    DEFAULT,          // 비밀번호 미입력
+    INVALID_CONFIRM   // 비밀번호 정규식은 일치하지만 비밀번호 확인이 없거나 다를 때
+}
+
+enum class ValidState {
+    SUCCESS,          // 사용 가능한 아이디
+    EXIST,            // 사용중인 아이디
+    ERROR,            // 닉네임 정규식 불일치()
+    LOADING,          // 닉네임 사용 가능 여부 확인중.
+    DEFAULT           // 닉네임 입력 전
 }
