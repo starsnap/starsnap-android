@@ -36,8 +36,16 @@ class SignupViewModel @Inject constructor(
     var username: String
         get() = _uiState.value.username
         set(value) {
-            checkValidUserName(value)
             _uiState.value = _uiState.value.copy(username = value)
+
+            // 기존 검사 Job이 있다면 취소
+            usernameCheckJob?.cancel()
+
+            // 500ms 대기 후 검사 실행
+            usernameCheckJob = viewModelScope.launch {
+                delay(500) // 사용자가 입력을 멈춘 후 500ms 뒤 실행
+                checkValidUserName(value)
+            }
         }
 
     var password: String
@@ -55,7 +63,6 @@ class SignupViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(confirmPassword = value, password = password)
         }
 
-
     var email: String
         get() = _uiState.value.email
         set(value) {
@@ -66,6 +73,7 @@ class SignupViewModel @Inject constructor(
     var verifyCode: String
         get() = _uiState.value.verifyCode
         set(value) {
+            if(value.isEmpty()) _uiState.value.copy(verifyCodeState = VerifyCodeState.DEFAULT)
             _uiState.value = _uiState.value.copy(
                 verifyCode = value,
                 verifyButtonState = value.length == 4
@@ -78,6 +86,7 @@ class SignupViewModel @Inject constructor(
         val currentState = _uiState.value
         _uiState.value = _uiState.value.copy(signupState = State.LOADING)
         runCatching {
+            delay(1000)
             authRepository.signup(
                 SignupDto(
                     currentState.username,
@@ -104,8 +113,9 @@ class SignupViewModel @Inject constructor(
                 usernameValidState = ValidState.DEFAULT,
             )
         } else if (isUserNameValid) {
-            _uiState.value = _uiState.value.copy(usernameValidState = ValidState.LOADING)
+            _uiState.value = _uiState.value.copy(usernameValidState = ValidState.LOADING, usernameButtonState = false)
             runCatching {
+                delay(300)
                 authRepository.checkValidUserName(username)
             }.onSuccess {
                 _uiState.value = _uiState.value.copy(
@@ -164,7 +174,8 @@ class SignupViewModel @Inject constructor(
 
     // 인증 번호 발송
     fun sendEmail() = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(validCodeState = State.LOADING)
+        _uiState.value = _uiState.value.copy(validCodeState = State.LOADING, verifyCode = "")
+        startTimer()
         runCatching {
             authRepository.send(_uiState.value.email)
         }.onSuccess {
@@ -178,18 +189,22 @@ class SignupViewModel @Inject constructor(
 
     // 인증 번호 확인
     fun checkVerifyCode(verifyCode: String) = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(verifyCodeState = State.LOADING, verifyButtonState = false)
+        _uiState.value = _uiState.value.copy(verifyCodeState = VerifyCodeState.DEFAULT, verifyButtonState = false)
         runCatching {
             authRepository.verify(VerifyEmailRequestDto(email, verifyCode))
         }.onSuccess {
             Log.d(TAG, it.toString())
             _uiState.value = _uiState.value.copy(
-                token = it.token, verifyButtonState = true, verifyCodeState = State.SUCCESS
+                token = it.token, verifyButtonState = true, verifyCodeState = VerifyCodeState.SUCCESS
             )
+
+            // 코드 인증 완료시 타이머 종료
+            timerJob?.cancel()
+            _timerUiState.value = _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false)
         }.onFailure { e ->
             Log.d(TAG, e.message.toString())
             _uiState.value =
-                _uiState.value.copy(verifyCodeState = State.ERROR, verifyButtonState = false)
+                _uiState.value.copy(verifyCodeState = VerifyCodeState.ERROR, verifyButtonState = false)
         }
     }
 
@@ -264,12 +279,17 @@ data class SignupUiState(
     val validCodeState: State = State.DEFAULT,
 
     val verifyButtonState: Boolean = false,
-    val verifyCodeState: State = State.DEFAULT,
+    val verifyCodeState: VerifyCodeState = VerifyCodeState.DEFAULT,
 
     val consentButtonState: Boolean = false,
     val signupButtonState: Boolean = false,
 
     val signupState: State = State.DEFAULT
+)
+
+data class TimerUiState(
+    val isTimerRunning: Boolean = false,
+    val timerValue: Long = 300L
 )
 
 enum class State {
@@ -289,4 +309,12 @@ enum class ValidState {
     ERROR,            // 닉네임 정규식 불일치()
     LOADING,          // 닉네임 사용 가능 여부 확인중.
     DEFAULT           // 닉네임 입력 전
+}
+
+enum class VerifyCodeState {
+    SUCCESS,          // 인증 성공
+    ERROR,            // 인증 실패
+    LOADING,          // 인증 확인
+    DEFAULT,          // 인증 코드 입력 전
+    RESEND            // 인증 번호 시간 지났을 경우
 }
