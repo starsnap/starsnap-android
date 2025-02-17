@@ -49,7 +49,7 @@ fun EmailSignupScreen(viewModel: SignupViewModel, navController: NavController) 
             Text(
                 stringResource(R.string.signup_email_screen_title),
                 style = SignupTitle,
-                modifier = Modifier.padding(top = 30.dp)
+                modifier = Modifier.padding(top = 30.dp, bottom = 13.dp)
             )
 
             CheckEmailStatusMessage(viewModel)
