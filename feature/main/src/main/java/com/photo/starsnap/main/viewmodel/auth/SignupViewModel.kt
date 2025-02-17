@@ -23,11 +23,14 @@ class SignupViewModel @Inject constructor(
         const val TAG = "SignupViewModel"
     }
 
+    private var usernameCheckJob: Job? = null
     private var timerJob: Job? = null
+
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> get() = _uiState
 
     private val _timerUiState = MutableStateFlow(TimerUiState())
+    val timerUiState: StateFlow<TimerUiState> get() = _timerUiState
 
 
     var username: String
@@ -237,6 +240,9 @@ class SignupViewModel @Inject constructor(
         }
     }
 
+    fun resetVerifyCodeState() {
+        _uiState.value = _uiState.value.copy(verifyCodeState = VerifyCodeState.DEFAULT, verifyButtonState = false, verifyCode = "")
+    }
 }
 
 data class SignupUiState(

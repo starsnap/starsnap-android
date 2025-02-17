@@ -26,8 +26,29 @@ import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
 fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController) {
-    Scaffold(topBar = { SignupAppBar { navController.popBackStack() } }) { innerPadding ->
+
+    val uiState by viewModel.uiState.collectAsState()
     val timerUiState by viewModel.timerUiState.collectAsState()
+
+    LaunchedEffect(uiState.verifyCodeState) {
+        // 코드 인증 성공시 약관동의 화면으로 이동
+        if (uiState.verifyCodeState == VerifyCodeState.SUCCESS) {
+            navController.navigate(SIGNUP_CONSENT_ROUTE)
+            viewModel.resetVerifyCodeState()
+        }
+    }
+
+    Scaffold(
+        topBar = { SignupAppBar { navController.popBackStack() } },
+        bottomBar = {
+            // 다음 버튼
+            NextButton(
+                event = { viewModel.checkVerifyCode(viewModel.verifyCode) },
+                buttonText = "인증하기",
+                enabled = uiState.verifyButtonState
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(horizontal = 35.dp)
@@ -47,13 +68,9 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
 
             VerifyCodeEditText { verifyCode = it }
 
-            Spacer(Modifier.weight(1F))
-            // 다음 버튼
-            NextButton(
-                event = { navController.navigate(SIGNUP_CONSENT_ROUTE) },
-                buttonText = "다음",
-                enabled = uiState.verifyButtonState
-            )
+            TextButton("인증번호 재전송", { viewModel.sendEmail() }, hint1, Modifier.fillMaxWidth())
+
+            Spacer(Modifier.height(31.dp))
 
             VerifyCodeTimer(timerUiState.timerValue)
         }
