@@ -27,6 +27,7 @@ import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 @Composable
 fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController) {
     Scaffold(topBar = { SignupAppBar { navController.popBackStack() } }) { innerPadding ->
+    val timerUiState by viewModel.timerUiState.collectAsState()
         Column(
             modifier = Modifier
                 .padding(horizontal = 35.dp)
@@ -53,6 +54,8 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
                 buttonText = "다음",
                 enabled = uiState.verifyButtonState
             )
+
+            VerifyCodeTimer(timerUiState.timerValue)
         }
     }
 }

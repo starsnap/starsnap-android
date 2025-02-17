@@ -8,6 +8,8 @@ import com.photo.starsnap.network.auth.AuthRepository
 import com.photo.starsnap.network.auth.dto.rq.SignupDto
 import com.photo.starsnap.network.auth.dto.rq.VerifyEmailRequestDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,8 +23,12 @@ class SignupViewModel @Inject constructor(
         const val TAG = "SignupViewModel"
     }
 
+    private var timerJob: Job? = null
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> get() = _uiState
+
+    private val _timerUiState = MutableStateFlow(TimerUiState())
+
 
     var username: String
         get() = _uiState.value.username
@@ -201,6 +207,36 @@ class SignupViewModel @Inject constructor(
             passwordValidState = passwordState
         )
     }
+
+    // 타이머 시작(1분)
+    private fun startTimer() {
+        val duration = 300L  // 초 단위로 수정 (1분)
+        timerJob?.cancel()  // 기존 타이머 취소
+        timerJob = viewModelScope.launch {
+
+            val startTime = System.currentTimeMillis()
+            val endTime = startTime + duration * 1000
+
+            // 타이머 시작
+            _timerUiState.value = _timerUiState.value.copy(isTimerRunning = true, timerValue = duration)
+
+            while (System.currentTimeMillis() < endTime) {
+                val remainingMillis = endTime - System.currentTimeMillis()
+                val remainingSeconds = (remainingMillis / 1000).coerceAtLeast(0)
+
+                // 상태 업데이트
+                _timerUiState.value = _timerUiState.value.copy(timerValue = remainingSeconds)
+                Log.d(TAG, "시간: ${_timerUiState.value.timerValue}, 활성화 상태: ${_timerUiState.value.isTimerRunning}")
+
+                delay(1000L)
+            }
+
+            // 타이머 종료 처리
+            _uiState.value = _uiState.value.copy(verifyCodeState = VerifyCodeState.RESEND, verifyButtonState = false)
+            _timerUiState.value = _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false) // 타이머 종료 시 0초로 설정
+        }
+    }
+
 }
 
 data class SignupUiState(
