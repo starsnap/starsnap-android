@@ -47,10 +47,12 @@ fun PasswordSignupScreen(viewModel: SignupViewModel, navController: NavControlle
             Text(
                 stringResource(R.string.signup_password_screen_title),
                 style = SignupTitle,
-                modifier = Modifier.padding(top = 30.dp)
+                modifier = Modifier.padding(top = 30.dp, bottom = 13.dp)
             )
 
             CheckPasswordStatusMessage(viewModel)
+
+            Spacer(Modifier.height(55.dp))
 
             BaseEditText(
                 defaultText = viewModel.password,
