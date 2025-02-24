@@ -55,10 +55,16 @@ fun MainButton(event: () -> Unit, enabled: Boolean, buttonText: String) {
 
 // 텍스트 버튼
 @Composable
-fun TextButton(text: String, onClick: () -> Unit, textStyle: TextStyle, modifier: Modifier = Modifier) {
+fun TextButton(
+    text: String,
+    onClick: () -> Unit,
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier,
+    buttonState: Boolean = true
+) {
     Box(
         modifier.clickable(
-            onClick = onClick,
+            onClick = { if (buttonState) onClick() },
             interactionSource = remember { MutableInteractionSource() },
             indication = null
         ), contentAlignment = Alignment.Center
