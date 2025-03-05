@@ -24,12 +24,12 @@ import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_PASSWORD_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
-fun UserNameSignupScreen(viewModel: SignupViewModel, navController: NavController) {
+fun UserNameSignupScreen(viewModel: SignupViewModel, navController: NavController, onNavigateToLogin: () -> Unit) {
 
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { SignupAppBar { navController.popBackStack() } },
+        topBar = { SignupAppBar { onNavigateToLogin() } },
         bottomBar = {
             // 다음 버튼
             NextButton(
