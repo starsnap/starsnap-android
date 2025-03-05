@@ -1,8 +1,6 @@
 package com.photo.starsnap.main.ui.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.main.utils.clickableSingle
 
 @Composable
 fun CustomCheckBox(
@@ -23,13 +22,11 @@ fun CustomCheckBox(
     var checkState by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.clickable(
+        modifier = Modifier.clickableSingle(
             onClick = {
                 checkState = !checkState // 상태 변경
                 onCheckedChange(checkState) // 변경된 상태 전달
-            },
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
+            }
         )
     ) {
         Image(

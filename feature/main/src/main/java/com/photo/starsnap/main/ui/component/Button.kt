@@ -5,8 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +28,7 @@ import com.photo.starsnap.designsystem.CustomColor.light_black
 import com.photo.starsnap.designsystem.text.CustomTextStyle.TitleLarge
 import com.photo.starsnap.designsystem.text.CustomTextStyle.TitleMedium
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.main.utils.clickableSingle
 
 // 로그인, 회원가입 등 메인 버튼으로 사용
 @Composable
@@ -38,12 +36,9 @@ fun MainButton(event: () -> Unit, enabled: Boolean, buttonText: String) {
     val buttonBackground = if (enabled) yellow_400 else yellow_100
     Box(
         Modifier
-            .clickable(onClick = {
-                if (enabled) {
-                    event()
-                }
-            }, interactionSource = remember { MutableInteractionSource() },
-                indication = null
+            .clickableSingle(
+                enabled = enabled,
+                onClick = event
             )
             .height(45.dp)
             .fillMaxWidth()
@@ -63,10 +58,9 @@ fun TextButton(
     buttonState: Boolean = true
 ) {
     Box(
-        modifier.clickable(
-            onClick = { if (buttonState) onClick() },
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
+        modifier.clickableSingle(
+            enabled = buttonState,
+            onClick = onClick,
         ), contentAlignment = Alignment.Center
     ) {
         Text(text, style = textStyle, color = light_black)
@@ -81,10 +75,8 @@ fun AppleLoginButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .height(55.dp)
             .background(Color.Black, RoundedCornerShape(12.dp))
-            .clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+            .clickableSingle(
+                onClick = onClick
             )
     ) {
         Image(
@@ -111,10 +103,8 @@ fun GoogleLoginButton(onClick: () -> Unit) {
             .height(55.dp)
             .background(Color.White, RoundedCornerShape(12.dp))
             .border(width = 1.dp, shape = RoundedCornerShape(12.dp), color = Color.Black)
-            .clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+            .clickableSingle(
+                onClick = onClick
             )
     ) {
         Image(
@@ -138,10 +128,9 @@ fun SubmitButton(onClick: () -> Unit, buttonText: String, enabled: Boolean) {
             .width(90.dp)
             .background(buttonBackground, RoundedCornerShape(size = 8.dp))
             .padding(horizontal = 10.dp)
-            .clickable(
-                onClick = { if (enabled) onClick() },
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+            .clickableSingle(
+                enabled = enabled,
+                onClick = onClick,
             )
     ) {
         Text(buttonText, Modifier.align(Alignment.Center), style = title2)
@@ -158,14 +147,9 @@ fun NextButton(event: () -> Unit, enabled: Boolean, buttonText: String) {
 
     Box(
         Modifier
-            .clickable(
-                onClick = {
-                    if (enabled) {
-                        event()
-                    }
-                },
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+            .clickableSingle(
+                enabled = enabled,
+                onClick = event,
             )
             .height(60.dp)
             .fillMaxWidth()
