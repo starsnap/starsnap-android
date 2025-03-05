@@ -8,6 +8,8 @@
     <string name="id">아이디</string>
     <string name="password">비밀번호</string>
 
+    <string name="internet_error">인터넷 연결을 확인 해주세요.</string>
+
     <string name="login_find_username_button_text">아이디 찾기</string>
     <string name="login_find_password_button_text">비밀번호 찾기</string>
 
@@ -31,9 +33,10 @@
 
     <string name="signup_verify_screen_title">이메일 확인 후\n인증번호를 입력해주세요.</string>
     <string name="signup_verify_screen_error_message">인증번호가 일치하지 않습니다.</string>
-    <string name="signup_verify_screen_success_message">인증 되었습니다.</string>
+    <string name="signup_verify_screen_success_message"> </string>
     <string name="signup_verify_screen_default_message">인증번호를 입력해주세요.</string>
-    <string name="signup_verify_screen_loading_message">확인중...</string>
+    <string name="signup_verify_screen_loading_message"> </string>
+    <string name="signup_verify_screen_resend_message">인증번호를 다시 전송해 주세요.</string>
 
     <string name="signup_email_screen_title">이메일을 통해\n인증 해주세요.</string>
     <string name="signup_email_screen_default_message">이메일을 입력해주세요.</string>

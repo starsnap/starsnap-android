@@ -135,6 +135,12 @@ class SignupViewModel @Inject constructor(
                             usernameButtonState = false,
                             usernameValidState = ValidState.EXIST,
                         )
+                } else {
+                    _uiState.value =
+                        _uiState.value.copy(
+                            usernameButtonState = false,
+                            usernameValidState = ValidState.INTERNET_ERROR,
+                        )
                 }
                 Log.d(TAG, e.message.toString())
             }
@@ -166,9 +172,16 @@ class SignupViewModel @Inject constructor(
                     emailValidState = ValidState.SUCCESS, emailSendButtonState = true
                 )
             }.onFailure { e ->
-                _uiState.value = _uiState.value.copy(
-                    emailSendButtonState = false, emailValidState = ValidState.EXIST
-                )
+                if (e.message == "HTTP 409 ") {
+                    // 닉네임 중복일때 어떤 애러 메시지 나오는지 확인 뒤 EXIST 처리 필요
+                    _uiState.value = _uiState.value.copy(
+                        emailSendButtonState = false, emailValidState = ValidState.EXIST
+                    )
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        emailSendButtonState = false, emailValidState = ValidState.INTERNET_ERROR
+                    )
+                }
                 Log.d(TAG, e.message.toString())
             }
         } else {
@@ -190,7 +203,10 @@ class SignupViewModel @Inject constructor(
             Log.d(TAG, it.toString())
         }.onFailure { e ->
             Log.d(TAG, e.message.toString())
-            _uiState.value = _uiState.value.copy(validCodeState = State.ERROR)
+            _uiState.value = _uiState.value.copy(validCodeState = State.INTERNET_ERROR)
+            _timerUiState.value = _timerUiState.value.copy(isTimerRunning = false)
+            timerJob?.cancel()
+            resendTimer?.cancel()
         }
     }
 
@@ -215,12 +231,20 @@ class SignupViewModel @Inject constructor(
             resendTimer?.cancel()
             _timerUiState.value = _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false, resendTime = 0L)
         }.onFailure { e ->
+            if (e.message == "HTTP 409 " || e.message == "HTTP 400 ") {
+                _uiState.value =
+                    _uiState.value.copy(
+                        verifyCodeState = VerifyCodeState.ERROR,
+                        verifyButtonState = false
+                    )
+            } else {
+                _uiState.value =
+                    _uiState.value.copy(
+                        verifyCodeState = VerifyCodeState.INTERNET_ERROR,
+                        verifyButtonState = false
+                    )
+            }
             Log.d(TAG, e.message.toString())
-            _uiState.value =
-                _uiState.value.copy(
-                    verifyCodeState = VerifyCodeState.ERROR,
-                    verifyButtonState = false
-                )
         }
     }
 
@@ -360,7 +384,7 @@ data class TimerUiState(
 )
 
 enum class State {
-    SUCCESS, LOADING, ERROR, DEFAULT
+    SUCCESS, LOADING, ERROR, DEFAULT, INTERNET_ERROR
 }
 
 enum class PasswordState {
@@ -375,7 +399,8 @@ enum class ValidState {
     EXIST,            // 사용중인 아이디
     ERROR,            // 닉네임 정규식 불일치()
     LOADING,          // 닉네임 사용 가능 여부 확인중.
-    DEFAULT           // 닉네임 입력 전
+    DEFAULT,           // 닉네임 입력 전
+    INTERNET_ERROR    // 인터넷 애러
 }
 
 enum class VerifyCodeState {
@@ -383,5 +408,6 @@ enum class VerifyCodeState {
     ERROR,            // 인증 실패
     LOADING,          // 인증 확인
     DEFAULT,          // 인증 코드 입력 전
-    RESEND            // 인증 번호 시간 지났을 경우
+    RESEND,           // 인증 번호 시간 지났을 경우
+    INTERNET_ERROR    // 인터넷 애러
 }

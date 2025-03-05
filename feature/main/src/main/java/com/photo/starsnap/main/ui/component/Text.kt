@@ -53,6 +53,11 @@ fun CheckUserNameStatusMessage(viewModel: SignupViewModel) {
             stringResource(R.string.signup_username_screen_default_message),
             gray
         )
+
+        ValidState.INTERNET_ERROR -> MessageState(
+            stringResource(R.string.internet_error),
+            error
+        )
     }
 
     // 색상을 자연스럽게 전환하기 위한 애니메이션
@@ -138,6 +143,11 @@ fun CheckEmailStatusMessage(viewModel: SignupViewModel) {
             stringResource(R.string.signup_email_screen_default_message),
             gray
         )
+
+        ValidState.INTERNET_ERROR -> MessageState(
+            stringResource(R.string.internet_error),
+            error
+        )
     }
 
     // 색상을 자연스럽게 전환하기 위한 애니메이션
@@ -183,6 +193,11 @@ fun CheckVerifyCodeStatusMessage(viewModel: SignupViewModel) {
         VerifyCodeState.RESEND -> MessageState(
             stringResource(R.string.signup_verify_screen_resend_message),
             gray
+        )
+
+        VerifyCodeState.INTERNET_ERROR -> MessageState(
+            stringResource(R.string.internet_error),
+            error
         )
     }
 
