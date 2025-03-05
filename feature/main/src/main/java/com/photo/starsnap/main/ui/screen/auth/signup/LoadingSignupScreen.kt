@@ -48,6 +48,7 @@ fun LoadingSignupScreen(
         State.SUCCESS -> stringResource(R.string.signup_success_screen_title) to successComposition
         State.ERROR -> stringResource(R.string.signup_error_screen_title) to errorComposition
         State.DEFAULT -> stringResource(R.string.signup_error_screen_title) to errorComposition
+        State.INTERNET_ERROR -> stringResource(R.string.internet_error) to errorComposition
     }
 
     Scaffold(
