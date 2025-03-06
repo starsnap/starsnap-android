@@ -37,14 +37,16 @@ class SignupViewModel @Inject constructor(
     var username: String
         get() = _uiState.value.username
         set(value) {
-            _uiState.value = _uiState.value.copy(username = value)
+            _uiState.value = _uiState.value.copy(
+                username = value, usernameButtonState = false
+            )
 
             // 기존 검사 Job이 있다면 취소
             usernameCheckJob?.cancel()
 
             // 500ms 대기 후 검사 실행
             usernameCheckJob = viewModelScope.launch {
-                delay(500) // 사용자가 입력을 멈춘 후 500ms 뒤 실행
+                delay(300) // 사용자가 입력을 멈춘 후 500ms 뒤 실행
                 checkValidUserName(value)
             }
         }
