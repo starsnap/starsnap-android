@@ -5,15 +5,13 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.compose.rememberNavController
-import com.photo.starsnap.main.screen.auth.LoginScreen
-import com.photo.starsnap.main.screen.auth.SignupScreen
+import com.photo.starsnap.main.ui.screen.auth.LoginScreen
+import com.photo.starsnap.main.ui.screen.auth.SignupScreen
 import com.photo.starsnap.main.utils.NavigationRoute.AUTH_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.LOGIN_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.MAIN_ROUTE
@@ -38,11 +36,13 @@ class MainActivity : AppCompatActivity() {
                     * */
                     composable(
                         LOGIN_ROUTE,
+                        // 열때 효과
                         enterTransition = {
                             return@composable slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.End, tween(300)
                             )
                         },
+                        // 닫을때 효과
                         exitTransition = {
                             return@composable slideOutOfContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Start, tween(300)
@@ -59,7 +59,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     composable(SIGNUP_ROUTE) {
                         SignupScreen(onNavigateToLogin = {
-                            navController.popBackStack()
+                            navController.navigate(LOGIN_ROUTE){
+                                popUpTo(0) { inclusive = true }
+                            }
                         })
                     }
                 }
