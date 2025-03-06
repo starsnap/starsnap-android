@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 object Url {
-    const val BASE_URL = "http://192.168.0.146:8080/"
+    const val BASE_URL = "http://192.168.0.157:8080/"
 }
 
 @Module
@@ -84,9 +84,9 @@ class NetworkModule {
         authInterceptor: AuthInterceptor
     ): OkHttpClient {
         return OkHttpClient().newBuilder().apply {
-            connectTimeout(60, TimeUnit.SECONDS)
-            readTimeout(60, TimeUnit.SECONDS)
-            writeTimeout(60, TimeUnit.SECONDS)
+            connectTimeout(3, TimeUnit.SECONDS)
+            readTimeout(3, TimeUnit.SECONDS)
+            writeTimeout(3, TimeUnit.SECONDS)
             addInterceptor(loggerInterceptor)
             addInterceptor(authInterceptor)
             authenticator(authAuthenticator)
