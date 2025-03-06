@@ -1,6 +1,8 @@
 package com.photo.starsnap.main.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,117 +26,125 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.photo.starsnap.designsystem.CustomColor.gray
+import androidx.compose.ui.unit.sp
 import com.photo.starsnap.designsystem.CustomColor.container
+import com.photo.starsnap.designsystem.CustomColor.button
+import com.photo.starsnap.designsystem.text.CustomTextStyle.hint1
+import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.main.utils.EditTextType
+import com.photo.starsnap.main.utils.getKeyboardType
+import com.photo.starsnap.main.utils.maxLangth
 
 @Composable
-fun EditText(hint: String, modifier: Modifier = Modifier, username: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        BasicTextField(value = text,
-            onValueChange = { input ->
-                text = input
-                username(input)
-            },
-            modifier = Modifier
-                .height(50.dp)
-                .background(container, shape = RoundedCornerShape(size = 8.dp)),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 0.dp, end = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(19.dp))
-                    Box {
-                        innerTextField()
-                        if (text.isEmpty()) {
-                            Text(hint, color = gray)
-                        }
-                    }
-                }
-            })
-    }
-}
-
-@Composable
-fun PasswordEditText(modifier: Modifier = Modifier, password: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
+fun BaseEditText(
+    defaultText: String = "",
+    hint: String,
+    inputText: (String) -> Unit,
+    editTextType: EditTextType
+) {
+    var text by remember { mutableStateOf(defaultText) }
+    val keyboardType = getKeyboardType(editTextType)
     var checkState by remember { mutableStateOf(false) }
+    val maxLangth = maxLangth(editTextType)
     val visualTransformation =
-        if (!checkState) PasswordVisualTransformation() else VisualTransformation.None
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        BasicTextField(value = text,
-            onValueChange = { input ->
-                text = input
-                password(input)
-            },
-            modifier = Modifier
-                .height(50.dp)
-                .background(container, shape = RoundedCornerShape(size = 8.dp)),
-            visualTransformation = visualTransformation,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 0.dp, end = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(19.dp))
-                    Box {
-                        innerTextField()
-                        if (text.isEmpty()) {
-                            Text("비밀번호", color = gray)
-                        }
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    PasswordEyeCheckBox { checkState = it }
-                }
-            })
-    }
-@Composable
-fun VerifyCodeEditText(verifyCode: (String) -> Unit) {
-    var code by remember { mutableStateOf("") }
-    BasicTextField(value = code,
+        if (!checkState && editTextType == EditTextType.Password) PasswordVisualTransformation() else VisualTransformation.None
+    BasicTextField(value = text,
+        textStyle = title2,
         onValueChange = { input ->
-            if (4 >= input.length) {
-                code = input
-                Log.d("VerifyCodeEditText",input)
-                verifyCode(input)
+            if (maxLangth > input.length) {
+                text = input
+                inputText(input)
             }
         },
         modifier = Modifier
-            .height(70.dp)
-            .fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        visualTransformation = VisualTransformation.None,
+            .height(60.dp)
+            .background(container, shape = RoundedCornerShape(size = 8.dp)),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        visualTransformation = visualTransformation,
         singleLine = true,
-        decorationBox = {
+        decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
                     .padding(start = 0.dp, end = 15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row {
-                    repeat(4) { index ->
-                        Spacer(Modifier.width(if (index == 0) 0.dp else 10.dp))
-                        VerifyCodeEditText(code.getOrNull(index)?.toString() ?: "")
+                Spacer(modifier = Modifier.width(19.dp))
+                Box(
+                    Modifier.weight(1F)
+                ) {
+                    innerTextField()
+                    if (text.isEmpty()) {
+                        TextEditHint(hint)
                     }
+                }
+                if (editTextType == EditTextType.Password) {
+                    Spacer(Modifier.width(20.dp))
+                    PasswordEyeCheckBox { checkState = it }
                 }
             }
         })
+}
+
+@Composable
+fun EditText(hint: String, username: (String) -> Unit) {
+    BaseEditText(hint = hint, inputText = username, editTextType = EditTextType.Text)
+}
+
+@Composable
+fun PasswordEditText(hint: String, password: (String) -> Unit) {
+    BaseEditText(hint = hint, inputText = password, editTextType = EditTextType.Password)
+}
+
+@Composable
+fun VerifyCodeEditText(verifyCode: (String) -> Unit, state: Boolean) {
+    var code by remember { mutableStateOf("") }
+    LaunchedEffect(state) {
+        if (!state) {
+            code = ""
+        }
+    }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        BasicTextField(
+            value = code,
+            onValueChange = { input ->
+                // 최대 글자수 4개로 제한
+                if (input.length <= 4 && state) {
+                    code = input
+                    verifyCode(input)
+                }
+            },
+            modifier = Modifier
+                .height(70.dp)
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            visualTransformation = VisualTransformation.None,
+            singleLine = true,
+            decorationBox = {
+                // 기본 입력창은 숨기고, 커스텀 UI로 각 자리 박스를 그립니다.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        repeat(4) { index ->
+                            Spacer(Modifier.width(if (index == 0) 0.dp else 13.dp))
+                            VerifyCodeEditText(code.getOrNull(index)?.toString() ?: "")
+                        }
+                    }
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -141,11 +152,16 @@ fun VerifyCodeEditText(code: String) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .height(70.dp)
-            .width(55.dp)
-            .border(1.dp, button, shape = RoundedCornerShape(size = 8.dp))
+            .height(75.dp)
+            .width(60.dp)
+            .border(0.8.dp, button, shape = RoundedCornerShape(size = 8.dp))
     ) {
-        Text(text = code)
+        Text(text = code, fontSize = 30.sp)
     }
 }
+
+@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
+@Composable
+fun BaseEditTextPreview() {
+    BaseEditText(hint = "아이디", inputText = {}, editTextType = EditTextType.Text)
 }
