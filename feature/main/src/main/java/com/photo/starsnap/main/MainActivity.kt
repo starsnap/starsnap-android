@@ -39,13 +39,13 @@ class MainActivity : AppCompatActivity() {
                         // 열때 효과
                         enterTransition = {
                             return@composable slideIntoContainer(
-                                AnimatedContentTransitionScope.SlideDirection.End, tween(300)
+                                AnimatedContentTransitionScope.SlideDirection.End, tween(400)
                             )
                         },
                         // 닫을때 효과
                         exitTransition = {
                             return@composable slideOutOfContainer(
-                                AnimatedContentTransitionScope.SlideDirection.Start, tween(300)
+                                AnimatedContentTransitionScope.SlideDirection.Start, tween(400)
                             )
                         }
                     ) {
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     composable(SIGNUP_ROUTE) {
                         SignupScreen(onNavigateToLogin = {
                             navController.navigate(LOGIN_ROUTE){
-                                popUpTo(0) { inclusive = true }
+                                popUpTo(LOGIN_ROUTE) { inclusive = true }
                             }
                         })
                     }
