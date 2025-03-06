@@ -1,4 +1,4 @@
-package com.photo.starsnap.main.screen.auth
+package com.photo.starsnap.main.ui.screen.auth
 
 import android.content.Context
 import android.content.Intent
@@ -78,9 +78,12 @@ fun LoginScreen(
                 .padding(vertical = 70.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        EditText(stringResource(R.string.id)) { username = it }
+
+        EditText(stringResource(R.string.login_edit_text_username_hint)) { username = it }
         Spacer(Modifier.height(15.dp))
-        PasswordEditText { password = it }
+        PasswordEditText(hint = stringResource(R.string.login_edit_text_password_hint)) {
+            password = it
+        }
         Spacer(Modifier.height(20.dp))
         MainButton(
             { loginViewModel.login(username, password) },
@@ -89,15 +92,32 @@ fun LoginScreen(
         )
         Spacer(Modifier.height(24.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            TextButton(text = stringResource(R.string.find_username), textStyle = title4, onClick = { })
+            TextButton(
+                text = stringResource(R.string.login_find_username_button_text),
+                textStyle = title4,
+                onClick = { })
             Spacer(Modifier.width(30.dp))
-            TextButton(text = stringResource(R.string.find_password), textStyle = title4, onClick = { })
+            TextButton(
+                text = stringResource(R.string.login_find_password_button_text),
+                textStyle = title4,
+                onClick = { })
             Spacer(Modifier.width(30.dp))
-            TextButton(text = stringResource(R.string.signup), textStyle = title4, onClick = moveSignupNavigation)
+            TextButton(
+                text = stringResource(R.string.signup),
+                textStyle = title4,
+                onClick = moveSignupNavigation
+            )
         }
         Spacer(Modifier.weight(1F))
         Column {
-            GoogleLoginButton(onClick = {doGoogleSignIn(context, coroutineScope, loginViewModel, null)})
+            GoogleLoginButton(onClick = {
+                doGoogleSignIn(
+                    context,
+                    coroutineScope,
+                    loginViewModel,
+                    null
+                )
+            })
             Spacer(Modifier.height(10.dp))
             AppleLoginButton {}
             Spacer(Modifier.height(30.dp))
