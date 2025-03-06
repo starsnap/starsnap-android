@@ -24,6 +24,7 @@ class SignupViewModel @Inject constructor(
     }
 
     private var usernameCheckJob: Job? = null
+    private var emailCheckJob: Job? = null
     private var resendTimer: Job? = null
     private var timerJob: Job? = null
 
@@ -44,9 +45,9 @@ class SignupViewModel @Inject constructor(
             // 기존 검사 Job이 있다면 취소
             usernameCheckJob?.cancel()
 
-            // 500ms 대기 후 검사 실행
+            // 300ms 대기 후 검사 실행
             usernameCheckJob = viewModelScope.launch {
-                delay(300) // 사용자가 입력을 멈춘 후 500ms 뒤 실행
+                delay(400) // 사용자가 입력을 멈춘 후 500ms 뒤 실행
                 checkValidUserName(value)
             }
         }
@@ -69,8 +70,16 @@ class SignupViewModel @Inject constructor(
     var email: String
         get() = _uiState.value.email
         set(value) {
-            checkValidEmail(value)
-            _uiState.value = _uiState.value.copy(email = value)
+            _uiState.value = _uiState.value.copy(email = value, emailSendButtonState = false)
+
+            // 기존 검사 Job이 있다면 취소
+            emailCheckJob?.cancel()
+
+            // 500ms 대기 후 검사 실행
+            usernameCheckJob = viewModelScope.launch {
+                delay(400)
+                checkValidEmail(value)
+            }
         }
 
     var verifyCode: String
@@ -231,7 +240,8 @@ class SignupViewModel @Inject constructor(
             // 코드 인증 완료시 타이머 종료
             timerJob?.cancel()
             resendTimer?.cancel()
-            _timerUiState.value = _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false, resendTime = 0L)
+            _timerUiState.value =
+                _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false, resendTime = 0L)
         }.onFailure { e ->
             if (e.message == "HTTP 409 " || e.message == "HTTP 400 ") {
                 _uiState.value =
