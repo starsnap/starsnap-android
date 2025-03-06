@@ -4,10 +4,14 @@ kotlin = "1.9.23"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
 
+# lottie
+lottieVersion = "5.2.0"
+
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.8.2"
+lifecycleLiveDataCore = "2.8.7"
 activityCompose = "1.8.0"
 composeBom = "2024.12.01"
 hilt = "2.48.1"
@@ -38,6 +42,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-livedata-core = { group = "androidx.lifecycle", name = "lifecycle-livedata-core", version.ref = "lifecycleLiveDataCore" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -83,6 +88,8 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.6.0"}
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 
+airbnb-android-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottieVersion" }
+airbnb-android-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
