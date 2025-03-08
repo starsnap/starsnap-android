@@ -84,9 +84,9 @@ class NetworkModule {
         authInterceptor: AuthInterceptor
     ): OkHttpClient {
         return OkHttpClient().newBuilder().apply {
-            connectTimeout(3, TimeUnit.SECONDS)
-            readTimeout(3, TimeUnit.SECONDS)
-            writeTimeout(3, TimeUnit.SECONDS)
+            connectTimeout(10, TimeUnit.SECONDS)
+            readTimeout(10, TimeUnit.SECONDS)
+            writeTimeout(10, TimeUnit.SECONDS)
             addInterceptor(loggerInterceptor)
             addInterceptor(authInterceptor)
             authenticator(authAuthenticator)
