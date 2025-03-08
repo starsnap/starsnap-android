@@ -16,7 +16,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.CustomColor.button
-import com.photo.starsnap.designsystem.text.CustomTextStyle.hint1
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
 import com.photo.starsnap.main.utils.EditTextType
 import com.photo.starsnap.main.utils.getKeyboardType
 import com.photo.starsnap.main.utils.maxLangth
+import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
 fun BaseEditText(
@@ -98,13 +98,11 @@ fun PasswordEditText(hint: String, password: (String) -> Unit) {
 }
 
 @Composable
-fun VerifyCodeEditText(verifyCode: (String) -> Unit, state: Boolean) {
+fun VerifyCodeEditText(viewModel: SignupViewModel) {
     var code by remember { mutableStateOf("") }
-    LaunchedEffect(state) {
-        if (!state) {
-            code = ""
-        }
-    }
+
+    val timerUiState by viewModel.timerUiState.collectAsState()
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,9 +111,9 @@ fun VerifyCodeEditText(verifyCode: (String) -> Unit, state: Boolean) {
             value = code,
             onValueChange = { input ->
                 // 최대 글자수 4개로 제한
-                if (input.length <= 4 && state) {
+                if (input.length <= 4 && timerUiState.isTimerRunning) {
                     code = input
-                    verifyCode(input)
+                    viewModel.verifyCode = input
                 }
             },
             modifier = Modifier

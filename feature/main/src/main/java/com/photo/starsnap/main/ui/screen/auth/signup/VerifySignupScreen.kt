@@ -78,7 +78,8 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
 
             Spacer(Modifier.height(55.dp))
 
-            VerifyCodeEditText({ viewModel.verifyCode = it }, timerUiState.isTimerRunning)
+            // 인증번호 입력 칸?
+            VerifyCodeEditText(viewModel)
 
             Spacer(Modifier.height(24.dp))
 
