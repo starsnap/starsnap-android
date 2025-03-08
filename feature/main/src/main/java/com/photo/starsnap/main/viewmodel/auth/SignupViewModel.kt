@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.viewmodel.auth
 
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,8 +26,9 @@ class SignupViewModel @Inject constructor(
 
     private var usernameCheckJob: Job? = null
     private var emailCheckJob: Job? = null
-    private var resendTimer: Job? = null
-    private var timerJob: Job? = null
+    private var timer: CountDownTimer? = null
+    private var resendTimer: CountDownTimer? = null
+
 
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> get() = _uiState
@@ -85,11 +87,19 @@ class SignupViewModel @Inject constructor(
     var verifyCode: String
         get() = _uiState.value.verifyCode
         set(value) {
-            if (value.isEmpty()) _uiState.value.copy(verifyCodeState = VerifyCodeState.DEFAULT)
             _uiState.value = _uiState.value.copy(
-                verifyCode = value,
+                verifyCode = value,  // `verifyCode`도 복사해야 할 수 있습니다.
                 verifyButtonState = value.length == 4
             )
+            Log.d(TAG, value)
+
+            if (value.isEmpty()) {
+                _uiState.value = _uiState.value.copy(
+                    verifyCodeState = VerifyCodeState.DEFAULT,
+                    verifyButtonState = false  // `verifyButtonState`도 초기화해야 할 수 있습니다.
+                )
+            }
+
             Log.d(TAG, "${value.length} verifyButtonState: ${_uiState.value.verifyButtonState}")
         }
 
@@ -205,18 +215,18 @@ class SignupViewModel @Inject constructor(
     // 인증 번호 발송
     fun sendEmail() = viewModelScope.launch {
         _uiState.value = _uiState.value.copy(validCodeState = State.LOADING, verifyCode = "")
-        startTimer()
-        resendStarTimer()
+        timerStart()
+        timerResendStart()
         runCatching {
             authRepository.send(_uiState.value.email)
         }.onSuccess {
-            _uiState.value = _uiState.value.copy(validCodeState = State.SUCCESS)
             Log.d(TAG, it.toString())
         }.onFailure { e ->
             Log.d(TAG, e.message.toString())
             _uiState.value = _uiState.value.copy(validCodeState = State.INTERNET_ERROR)
-            _timerUiState.value = _timerUiState.value.copy(isTimerRunning = false)
-            timerJob?.cancel()
+            _timerUiState.value =
+                _timerUiState.value.copy(isTimerRunning = false, timerValue = 0L, resendTime = 0L)
+            timer?.cancel()
             resendTimer?.cancel()
         }
     }
@@ -238,7 +248,7 @@ class SignupViewModel @Inject constructor(
             )
 
             // 코드 인증 완료시 타이머 종료
-            timerJob?.cancel()
+            timer?.cancel()
             resendTimer?.cancel()
             _timerUiState.value =
                 _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false, resendTime = 0L)
@@ -247,7 +257,8 @@ class SignupViewModel @Inject constructor(
                 _uiState.value =
                     _uiState.value.copy(
                         verifyCodeState = VerifyCodeState.ERROR,
-                        verifyButtonState = false
+                        verifyButtonState = false,
+                        verifyCode = ""
                     )
             } else {
                 _uiState.value =
@@ -263,7 +274,6 @@ class SignupViewModel @Inject constructor(
     // 비밀번호 유효성 검사
     private fun checkValidPassword(password: String, confirmPassword: String) {
         val isPasswordValid = TextPattern.PASSWORD.toPattern().matcher(password).matches()
-        Log.d(TAG, "비밀번호: $password, 비밀번호 확인: $confirmPassword")
 
         val passwordState = when {
             password.isEmpty() -> PasswordState.DEFAULT
@@ -278,79 +288,52 @@ class SignupViewModel @Inject constructor(
         )
     }
 
-    // 타이머 시작(5분)
-    private fun startTimer() {
-        val duration = 300L  // 초 단위로 수정 (5분)
 
-        timerJob?.cancel()  // 기존 타이머 취소
-        timerJob = viewModelScope.launch {
-
-            val startTime = System.currentTimeMillis()
-            val endTime = startTime + duration * 1000
-
-            // 타이머 시작
-            _timerUiState.value =
-                _timerUiState.value.copy(
+    private fun timerStart() {
+        timer?.cancel()
+        timer = object : CountDownTimer(300_000L, 1000L) {
+            override fun onTick(millisUntilFinished: Long) {
+                _timerUiState.value = _timerUiState.value.copy(
                     isTimerRunning = true,
-                    timerValue = duration
+                    timerValue = millisUntilFinished / 1000
                 )
 
-            while (System.currentTimeMillis() < endTime) {
-                val remainingMillis = endTime - System.currentTimeMillis()
-                val remainingSeconds = (remainingMillis / 1000).coerceAtLeast(0)
-
-                // 상태 업데이트
-                _timerUiState.value = _timerUiState.value.copy(timerValue = remainingSeconds)
-                Log.d(
-                    TAG,
-                    "시간: ${_timerUiState.value.timerValue}, 활성화 상태: ${_timerUiState.value.isTimerRunning}"
-                )
-
-                delay(1000L)
+                Log.d(TAG, "일반: ${millisUntilFinished / 1000}")
             }
 
-            // 타이머 종료 처리
-            _uiState.value = _uiState.value.copy(
-                verifyCodeState = VerifyCodeState.RESEND,
-                verifyButtonState = false
-            )
-            _timerUiState.value =
-                _timerUiState.value.copy(timerValue = 0L, isTimerRunning = false) // 타이머 종료 시 0초로 설정
-        }
+            override fun onFinish() {
+                // 타이머 종료 처리
+                _uiState.value = _uiState.value.copy(
+                    verifyCodeState = VerifyCodeState.RESEND,
+                    verifyButtonState = false
+                )
+                _timerUiState.value =
+                    _timerUiState.value.copy(
+                        timerValue = 0L,
+                        isTimerRunning = false
+                    ) // 타이머 종료 시 0초로 설정
+            }
+        }.start()
     }
 
-    private fun resendStarTimer() {
-        val resendTime = 60L // 초 단위로 수정 (5분)
-
-        resendTimer?.cancel()  // 기존 타이머 취소
-        resendTimer = viewModelScope.launch {
-
-            val startTime = System.currentTimeMillis()
-            val endTime = startTime + resendTime * 1000
-
-            // 타이머 시작
-            _timerUiState.value =
-                _timerUiState.value.copy(resendTime = resendTime)
-
-            while (System.currentTimeMillis() < endTime) {
-                val remainingMillis = endTime - System.currentTimeMillis()
-                val remainingSeconds = (remainingMillis / 1000).coerceAtLeast(0)
-
-                // 상태 업데이트
-                _timerUiState.value = _timerUiState.value.copy(resendTime = remainingSeconds)
-                Log.d(
-                    TAG,
-                    "시간: ${_timerUiState.value.resendTime}"
+    private fun timerResendStart() {
+        resendTimer?.cancel()
+        resendTimer = object : CountDownTimer(60_000L, 1000L) {
+            override fun onTick(millisUntilFinished: Long) {
+                _timerUiState.value = _timerUiState.value.copy(
+                    isTimerRunning = true,
+                    resendTime = millisUntilFinished / 1000
                 )
-
-                delay(1000L)
+                Log.d(TAG, "재전송: ${millisUntilFinished / 1000}")
             }
 
-            // 타이머 종료 처리
-            _timerUiState.value = _timerUiState.value.copy(
-                resendTime = 0L,
-            )
-        }
+            override fun onFinish() {
+                // 타이머 종료 처리
+                _timerUiState.value = _timerUiState.value.copy(
+                    resendTime = 0L,
+                )
+            }
+        }.start()
     }
 
     fun resetVerifyCodeState() {
@@ -366,7 +349,7 @@ data class SignupUiState(
     val username: String = "", // 닉네임
     val password: String = "", // 비밀번호
     val email: String = "", // 이메일
-    val verifyCode: String = "", // 인증번호
+    var verifyCode: String = "", // 인증번호
     val token: String = "", // 회원가입 토큰
 
     val usernameButtonState: Boolean = false,
