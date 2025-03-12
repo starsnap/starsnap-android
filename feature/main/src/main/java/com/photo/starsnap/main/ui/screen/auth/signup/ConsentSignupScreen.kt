@@ -16,7 +16,7 @@ import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.main.ui.component.NextButton
 import com.photo.starsnap.main.ui.component.SignupAppBar
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_LOADING_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_LOADING_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 import com.photo.starsnap.main.viewmodel.auth.State
 
@@ -26,7 +26,7 @@ fun ConsentSignupScreen(viewModel: SignupViewModel, navController: NavController
 
     LaunchedEffect(uiState.signupState) {
         if (uiState.signupState == State.LOADING) {
-            navController.navigate(SIGNUP_LOADING_ROUTE)
+            navController.navigate(AUTH_SIGNUP_LOADING_ROUTE)
         }
     }
 

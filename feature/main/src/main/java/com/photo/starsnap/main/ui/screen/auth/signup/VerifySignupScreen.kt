@@ -26,7 +26,7 @@ import com.photo.starsnap.main.ui.component.SignupAppBar
 import com.photo.starsnap.main.ui.component.TextButton
 import com.photo.starsnap.main.ui.component.VerifyCodeEditText
 import com.photo.starsnap.main.ui.component.VerifyCodeTimer
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_CONSENT_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_CONSENT_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 import com.photo.starsnap.main.viewmodel.auth.VerifyCodeState
 
@@ -45,7 +45,7 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
     LaunchedEffect(uiState.verifyCodeState) {
         // 코드 인증 성공시 약관동의 화면으로 이동
         if (uiState.verifyCodeState == VerifyCodeState.SUCCESS) {
-            navController.navigate(SIGNUP_CONSENT_ROUTE)
+            navController.navigate(AUTH_SIGNUP_CONSENT_ROUTE)
             viewModel.resetVerifyCodeState()
         }
     }

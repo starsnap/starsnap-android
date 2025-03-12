@@ -20,7 +20,7 @@ import com.photo.starsnap.main.ui.component.CheckPasswordStatusMessage
 import com.photo.starsnap.main.ui.component.NextButton
 import com.photo.starsnap.main.ui.component.SignupAppBar
 import com.photo.starsnap.main.utils.EditTextType
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_EMAIL_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_EMAIL_ROUTE
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
@@ -32,7 +32,7 @@ fun PasswordSignupScreen(viewModel: SignupViewModel, navController: NavControlle
         bottomBar = {
             // 다음 버튼
             NextButton(
-                event = { navController.navigate(SIGNUP_EMAIL_ROUTE) },
+                event = { navController.navigate(AUTH_SIGNUP_EMAIL_ROUTE) },
                 buttonText = "다음",
                 enabled = uiState.passwordButtonState
             )
