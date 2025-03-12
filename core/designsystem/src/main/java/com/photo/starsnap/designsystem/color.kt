@@ -21,5 +21,9 @@ object CustomColor{
     val light_gray = Color(0xFFB1B8C0)
     val button = Color(0xFFDBDEE2)
     val container = Color(0xFFF2F3F4)
+
+    val error = Color(0xFFFF4040)
+    val success = Color(0xFF00C781)
+
 }
 

@@ -9,6 +9,7 @@ import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.PATCH
@@ -20,7 +21,7 @@ interface AuthApi {
     @Headers("Auth: false")
     suspend fun send(@Query("email") email: String): StatusDto
 
-    @POST("/api/auth/verify") // 인증번호 확인
+    @POST("/api/auth/email/verify") // 인증번호 확인
     @Headers("Auth: false")
     suspend fun verify(@Body verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
 
@@ -35,7 +36,7 @@ interface AuthApi {
     @DELETE("/api/auth") // 유저 삭제
     suspend fun delete(): StatusDto
 
-    @PATCH("/api/auth/refresh") // 토큰 제발급
+    @PATCH("/api/auth/refresh") // 토큰 재발급
     @Headers("Auth: false")
     suspend fun reissueToken(
         @Header("refresh-token") refreshToken: String,
@@ -46,5 +47,18 @@ interface AuthApi {
     @Headers("Auth: false")
     suspend fun changePassword(
         @Body changePasswordDto: ChangePasswordDto,
+    ): StatusDto
+
+    @GET("/api/auth/valid/username") // 닉네임 사용 가능 한지 확인
+    @Headers("Auth: false")
+    suspend fun checkValidUsername(
+        @Query("username") username: String
+    ): StatusDto
+
+
+    @GET("/api/auth/valid/email") // 이메일 사용 가능 한지 확인
+    @Headers("Auth: false")
+    suspend fun checkValidEmail(
+        @Query("email") email: String
     ): StatusDto
 }

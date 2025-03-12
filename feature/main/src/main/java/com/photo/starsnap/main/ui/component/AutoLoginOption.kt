@@ -1,8 +1,6 @@
 package com.photo.starsnap.main.ui.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -18,19 +16,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.main.utils.clickableSingle
 
 @Composable
 fun AutoLoginOption(checkState: (Boolean) -> Unit) {
     var isChecked by remember { mutableStateOf(false) } // 상태 관리
 
     Row(
-        modifier = Modifier.clickable(
+        modifier = Modifier.clickableSingle(
             onClick = {
                 isChecked = !isChecked // 상태 토글
                 checkState(isChecked) // 상태 전달
-            },
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
+            }
         ).padding(start = 5.dp, top = 10.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -67,6 +67,9 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
 
+    implementation(libs.androidx.lifecycle.livedata.core)
+
+
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth)
 
@@ -78,6 +81,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.airbnb.android.lottie.compose)
 
     kapt(libs.hilt.compiler)
 

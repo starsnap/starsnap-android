@@ -16,4 +16,6 @@ interface AuthRepository {
     suspend fun delete(): StatusDto
     suspend fun reissueToken(refreshToken: String, accessToken: String): retrofit2.Response<TokenDto>
     suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
+    suspend fun checkValidUserName(username: String): StatusDto
+    suspend fun checkValidEmail(email: String): StatusDto
 }
