@@ -18,9 +18,9 @@ import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.main.ui.component.BaseEditText
 import com.photo.starsnap.main.ui.component.CheckPasswordStatusMessage
 import com.photo.starsnap.main.ui.component.NextButton
-import com.photo.starsnap.main.ui.component.SignupAppBar
+import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.utils.EditTextType
-import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_EMAIL_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_EMAIL
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
@@ -28,11 +28,16 @@ fun PasswordSignupScreen(viewModel: SignupViewModel, navController: NavControlle
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { SignupAppBar { navController.popBackStack() } },
+        topBar = {
+            TopAppBar(
+                title = stringResource(R.string.signup_top_bar_title),
+                navController = navController
+            )
+        },
         bottomBar = {
             // 다음 버튼
             NextButton(
-                event = { navController.navigate(AUTH_SIGNUP_EMAIL_ROUTE) },
+                event = { navController.navigate(SIGNUP_EMAIL) },
                 buttonText = "다음",
                 enabled = uiState.passwordButtonState
             )
