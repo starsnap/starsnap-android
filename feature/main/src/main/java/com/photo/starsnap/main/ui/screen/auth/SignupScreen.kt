@@ -12,13 +12,7 @@ import com.photo.starsnap.main.ui.screen.auth.signup.LoadingSignupScreen
 import com.photo.starsnap.main.ui.screen.auth.signup.PasswordSignupScreen
 import com.photo.starsnap.main.ui.screen.auth.signup.UserNameSignupScreen
 import com.photo.starsnap.main.ui.screen.auth.signup.VerifySignupScreen
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_CONSENT_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_EMAIL_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_LOADING_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_PASSWORD_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_USERNAME_ROUTE
-import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_VERIFY_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 
 @Composable
@@ -28,30 +22,30 @@ fun SignupScreen(
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "SIGNUP") {
-        navigation(startDestination = SIGNUP_USERNAME_ROUTE, route = SIGNUP_ROUTE) {
+    NavHost(navController = navController, startDestination = NavigationRoute.SIGNUP) {
+        navigation(startDestination = NavigationRoute.SIGNUP_USERNAME, route = NavigationRoute.SIGNUP) {
             // 닉네임 입력 화면
-            composable(SIGNUP_USERNAME_ROUTE) {
+            composable(NavigationRoute.SIGNUP_USERNAME) {
                 UserNameSignupScreen(viewModel, navController, onNavigateToLogin)
             }
             // 비밀번호 입력 화면
-            composable(SIGNUP_PASSWORD_ROUTE) {
+            composable(NavigationRoute.SIGNUP_PASSWORD) {
                 PasswordSignupScreen(viewModel, navController)
             }
             // 이메일 입력 화면
-            composable(SIGNUP_EMAIL_ROUTE) {
+            composable(NavigationRoute.SIGNUP_EMAIL) {
                 EmailSignupScreen(viewModel, navController)
             }
             // 이메일 인증 화면
-            composable(SIGNUP_VERIFY_ROUTE) {
+            composable(NavigationRoute.SIGNUP_VERIFY) {
                 VerifySignupScreen(viewModel, navController)
             }
             // 약관동의 화면
-            composable(SIGNUP_CONSENT_ROUTE) {
+            composable(NavigationRoute.SIGNUP_CONSENT) {
                 ConsentSignupScreen(viewModel, navController)
             }
             // 마지막 화면
-            composable(SIGNUP_LOADING_ROUTE) {
+            composable(NavigationRoute.SIGNUP_LOADING) {
                 LoadingSignupScreen(viewModel, navController, onNavigateToLogin)
             }
         }

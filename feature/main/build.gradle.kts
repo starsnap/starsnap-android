@@ -83,10 +83,15 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.airbnb.android.lottie.compose)
+    implementation(libs.core.ktx)
+    implementation(libs.core.ktx)
 
     kapt(libs.hilt.compiler)
 
     implementation(libs.material)
+
+    implementation(libs.landscapist.glide)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
