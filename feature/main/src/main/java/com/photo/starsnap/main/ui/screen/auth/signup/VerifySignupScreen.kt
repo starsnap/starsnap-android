@@ -22,11 +22,11 @@ import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.designsystem.text.CustomTextStyle.hint1
 import com.photo.starsnap.main.ui.component.CheckVerifyCodeStatusMessage
 import com.photo.starsnap.main.ui.component.NextButton
-import com.photo.starsnap.main.ui.component.SignupAppBar
+import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.ui.component.TextButton
 import com.photo.starsnap.main.ui.component.VerifyCodeEditText
 import com.photo.starsnap.main.ui.component.VerifyCodeTimer
-import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_CONSENT_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_CONSENT
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 import com.photo.starsnap.main.viewmodel.auth.VerifyCodeState
 
@@ -45,13 +45,18 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
     LaunchedEffect(uiState.verifyCodeState) {
         // 코드 인증 성공시 약관동의 화면으로 이동
         if (uiState.verifyCodeState == VerifyCodeState.SUCCESS) {
-            navController.navigate(AUTH_SIGNUP_CONSENT_ROUTE)
+            navController.navigate(SIGNUP_CONSENT)
             viewModel.resetVerifyCodeState()
         }
     }
 
     Scaffold(
-        topBar = { SignupAppBar { navController.popBackStack() } },
+        topBar = {
+            TopAppBar(
+                title = stringResource(R.string.signup_top_bar_title),
+                navController = navController
+            )
+        },
         bottomBar = {
             // 다음 버튼
             NextButton(
@@ -83,7 +88,13 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
 
             Spacer(Modifier.height(24.dp))
 
-            TextButton(resendButtonText , { viewModel.sendEmail() }, hint1, Modifier.fillMaxWidth(), timerUiState.resendTime == 0L)
+            TextButton(
+                resendButtonText,
+                { viewModel.sendEmail() },
+                hint1,
+                Modifier.fillMaxWidth(),
+                timerUiState.resendTime == 0L
+            )
 
             Spacer(Modifier.height(31.dp))
 

@@ -15,8 +15,8 @@ import androidx.navigation.NavController
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.SignupTitle
 import com.photo.starsnap.main.ui.component.NextButton
-import com.photo.starsnap.main.ui.component.SignupAppBar
-import com.photo.starsnap.main.utils.NavigationRoute.AUTH_SIGNUP_LOADING_ROUTE
+import com.photo.starsnap.main.ui.component.TopAppBar
+import com.photo.starsnap.main.utils.NavigationRoute.SIGNUP_LOADING
 import com.photo.starsnap.main.viewmodel.auth.SignupViewModel
 import com.photo.starsnap.main.viewmodel.auth.State
 
@@ -26,12 +26,17 @@ fun ConsentSignupScreen(viewModel: SignupViewModel, navController: NavController
 
     LaunchedEffect(uiState.signupState) {
         if (uiState.signupState == State.LOADING) {
-            navController.navigate(AUTH_SIGNUP_LOADING_ROUTE)
+            navController.navigate(SIGNUP_LOADING)
         }
     }
 
     Scaffold(
-        topBar = { SignupAppBar { navController.popBackStack() } },
+        topBar = {
+            TopAppBar(
+                title = stringResource(R.string.signup_top_bar_title),
+                navController = navController
+            )
+        },
         bottomBar = {
             // 회원가입 버튼
             NextButton(
