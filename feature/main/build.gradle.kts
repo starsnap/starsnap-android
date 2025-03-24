@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
@@ -69,6 +70,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.core)
 
+    implementation(libs.androidx.paging.compose)
 
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth)
@@ -83,8 +85,9 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.airbnb.android.lottie.compose)
-    implementation(libs.core.ktx)
-    implementation(libs.core.ktx)
+
+    implementation(libs.okhttp)
+    implementation(platform(libs.okhttp.bom))
 
     kapt(libs.hilt.compiler)
 
