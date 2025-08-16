@@ -10,7 +10,7 @@ import com.photo.starsnap.main.utils.NavigationRoute
 
 fun NavGraphBuilder.StarHubRoute(navController: NavController) {
     navigation(
-        startDestination = NavigationRoute.LOGIN,
+        startDestination = NavigationRoute.STAR_LIST,
         route = NavigationRoute.STAR_HUB_ROUTE
     ) {
         composable(NavigationRoute.STAR_LIST) {

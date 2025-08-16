@@ -20,7 +20,7 @@ fun NavGraphBuilder.AuthRoute(navController: NavHostController) {
         * Transition 애니메이션 참고
         * */
         composable(
-            LOGIN,
+            LOGIN, // 처음 페이지
             // 열때 효과
             enterTransition = {
                 return@composable slideIntoContainer(
