@@ -33,8 +33,8 @@ fun AutoLoginOption(checkState: (Boolean) -> Unit) {
     ) {
         Box {
             Image(
-                painter = if (isChecked) painterResource(R.drawable.check_box_true) else painterResource(
-                    R.drawable.check_box_false
+                painter = if (isChecked) painterResource(R.drawable.check_box_true_icon) else painterResource(
+                    R.drawable.check_box_false_icon
                 ),
                 contentDescription = if (isChecked) "Checked" else "Unchecked"
             )
