@@ -40,8 +40,8 @@ fun CustomCheckBox(
 @Composable
 fun PasswordEyeCheckBox(checkState: (Boolean) -> Unit) {
     CustomCheckBox(
-        onPainter = painterResource(R.drawable.eye_open),
-        offPainter = painterResource(R.drawable.eye_close),
+        onPainter = painterResource(R.drawable.eye_open_icon),
+        offPainter = painterResource(R.drawable.eye_close_icon),
         onCheckedChange = checkState
     )
 }
@@ -49,8 +49,8 @@ fun PasswordEyeCheckBox(checkState: (Boolean) -> Unit) {
 @Composable
 fun AutoLoginCheckBox(checkState: (Boolean) -> Unit) {
     CustomCheckBox(
-        onPainter = painterResource(R.drawable.check_box_true),
-        offPainter = painterResource(R.drawable.check_box_false),
+        onPainter = painterResource(R.drawable.check_box_true_icon),
+        offPainter = painterResource(R.drawable.check_box_false_icon),
         onCheckedChange = checkState
     )
 }
