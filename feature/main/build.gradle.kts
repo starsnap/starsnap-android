@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.photo.starsnap.main"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -62,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.compose.runtime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
@@ -94,6 +96,8 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.landscapist.glide)
+
+//    implementation(libs.ucrop)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
