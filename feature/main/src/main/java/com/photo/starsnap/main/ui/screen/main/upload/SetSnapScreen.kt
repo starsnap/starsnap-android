@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.skydoves.landscapist.ImageOptions
@@ -20,7 +21,8 @@ import com.skydoves.landscapist.glide.GlideImage
 fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel) {
     val selectImage = uploadViewModel.selectedImage
     Scaffold(
-        topBar = { TopAppBar("새로운 스냅", navController) }
+        topBar = { TopAppBar("새로운 스냅", navController) },
+        containerColor = CustomColor.container,
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             GlideImage(

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.ui.component.Snap
 import com.photo.starsnap.main.utils.NavigationRoute.SNAP
 import com.photo.starsnap.main.viewmodel.main.SnapViewModel
@@ -21,7 +22,9 @@ fun SnapListScreen(navController: NavController, viewModel: SnapViewModel) {
 
     val snap = viewModel.snapList.collectAsLazyPagingItems()
 
-    Scaffold { padding ->
+    Scaffold(
+        containerColor = CustomColor.container,
+    ) { padding ->
         LazyVerticalGrid(
             modifier = Modifier.padding(padding),
             columns = GridCells.Fixed(2),

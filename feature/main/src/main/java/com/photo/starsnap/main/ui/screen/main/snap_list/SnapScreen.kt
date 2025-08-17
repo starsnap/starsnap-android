@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.main.ui.component.SnapIcon
 import com.photo.starsnap.main.ui.component.SnapImage
@@ -23,12 +24,15 @@ fun SnapScreen(navController: NavController, viewModel: SnapViewModel) {
 
     val snap = viewModel.snapState.collectAsState()
 
-    Scaffold(topBar = {
-        TopAppBar(
-            title = stringResource(R.string.snap_top_app_bar_title),
-            navController = navController
-        )
-    }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = stringResource(R.string.snap_top_app_bar_title),
+                navController = navController
+            )
+        },
+        containerColor = CustomColor.container,
+    ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             // Snap Image
             SnapImage(snap.value.selectSnap?.snapData?.imageKey)

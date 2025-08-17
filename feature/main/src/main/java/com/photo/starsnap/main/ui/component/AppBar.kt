@@ -1,11 +1,13 @@
 package com.photo.starsnap.main.ui.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -13,6 +15,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.TopBarTitle
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
@@ -23,7 +26,12 @@ import com.photo.starsnap.main.utils.NavigationRoute
 @Composable
 fun TopAppBar(title: String, navController: NavController) {
     CenterAlignedTopAppBar(
-        expandedHeight = 56.dp,
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = CustomColor.container,      // 배경색
+            titleContentColor = CustomColor.title,             // 타이틀 텍스트 색
+            navigationIconContentColor = CustomColor.title,    // 네비게이션 아이콘 색
+            actionIconContentColor = CustomColor.title      // 액션 아이콘 색
+        ),
         title = {
             Text(
                 text = title,
@@ -51,7 +59,13 @@ fun TopAppBar(title: String, navController: NavController) {
 @Composable
 fun PickImageTopAppBar(navController: NavController) {
     CenterAlignedTopAppBar(
-        expandedHeight = 56.dp,
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = CustomColor.container,      // 배경색
+            titleContentColor = CustomColor.title,             // 타이틀 텍스트 색
+            navigationIconContentColor = CustomColor.title,    // 네비게이션 아이콘 색
+            actionIconContentColor = CustomColor.title      // 액션 아이콘 색
+        ),
+        windowInsets = WindowInsets(0),
         title = {
             Text(
                 text = "새로운 스냅",

@@ -15,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.ui.component.SelectImage
 import com.photo.starsnap.main.ui.component.PickImageTopAppBar
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
@@ -33,7 +33,8 @@ fun PickImageScreen(
     val selectImages = uploadViewModel.selectedImage
 
     Scaffold(
-        topBar = { PickImageTopAppBar(navController) }
+        topBar = { PickImageTopAppBar(navController) },
+        containerColor = CustomColor.container
     ) { padding ->
         LazyVerticalGrid(
             modifier = Modifier
