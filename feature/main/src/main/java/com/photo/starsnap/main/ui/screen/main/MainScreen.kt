@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.photo.starsnap.main.ui.component.BottomNavigation
 import com.photo.starsnap.main.route.bottom_nav_route.HomeRoute
+import com.photo.starsnap.main.route.bottom_nav_route.SearchRoute
 import com.photo.starsnap.main.route.bottom_nav_route.StarHubRoute
 import com.photo.starsnap.main.route.bottom_nav_route.UploadRoute
 import com.photo.starsnap.main.route.bottom_nav_route.UserRoute
@@ -22,7 +23,9 @@ fun MainScreen(
     uploadViewModel: UploadViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-    Scaffold(bottomBar = { BottomNavigation(navController) }) { padding ->
+    Scaffold(
+        bottomBar = { BottomNavigation(navController) }
+    ) { padding ->
         NavHost(
             navController = navController,
             startDestination = HOME_ROUTE,

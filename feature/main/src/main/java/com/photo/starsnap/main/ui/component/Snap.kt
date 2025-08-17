@@ -1,6 +1,5 @@
 package com.photo.starsnap.main.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title3
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title5
