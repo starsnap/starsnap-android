@@ -32,6 +32,7 @@ fun MainScreen(
             UserRoute(navController)
             UploadRoute(navController, snapViewModel, uploadViewModel)
             StarHubRoute(navController)
+            SearchRoute(navController)
         }
     }
 

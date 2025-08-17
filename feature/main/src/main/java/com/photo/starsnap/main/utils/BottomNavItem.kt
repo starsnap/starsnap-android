@@ -2,6 +2,7 @@ package com.photo.starsnap.main.utils
 
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.SEARCH_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.STAR_HUB_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.USER_ROUTE
 import com.photo.starsnap.main.utils.NavigationRoute.UPLOAD_ROUTE
@@ -41,5 +42,11 @@ sealed class BottomNavItem(
         label = "StarHub",
         iconRes = R.drawable.star_icon,
         route = STAR_HUB_ROUTE,
+    )
+
+    data object Search : BottomNavItem(
+        label = "Search",
+        iconRes = R.drawable.search_icon,
+        route = SEARCH_ROUTE,
     )
 }

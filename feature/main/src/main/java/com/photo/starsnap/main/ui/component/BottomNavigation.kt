@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.ui.component
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -26,8 +27,9 @@ fun BottomNavigation(
         listOf(
             BottomNavItem.Home,
             BottomNavItem.AddSnap,
-            BottomNavItem.User,
             BottomNavItem.Star,
+            BottomNavItem.Search,
+            BottomNavItem.User
         )
     }
 
@@ -36,6 +38,7 @@ fun BottomNavigation(
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar(
+        modifier = Modifier.height(70.dp),
         containerColor = Color.White
     ) {
         bottomNavItems.forEach { item ->
