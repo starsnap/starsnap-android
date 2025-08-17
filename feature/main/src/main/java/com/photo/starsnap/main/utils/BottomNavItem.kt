@@ -1,19 +1,23 @@
 package com.photo.starsnap.main.utils
 
 import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.STAR_HUB_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.USER_ROUTE
+import com.photo.starsnap.main.utils.NavigationRoute.UPLOAD_ROUTE
 
 sealed class BottomNavItem(
     val label: String,
     val iconRes: Int,
     val route: String,
 ) {
-
-    companion object {
-        private const val HOME_ROUTE = "HOME"
-        private const val USER_ROUTE = "USER"
-        private const val ADD_SNAP_ROUTE = "ADD_SNAP"
-        private const val STAR_HUB_ROUTE = "STAR_HUB"
-    }
+//
+//    companion object {
+//        private const val HOME_ROUTE = "HOME"
+//        private const val USER_ROUTE = "USER"
+//        private const val ADD_SNAP_ROUTE = "ADD_SNAP"
+//        private const val STAR_HUB_ROUTE = "STAR_HUB"
+//    }
 
     data object Home : BottomNavItem(
         label = "Home",
@@ -24,7 +28,7 @@ sealed class BottomNavItem(
     data object AddSnap : BottomNavItem(
         label = "AddSnap",
         iconRes = R.drawable.add_icon,
-        route = ADD_SNAP_ROUTE
+        route = UPLOAD_ROUTE
     )
 
     data object User : BottomNavItem(

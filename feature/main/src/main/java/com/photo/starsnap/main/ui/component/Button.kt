@@ -11,14 +11,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.photo.starsnap.designsystem.R
@@ -160,5 +171,31 @@ fun NextButton(event: () -> Unit, enabled: Boolean, buttonText: String) {
             modifier = Modifier.align(Alignment.Center),
             style = TitleLarge
         )
+    }
+}
+
+@Composable
+fun LikeIconButton() {
+    var isChecked by remember { mutableStateOf(false) }
+
+    IconToggleButton(checked = isChecked, onCheckedChange = { isChecked = it }) {
+        Icon(
+            imageVector = if (isChecked) ImageVector.vectorResource(id = R.drawable.like_true_icon) else ImageVector.vectorResource(id = R.drawable.like_false_icon),
+            contentDescription = "Toggle Favorite"
+        )
+    }
+}
+
+@Composable
+fun CommentIconButton() {
+    IconButton(onClick = { /* 클릭 이벤트 */ }) {
+        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.comment_icon), contentDescription = "Favorite")
+    }
+}
+
+@Composable
+fun SaveIconButton() {
+    IconButton(onClick = { /* 클릭 이벤트 */ }) {
+        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.save_icon), contentDescription = "Favorite")
     }
 }

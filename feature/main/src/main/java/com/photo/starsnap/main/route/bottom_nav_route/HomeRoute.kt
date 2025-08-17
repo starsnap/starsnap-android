@@ -7,14 +7,15 @@ import androidx.navigation.navigation
 import com.photo.starsnap.main.ui.screen.main.snap_list.SnapListScreen
 import com.photo.starsnap.main.ui.screen.main.snap_list.SnapScreen
 import com.photo.starsnap.main.utils.NavigationRoute
+import com.photo.starsnap.main.viewmodel.main.SnapViewModel
 
-fun NavGraphBuilder.HomeRoute(navController: NavController) {
+fun NavGraphBuilder.HomeRoute(navController: NavController, snapViewModel: SnapViewModel) {
     navigation(startDestination = NavigationRoute.SNAP_LIST, route = NavigationRoute.HOME_ROUTE) {
         composable(NavigationRoute.SNAP_LIST) {
-            SnapListScreen(navController)
+            SnapListScreen(navController, snapViewModel)
         }
         composable(NavigationRoute.SNAP) {
-            SnapScreen(navController)
+            SnapScreen(navController, snapViewModel)
         }
     }
 }

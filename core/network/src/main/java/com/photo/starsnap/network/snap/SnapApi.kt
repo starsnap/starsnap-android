@@ -1,7 +1,9 @@
 package com.photo.starsnap.network.snap
 
+import com.photo.starsnap.network.dto.SliceResponseDto
 import com.photo.starsnap.network.dto.StatusDto
 import com.photo.starsnap.network.snap.dto.SnapDto
+import com.photo.starsnap.network.snap.dto.SnapResponseDto
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -17,7 +19,11 @@ interface SnapApi {
         @Part("image") image: RequestBody,
         @Part("title") title: String,
         @Part("source") source: String,
-        @Part("date-taken") dateTaken: String
+        @Part("date-taken") dateTaken: String,
+        @Part("ai-state") aiState: Boolean,
+        @Part("tag") tag: List<String>,
+        @Part("star-id") starId: List<String>,
+        @Part("star-group-id") starGroupId: List<String>
     )
 
     @GET("/api/snap/send") // snap 조회
@@ -31,6 +37,10 @@ interface SnapApi {
         @Part("title") title: String,
         @Part("source") source: String,
         @Part("date-taken") dateTaken: String,
+        @Part("ai-state") aiState: Boolean,
+        @Part("tag") tag: List<String>,
+        @Part("star-id") starId: List<String>,
+        @Part("star-group-id") starGroupId: List<String>
     ): SnapDto
 
 
@@ -38,5 +48,16 @@ interface SnapApi {
     fun deleteSnap(
         @Query("snap-id") snapId: String,
     ): StatusDto
+
+    @GET("/api/snap")
+    fun getSnap(
+        size: Int,
+        page: Int,
+        tag: List<String>,
+        title: String,
+        userId: String,
+        starId: List<String>,
+        starGroupId: List<String>
+    ): SliceResponseDto<SnapResponseDto>
 
 }

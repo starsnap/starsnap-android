@@ -1,10 +1,8 @@
 package com.photo.starsnap.network.auth.dto.rs
 
-import java.time.LocalDateTime
-
 data class TokenDto(
     val accessToken: String,
     val refreshToken: String,
-    val expiredAt: LocalDateTime,
+    val expiredAt: String,
     val authority: String
 )

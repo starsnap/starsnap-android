@@ -1,6 +1,5 @@
 package com.photo.starsnap.network.user
 
-import com.photo.starsnap.network.user.UserApi
 import com.photo.starsnap.network.dto.SliceResponseDto
 import com.photo.starsnap.network.dto.StatusDto
 import com.photo.starsnap.network.user.dto.Follow
@@ -8,7 +7,7 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UserApiRepositoryImpl @Inject constructor(
-    val userApi: UserApi
+    private val userApi: UserApi
 ): UserRepository {
     override fun follow(userId: String): StatusDto {
         return userApi.follow(userId)

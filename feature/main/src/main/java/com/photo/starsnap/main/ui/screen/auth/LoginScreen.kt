@@ -23,6 +23,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,6 +46,7 @@ import com.photo.starsnap.main.ui.component.MainButton
 import com.photo.starsnap.main.ui.component.PasswordEditText
 import com.photo.starsnap.main.ui.component.TextButton
 import com.photo.starsnap.main.viewmodel.auth.LoginViewModel
+import com.photo.starsnap.main.viewmodel.state.LoginState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
@@ -67,6 +70,15 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     isClickable = username.isNotBlank() && password.isNotBlank()
+
+    val loginState by loginViewModel.loginState.observeAsState()
+
+    LaunchedEffect(loginState) {
+        if (loginState == LoginState.Success) {
+            moveMainNavigation()
+        }
+    }
+
 
     Column(
         modifier = Modifier

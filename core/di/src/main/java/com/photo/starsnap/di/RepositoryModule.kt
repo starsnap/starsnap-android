@@ -1,5 +1,7 @@
 package com.photo.starsnap.di
 
+import com.photo.starsnap.model.photo.PhotoRepository
+import com.photo.starsnap.model.photo.PhotoRepositoryImpl
 import com.photo.starsnap.network.auth.AuthApiRepositoryImpl
 import com.photo.starsnap.network.auth.AuthRepository
 import com.photo.starsnap.network.report.ReportApiRepositoryImpl
@@ -36,4 +38,10 @@ class RepositoryModule {
     @Singleton
     fun provideReportRepository(reportApiRepositoryImpl: ReportApiRepositoryImpl): ReportRepository =
         reportApiRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun providePhotoRepository(photoRepositoryImpl: PhotoRepositoryImpl): PhotoRepository =
+        photoRepositoryImpl
+
 }

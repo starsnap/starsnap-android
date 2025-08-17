@@ -9,25 +9,27 @@ import com.photo.starsnap.main.ui.screen.main.upload.PickStarScreen
 import com.photo.starsnap.main.ui.screen.main.upload.SetSnapScreen
 import com.photo.starsnap.main.ui.screen.main.upload.PickStarGroupScreen
 import com.photo.starsnap.main.utils.NavigationRoute
+import com.photo.starsnap.main.viewmodel.main.SnapViewModel
+import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 
-fun NavGraphBuilder.UploadRoute(navController: NavController) {
+fun NavGraphBuilder.UploadRoute(navController: NavController, snapViewModel: SnapViewModel, uploadViewModel: UploadViewModel) {
     navigation(
         startDestination = NavigationRoute.PICK_IMAGE,
         route = NavigationRoute.UPLOAD_ROUTE
     ) {
         composable(NavigationRoute.PICK_IMAGE) {
-            PickImageScreen(navController)
+            PickImageScreen(navController, uploadViewModel)
         }
 
         composable(NavigationRoute.SET_SNAP) {
-            SetSnapScreen(navController)
+            SetSnapScreen(navController, uploadViewModel)
         }
 
         composable(NavigationRoute.PICK_STAR) {
-            PickStarScreen(navController)
+            PickStarScreen(navController, uploadViewModel)
         }
         composable(NavigationRoute.PICK_STAR_GROUP) {
-            PickStarGroupScreen(navController)
+            PickStarGroupScreen(navController, uploadViewModel)
         }
     }
 }

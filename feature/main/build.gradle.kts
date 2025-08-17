@@ -2,13 +2,14 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
 
 android {
     namespace = "com.photo.starsnap.main"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -52,6 +53,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -61,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.compose.runtime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
@@ -69,6 +72,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.livedata.core)
 
+    implementation(libs.androidx.paging.compose)
 
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth)
@@ -83,14 +87,17 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.airbnb.android.lottie.compose)
-    implementation(libs.core.ktx)
-    implementation(libs.core.ktx)
+
+    implementation(libs.okhttp)
+    implementation(platform(libs.okhttp.bom))
 
     kapt(libs.hilt.compiler)
 
     implementation(libs.material)
 
     implementation(libs.landscapist.glide)
+
+//    implementation(libs.ucrop)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

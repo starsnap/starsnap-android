@@ -56,6 +56,7 @@ object NavigationRoute {
     const val UPLOAD_ROUTE = "upload_route" // star upload 라우터
     const val USER_ROUTE = "user_route" // user 라우터
     const val STAR_HUB_ROUTE = "star_hub_route" // star hub 라우터
+    const val ADD_SNAP_ROUTE = "add_snap_route" // add snap 라우터
 
     // setting route
     const val SETTING_ROUTE = "setting_route" // setting 라우터
