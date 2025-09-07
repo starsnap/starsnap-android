@@ -5,15 +5,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.photo.starsnap.network.snap.SnapRepository
 import com.photo.starsnap.network.snap.dto.SnapResponseDto
-import kotlinx.coroutines.runBlocking
 
 class SnapPagingSource(
     private val snapRepository: SnapRepository,
-    private val tag: List<String>,
-    private val title: String,
-    private val userId: String,
-    private val starId: List<String>,
-    private val starGroupId: List<String>
 ) : PagingSource<Int, SnapResponseDto>() {
 
     override fun getRefreshKey(state: PagingState<Int, SnapResponseDto>): Int? {
@@ -25,27 +19,25 @@ class SnapPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SnapResponseDto> {
         return try {
-            val page = params.key ?: 1
-            val data =
-                runBlocking {
-                    snapRepository.getSnap(
-                        size = PAGING_SIZE,
-                        page = page - 1,
-                        tag = tag,
-                        title = title,
-                        userId = userId,
-                        starId = starId,
-                        starGroupId = starGroupId
-                    )
-                }
-            val snap = data.content
+            val page = params.key ?: 0
+
+            val data = snapRepository.getFeedSnap(
+                size = PAGING_SIZE,
+                page = page,
+            )
+
+            val snapList = data.content
             val endOfPaginationReached = data.last
 
-            val prevKey = if (page == 1) null else page - 1
+            val prevKey = if (page == 0) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
             Log.d(TAG, "prevKey: $prevKey, nextKey: $nextKey")
 
-            LoadResult.Page(snap, prevKey, nextKey)
+            LoadResult.Page(
+                data = snapList,
+                prevKey = prevKey,
+                nextKey = nextKey
+            )
         } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
@@ -53,6 +45,6 @@ class SnapPagingSource(
 
     companion object {
         const val TAG = "SnapPagingSource"
-        const val PAGING_SIZE = 50
+        const val PAGING_SIZE = 10
     }
 }
