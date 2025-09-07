@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.ui.screen.main.setting
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,8 @@ import com.photo.starsnap.main.ui.component.TopAppBar
 
 @Composable
 fun BlockListScreen(navController: NavController) {
+    Log.d("화면", "BlockListScreen")
+
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.black_list_top_app_bar_title),

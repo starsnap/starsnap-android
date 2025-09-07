@@ -1,6 +1,8 @@
 package com.photo.starsnap.main.ui.screen.auth
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +22,11 @@ fun SignupScreen(
     viewModel: SignupViewModel = hiltViewModel(),
     onNavigateToLogin: () -> Unit
 ) {
+
+    LaunchedEffect(Unit) {
+        Log.d("화면", "SignupScreen")
+    }
+
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = NavigationRoute.SIGNUP) {

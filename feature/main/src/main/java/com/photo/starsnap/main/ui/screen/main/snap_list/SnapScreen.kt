@@ -1,9 +1,11 @@
 package com.photo.starsnap.main.ui.screen.main.snap_list
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,7 +23,9 @@ import com.photo.starsnap.main.viewmodel.main.SnapViewModel
 
 @Composable
 fun SnapScreen(navController: NavController, viewModel: SnapViewModel) {
-
+    LaunchedEffect(Unit) {
+        Log.d("화면", "SnapScreen")
+    }
     val snap = viewModel.snapState.collectAsState()
 
     Scaffold(

@@ -1,4 +1,4 @@
-package com.photo.starsnap.main.ui.screen.auth
+﻿package com.photo.starsnap.main.ui.screen.auth
 
 import android.content.Context
 import android.content.Intent
@@ -58,6 +58,10 @@ fun LoginScreen(
     moveSignupNavigation: () -> Unit,
     moveMainNavigation: () -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        Log.d("화면", "LoginScreen")
+    }
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 

@@ -1,6 +1,9 @@
 package com.photo.starsnap.main.ui.screen.main.upload
 
-import androidx.compose.foundation.layout.Column
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +22,11 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    val selectImage = uploadViewModel.selectedImage
+    LaunchedEffect(Unit) {
+        Log.d("화면", "SetSnapScreen")
+    }
+    val selectedPhotos by uploadViewModel.selectedPhotos.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = { TopAppBar("새로운 스냅", navController) },
         containerColor = CustomColor.container,
