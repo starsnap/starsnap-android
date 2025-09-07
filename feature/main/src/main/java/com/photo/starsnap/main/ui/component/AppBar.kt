@@ -26,6 +26,7 @@ import com.photo.starsnap.main.utils.NavigationRoute
 @Composable
 fun TopAppBar(title: String, navController: NavController) {
     CenterAlignedTopAppBar(
+        windowInsets = WindowInsets(0),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = CustomColor.container,      // 배경색
             titleContentColor = CustomColor.title,             // 타이틀 텍스트 색
