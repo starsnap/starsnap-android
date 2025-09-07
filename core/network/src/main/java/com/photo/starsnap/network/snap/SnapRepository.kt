@@ -7,7 +7,7 @@ import com.photo.starsnap.network.snap.dto.SnapResponseDto
 import okhttp3.RequestBody
 
 interface SnapRepository {
-    fun createSnap(
+    suspend fun createSnap(
         image: RequestBody,
         title: String,
         source: String,
@@ -18,8 +18,9 @@ interface SnapRepository {
         starGroupId: List<String>
     )
 
-    fun sendSnap(size: Int, page: Int)
-    fun fixSnap(
+    suspend fun sendSnap(size: Int, page: Int)
+
+    suspend fun fixSnap(
         snapId: String,
         image: RequestBody?,
         title: String,
@@ -31,8 +32,9 @@ interface SnapRepository {
         starGroupId: List<String>
     ): SnapDto
 
-    fun deleteSnap(snapId: String): StatusDto
-    fun getSnap(
+    suspend fun deleteSnap(snapId: String): StatusDto
+
+    suspend fun getSnap(
         size: Int,
         page: Int,
         tag: List<String>,
@@ -40,5 +42,10 @@ interface SnapRepository {
         userId: String,
         starId: List<String>,
         starGroupId: List<String>
+    ): SliceResponseDto<SnapResponseDto>
+
+    suspend fun getFeedSnap(
+        page: Int,
+        size: Int
     ): SliceResponseDto<SnapResponseDto>
 }

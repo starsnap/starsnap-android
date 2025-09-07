@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SnapApiRepositoryImpl @Inject constructor(
     private val snapApi: SnapApi
 ) : SnapRepository {
-    override fun createSnap(
+    override suspend fun createSnap(
         image: RequestBody,
         title: String,
         source: String,
@@ -32,11 +32,11 @@ class SnapApiRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun sendSnap(size: Int, page: Int) {
+    override suspend fun sendSnap(size: Int, page: Int) {
         return snapApi.sendSnap(size, page)
     }
 
-    override fun fixSnap(
+    override suspend fun fixSnap(
         snapId: String,
         image: RequestBody?,
         title: String,
@@ -60,11 +60,11 @@ class SnapApiRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun deleteSnap(snapId: String): StatusDto {
+    override suspend fun deleteSnap(snapId: String): StatusDto {
         return snapApi.deleteSnap(snapId)
     }
 
-    override fun getSnap(
+    override suspend fun getSnap(
         size: Int,
         page: Int,
         tag: List<String>,
@@ -74,5 +74,12 @@ class SnapApiRepositoryImpl @Inject constructor(
         starGroupId: List<String>
     ): SliceResponseDto<SnapResponseDto> {
         return snapApi.getSnap(size, page, tag, title, userId, starId, starGroupId)
+    }
+
+    override suspend fun getFeedSnap(
+        page: Int,
+        size: Int
+    ): SliceResponseDto<SnapResponseDto> {
+        return snapApi.getFeedSnap(page, size)
     }
 }

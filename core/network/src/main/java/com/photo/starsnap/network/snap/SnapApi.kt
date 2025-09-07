@@ -15,7 +15,7 @@ import retrofit2.http.Query
 
 interface SnapApi {
     @POST("/api/snap/create") // snap 생성
-    fun createSnap(
+    suspend fun createSnap(
         @Part("image") image: RequestBody,
         @Part("title") title: String,
         @Part("source") source: String,
@@ -28,10 +28,10 @@ interface SnapApi {
 
     @GET("/api/snap/send") // snap 조회
     @Headers("Auth: false")
-    fun sendSnap(@Query("size") size: Int, @Query("page") page: Int)
+    suspend fun sendSnap(@Query("size") size: Int, @Query("page") page: Int)
 
     @PATCH("/api/snap/fix") // snap 수정
-    fun fixSnap(
+    suspend fun fixSnap(
         @Part("snap-id") snapId: String,
         @Part("image") image: RequestBody?,
         @Part("title") title: String,
@@ -43,14 +43,20 @@ interface SnapApi {
         @Part("star-group-id") starGroupId: List<String>
     ): SnapDto
 
+    @GET("/api/snap/feed") // snap 기본 조회
+    suspend fun getFeedSnap(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): SliceResponseDto<SnapResponseDto>
+
 
     @DELETE("/api/snap/delete") // snap 삭제
-    fun deleteSnap(
-        @Query("snap-id") snapId: String,
+    suspend fun deleteSnap(
+        @Query("snap-id") snapId: String
     ): StatusDto
 
     @GET("/api/snap")
-    fun getSnap(
+    suspend fun getSnap(
         size: Int,
         page: Int,
         tag: List<String>,
