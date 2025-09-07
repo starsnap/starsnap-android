@@ -2,6 +2,7 @@ package com.photo.starsnap.main.utils.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.photo.starsnap.main.utils.constant.Constant.GALLERY_PHOTO_SIZE
 import com.photo.starsnap.model.photo.dao.GalleryImage
 import com.photo.starsnap.model.photo.PhotoRepository
 
@@ -22,7 +23,7 @@ class CustomGalleryPagingSource(
             val endOfPaginationReached = data.isEmpty()
             val prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1
             val nextKey =
-                if (endOfPaginationReached) null else position + (params.loadSize / PAGING_SIZE)
+                if (endOfPaginationReached) null else position + (params.loadSize / GALLERY_PHOTO_SIZE)
             LoadResult.Page(data, prevKey, nextKey)
         } catch (exception: Exception) {
             LoadResult.Error(exception)
@@ -38,7 +39,6 @@ class CustomGalleryPagingSource(
 
     companion object {
         const val TAG = "CustomGalleryPagingSource"
-        const val STARTING_PAGE_INDEX = 1
-        const val PAGING_SIZE = 50
+        const val STARTING_PAGE_INDEX = 0
     }
 }
