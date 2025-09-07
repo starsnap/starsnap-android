@@ -8,13 +8,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.photo.starsnap.main.utils.BottomNavItem
@@ -22,16 +20,8 @@ import com.photo.starsnap.main.utils.BottomNavItem
 @Composable
 fun BottomNavigation(
     navHostController: NavHostController,
+    bottomNavItems: List<BottomNavItem>
 ) {
-    val bottomNavItems = remember {
-        listOf(
-            BottomNavItem.Home,
-            BottomNavItem.AddSnap,
-            BottomNavItem.Star,
-            BottomNavItem.Search,
-            BottomNavItem.User
-        )
-    }
 
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
 
@@ -50,20 +40,12 @@ fun BottomNavigation(
                         contentDescription = item.label,
                     )
                 },
-//                label = {
-//                    Text(
-//                        text = item.label
-//                    )
-//                },
                 alwaysShowLabel = true,
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = {
-                    navHostController.navigate(item.route) {
-                        popUpTo(navHostController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+                    val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                    if (!isSelected) {
+                        navHostController.navigate(item.route)
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
