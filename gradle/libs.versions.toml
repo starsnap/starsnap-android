@@ -81,6 +81,7 @@ retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.r
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+google-accompanist-animations = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version = "0.32.0" }
 
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
