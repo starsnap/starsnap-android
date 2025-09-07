@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.google.gms.services)
     implementation(libs.google.android.gms.auth)
 
+    implementation(libs.google.accompanist.animations)
+
     implementation(libs.google.identity.googleid)
     implementation(libs.kotlinx.serialization.json)
 
