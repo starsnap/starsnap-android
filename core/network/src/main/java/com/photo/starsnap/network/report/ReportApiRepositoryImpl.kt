@@ -10,22 +10,22 @@ import javax.inject.Inject
 class ReportApiRepositoryImpl @Inject constructor(
     val reportApi: ReportApi
 ): ReportRepository {
-    override fun snapReport(snapReportCreateDto: SnapReportCreateDto) {
+    override suspend fun snapReport(snapReportCreateDto: SnapReportCreateDto) {
         return reportApi.snapReport(snapReportCreateDto)
     }
 
-    override fun userReport(userReportCreateDto: UserReportCreateDto) {
+    override suspend fun userReport(userReportCreateDto: UserReportCreateDto) {
         return reportApi.userReport(userReportCreateDto)
     }
 
-    override fun getSnapReport(
+    override suspend fun getSnapReport(
         size: Int,
         page: Int,
     ): SliceResponseDto<SnapReportDto> {
         return reportApi.getSnapReport(size, page)
     }
 
-    override fun getUserReport(
+    override suspend fun getUserReport(
         size: Int,
         page: Int,
     ): SliceResponseDto<UserReportDto> {
