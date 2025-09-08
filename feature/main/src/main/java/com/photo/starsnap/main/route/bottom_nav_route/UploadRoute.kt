@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.photo.starsnap.main.ui.screen.main.upload.PickImageScreen
+import com.photo.starsnap.main.ui.screen.main.upload.PickPhotoScreen
 import com.photo.starsnap.main.ui.screen.main.upload.PickStarScreen
 import com.photo.starsnap.main.ui.screen.main.upload.SetSnapScreen
 import com.photo.starsnap.main.ui.screen.main.upload.PickStarGroupScreen
@@ -19,7 +19,7 @@ fun NavGraphBuilder.UploadRoute(
         startDestination = NavigationRoute.PICK_IMAGE, route = NavigationRoute.UPLOAD_ROUTE
     ) {
         composable(NavigationRoute.PICK_IMAGE) {
-            PickImageScreen(navController, uploadViewModel)
+            PickPhotoScreen(navController, uploadViewModel)
         }
 
         composable(NavigationRoute.SET_SNAP) {
