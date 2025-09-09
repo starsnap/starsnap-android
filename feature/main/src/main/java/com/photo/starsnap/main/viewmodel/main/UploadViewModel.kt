@@ -41,7 +41,7 @@ class UploadViewModel @Inject constructor(
         get() = _selectedImages
 
     // 사진 선택
-    fun addSelectedImage(id: Long, imageUri: android.net.Uri) {
+    fun selectedImage(id: Long, imageUri: Uri) {
         val current = _selectedImages.value
         val exists = current.any { it.id == id }
         _selectedImages.value = if (exists) {
