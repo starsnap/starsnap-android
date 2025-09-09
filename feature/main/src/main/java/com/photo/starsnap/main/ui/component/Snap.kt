@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.zIndex
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title3
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title5
@@ -230,14 +230,18 @@ fun SnapMessage(
 }
 
 @Composable
-fun SelectImage() {
+fun SelectImage(index: Int) {
     Box(
         modifier = Modifier
-            .padding(1.dp)
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxSize()
+            .zIndex(1f)
             .background(Color.Black.copy(alpha = 0.3f))
-    )
+    ){
+        Text(
+            text = (index + 1).toString(),
+            style = TextStyle(color = Color.White)
+        )
+    }
 }
 
 @Composable
