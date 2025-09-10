@@ -58,7 +58,7 @@ fun TopAppBar(title: String, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PickImageTopAppBar(navController: NavController) {
+fun PickImageTopAppBar(navController: NavController, isNextEnabled: Boolean) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = CustomColor.container,      // 배경색
@@ -91,7 +91,7 @@ fun PickImageTopAppBar(navController: NavController) {
             Box(
                 modifier = Modifier
                     .clickableSingle(onClick = {
-                        navController.navigate(NavigationRoute.SET_SNAP)
+                        if (isNextEnabled) navController.navigate(NavigationRoute.SET_SNAP)
                     })
                     .padding(end = 20.dp),
             ) {

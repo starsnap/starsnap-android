@@ -144,7 +144,8 @@ fun PickPhotoScreen(
     }
 
     val photoList = uploadViewModel.photoList.collectAsLazyPagingItems() // 사진 목록
-    val selectedPhotos by uploadViewModel.selectedPhotos.collectAsStateWithLifecycle()
+    val selectedPhotos by uploadViewModel.selectedPhotos.collectAsStateWithLifecycle() // 선택 사진 목록
+
 
     // 권한 허용으로 상태 변경시 사진 가져오도록
     LaunchedEffect(hasPermission) {
@@ -166,7 +167,7 @@ fun PickPhotoScreen(
     when (hasPermission) {
         true -> { // 사진 권한이 있을때
             Scaffold(
-                topBar = { PickImageTopAppBar(navController) },
+                topBar = { PickImageTopAppBar(navController, selectedPhotos.isNotEmpty()) },
                 containerColor = CustomColor.container
             ) { padding ->
                 Column(
@@ -180,8 +181,8 @@ fun PickPhotoScreen(
                     var headerHeight by remember { mutableStateOf(400.dp) } // view image height
                     val gridState = rememberLazyGridState()
                     val pagerState = rememberPagerState(pageCount = { selectedPhotos.size })
-                    val previousSelectedCount = remember { mutableIntStateOf(0) }
                     val scope = rememberCoroutineScope()
+                    val previousSelectedCount = remember { mutableIntStateOf(0) }
 
 
                     LaunchedEffect(selectedPhotos) {
