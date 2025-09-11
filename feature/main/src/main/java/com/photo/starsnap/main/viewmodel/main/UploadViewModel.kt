@@ -55,6 +55,16 @@ class UploadViewModel @Inject constructor(
         )
     }
 
+    // star 선택
+    fun setStar(stars: List<String>){
+
+    }
+
+    // star group 선택
+    fun setStarGroup(starGroups: List<String>){
+
+    }
+
     fun uploadSnap() = viewModelScope.launch {
 
     }
