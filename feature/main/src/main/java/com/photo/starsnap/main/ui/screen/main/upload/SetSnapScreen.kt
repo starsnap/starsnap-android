@@ -18,7 +18,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material.Divider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,6 +51,14 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     val pagerState = rememberPagerState(pageCount = { selectedPhotos.size })
 
     var showDots by remember { mutableStateOf(false) }
+
+    // snap 정보
+    var title by remember { mutableStateOf("") } // 제목
+    var tags by remember { mutableStateOf(listOf<String>()) } // 태그
+    var stars by remember { mutableStateOf(listOf<String>()) } // 스타
+    var starGroups by remember { mutableStateOf(listOf<String>()) } // 스타 그룹
+    var aiState by remember { mutableStateOf(false) } // AI 여부
+    var commentsEnabled by remember { mutableStateOf(true) } // 댓글 허용 여부
 
     LaunchedEffect(pagerState.isScrollInProgress) {
         if (pagerState.isScrollInProgress) {
@@ -86,10 +98,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     )
                 )
             }
+            // 사진 위치 상태
             AnimatedVisibility(
-                visible = showDots,
-                enter = fadeIn(),
-                exit = fadeOut()
+                visible = showDots, enter = fadeIn(), exit = fadeOut()
             ) {
                 Row(
                     modifier = Modifier
@@ -104,13 +115,27 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                 .padding(horizontal = 4.dp)
                                 .size(if (isSelected) 10.dp else 8.dp)
                                 .background(
-                                    color = if (isSelected) CustomColor.light_black else CustomColor.light_gray.copy(alpha = 0.3f),
-                                    shape = CircleShape
+                                    color = if (isSelected) CustomColor.light_black else CustomColor.light_gray.copy(
+                                        alpha = 0.3f
+                                    ), shape = CircleShape
                                 )
                         )
                     }
                 }
             }
+            Spacer(Modifier.height(15.dp))
+            TextField( // 제목 입력
+                value = title,
+                onValueChange = { title = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text("제목 추가...") },
+            )
+            Spacer(Modifier.height(15.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(15.dp))
+
         }
     }
 }
