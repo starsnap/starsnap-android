@@ -21,7 +21,7 @@ class StarGroupPagingSource(
         return try {
             val page = params.key ?: 0
 
-            val data = starRepository.getFeedSnap(
+            val data = starRepository.getStarGroupList(
                 size = PAGING_SIZE,
                 page = page,
             )
