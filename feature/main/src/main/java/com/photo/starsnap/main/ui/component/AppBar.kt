@@ -27,12 +27,6 @@ import com.photo.starsnap.main.utils.NavigationRoute
 fun TopAppBar(title: String, navController: NavController) {
     CenterAlignedTopAppBar(
         windowInsets = WindowInsets(0),
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = CustomColor.container,      // 배경색
-            titleContentColor = CustomColor.title,             // 타이틀 텍스트 색
-            navigationIconContentColor = CustomColor.title,    // 네비게이션 아이콘 색
-            actionIconContentColor = CustomColor.title      // 액션 아이콘 색
-        ),
         title = {
             Text(
                 text = title,
@@ -60,12 +54,6 @@ fun TopAppBar(title: String, navController: NavController) {
 @Composable
 fun PickImageTopAppBar(navController: NavController, isNextEnabled: Boolean) {
     CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = CustomColor.container,      // 배경색
-            titleContentColor = CustomColor.title,             // 타이틀 텍스트 색
-            navigationIconContentColor = CustomColor.title,    // 네비게이션 아이콘 색
-            actionIconContentColor = CustomColor.title      // 액션 아이콘 색
-        ),
         windowInsets = WindowInsets(0),
         title = {
             Text(
