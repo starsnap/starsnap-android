@@ -8,6 +8,8 @@ import com.photo.starsnap.network.report.ReportApiRepositoryImpl
 import com.photo.starsnap.network.report.ReportRepository
 import com.photo.starsnap.network.snap.SnapApiRepositoryImpl
 import com.photo.starsnap.network.snap.SnapRepository
+import com.photo.starsnap.network.star.StarApiRepositoryImpl
+import com.photo.starsnap.network.star.StarRepository
 import com.photo.starsnap.network.user.UserApiRepositoryImpl
 import com.photo.starsnap.network.user.UserRepository
 import dagger.Module
@@ -33,6 +35,11 @@ class RepositoryModule {
     @Singleton
     fun provideSnapRepository(snapApiRepositoryImpl: SnapApiRepositoryImpl): SnapRepository =
         snapApiRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun provideStarRepository(starApiRepositoryImpl: StarApiRepositoryImpl): StarRepository =
+        starApiRepositoryImpl
 
     @Provides
     @Singleton

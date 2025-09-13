@@ -6,6 +6,7 @@ import com.photo.starsnap.di.Url.BASE_URL
 import com.photo.starsnap.network.auth.AuthApi
 import com.photo.starsnap.network.report.ReportApi
 import com.photo.starsnap.network.snap.SnapApi
+import com.photo.starsnap.network.star.StarApi
 import com.photo.starsnap.network.user.UserApi
 import dagger.Module
 import dagger.Provides
@@ -38,6 +39,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideSnapApi(retrofit: Retrofit): SnapApi = retrofit.create(SnapApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideStarApi(retrofit: Retrofit): StarApi = retrofit.create(StarApi::class.java)
 
     @Provides
     @Singleton
