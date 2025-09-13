@@ -55,12 +55,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.ui.component.SelectImage
 import com.photo.starsnap.main.ui.component.PickImageTopAppBar
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
@@ -168,7 +168,6 @@ fun PickPhotoScreen(
         true -> { // 사진 권한이 있을때
             Scaffold(
                 topBar = { PickImageTopAppBar(navController, selectedPhotos.isNotEmpty()) },
-                containerColor = CustomColor.container
             ) { padding ->
                 Column(
                     modifier = Modifier
@@ -236,24 +235,41 @@ fun PickPhotoScreen(
                         }
                     }
 
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(headerHeight)
-                    ) { page ->
-                        val photo = selectedPhotos[page]
-                        GlideImage(
+                    if (selectedPhotos.isEmpty()) {
+                        Box(
                             modifier = Modifier
-                                .animateContentSize()
-                                .fillMaxSize(),
-                            imageModel = { photo.imageUri },
-                            imageOptions = ImageOptions(
-                                contentScale = ContentScale.FillHeight,
-                                alignment = Alignment.Center,
-                                alpha = 1f
+                                .fillMaxWidth()
+                                .height(headerHeight),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "사진을 선택해 주세요."
                             )
-                        )
+                        }
+
+                    } else {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(headerHeight)
+                        ) { page ->
+                            val photo = selectedPhotos[page]
+                            GlideImage(
+                                modifier = Modifier
+                                    .animateContentSize()
+                                    .fillMaxSize(),
+                                imageModel = { photo.imageUri },
+                                imageOptions = ImageOptions(
+                                    contentScale = ContentScale.FillHeight,
+                                    alignment = Alignment.Center,
+                                    alpha = 1f
+                                )
+                            )
+                        }
                     }
 
                     // Photo grid: takes the rest, and participates in nested scroll
