@@ -26,6 +26,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -88,10 +90,10 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(horizontal = 22.dp)
+                .fillMaxSize()
                 .padding(padding)
-                .fillMaxSize(),
-
+                .padding(horizontal = 22.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             val starGridState = rememberLazyGridState()
             val starGroupGridState = rememberLazyGridState()
@@ -198,6 +200,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Text("StarGroup")
             Spacer(Modifier.height(5.dp))
             LazyHorizontalGrid(
+                modifier = Modifier.fillMaxWidth().height(87.dp),
                 state = starGroupGridState,
                 rows = GridCells.Fixed(1),
                 horizontalArrangement = Arrangement.spacedBy(1.dp),
@@ -235,6 +238,39 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Text("사진 찍은 날짜")
             Spacer(Modifier.height(5.dp))
+            TextField(
+                value = title,
+                onValueChange = { title = it },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                placeholder = { Text("YYYY-MM-DD") },
+            )
+            Spacer(Modifier.height(15.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(15.dp))
+            Text("AI 사용 여부")
+            Spacer(Modifier.height(4.dp))
+            Text("AI로 제작된 사진은 체크 해야합니다.")
+            Spacer(Modifier.height(15.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(15.dp))
+            Text("출처")
+            Spacer(Modifier.height(5.dp))
+            TextField(
+                // 출처 입력
+                value = title,
+                onValueChange = { title = it },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                placeholder = { Text("출처") },
+            )
+            Spacer(Modifier.height(40.dp))
+            Box(
+                modifier = Modifier.height(70.dp).background(CustomColor.yellow_100),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("다음")
+            }
         }
     }
 }
