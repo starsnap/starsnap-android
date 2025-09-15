@@ -1,6 +1,7 @@
 package com.photo.starsnap.main.ui.screen.main.upload
 
 import android.util.Log
+import android.widget.ToggleButton
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -29,7 +30,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -93,7 +96,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 22.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState(), enabled = true, flingBehavior = null),
         ) {
             val starGridState = rememberLazyGridState()
             val starGroupGridState = rememberLazyGridState()
@@ -137,8 +140,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                             .size(if (isSelected) 10.dp else 8.dp)
                             .background(
                                 color = if (isSelected) CustomColor.light_black
-                                else CustomColor.light_gray.copy(alpha = 0.3f),
-                                shape = CircleShape
+                                else CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
                             )
                     )
                 }
@@ -150,8 +152,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 // 제목 입력
                 value = title,
                 onValueChange = { title = it },
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("제목 추가...") },
             )
             Spacer(Modifier.height(15.dp))
@@ -160,7 +161,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Text("Star")
             Spacer(Modifier.height(5.dp))
             LazyHorizontalGrid(
-                modifier = Modifier.fillMaxWidth().height(65.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(65.dp),
                 state = starGridState,
                 rows = GridCells.Fixed(1),
                 horizontalArrangement = Arrangement.spacedBy(1.dp),
@@ -173,14 +176,12 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                             .height(65.dp)
                             .clickableSingle {
                                 navController.navigate(NavigationRoute.PICK_STAR)
-                            }
-                    ) {
+                            }) {
                         Box(
                             modifier = Modifier
                                 .background(CustomColor.light_gray.copy(alpha = 0.3f))
                                 .width(50.dp)
-                                .height(50.dp),
-                            contentAlignment = Alignment.BottomEnd
+                                .height(50.dp), contentAlignment = Alignment.BottomEnd
                         ) {
                             Text("+")
                         }
@@ -200,7 +201,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Text("StarGroup")
             Spacer(Modifier.height(5.dp))
             LazyHorizontalGrid(
-                modifier = Modifier.fillMaxWidth().height(87.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(87.dp),
                 state = starGroupGridState,
                 rows = GridCells.Fixed(1),
                 horizontalArrangement = Arrangement.spacedBy(1.dp),
@@ -213,14 +216,15 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                             .height(69.dp)
                             .clickableSingle {
                                 navController.navigate(NavigationRoute.PICK_STAR_GROUP)
-                            }
-                    ) {
+                            }) {
                         Box(
                             modifier = Modifier
-                                .background(CustomColor.light_gray.copy(alpha = 0.3f), shape = RoundedCornerShape(8.dp))
+                                .background(
+                                    CustomColor.light_gray.copy(alpha = 0.3f),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
                                 .width(90.dp)
-                                .height(54.dp),
-                            contentAlignment = Alignment.BottomEnd
+                                .height(54.dp), contentAlignment = Alignment.BottomEnd
                         ) {
                             Text("+")
                         }
@@ -241,16 +245,27 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             TextField(
                 value = title,
                 onValueChange = { title = it },
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("YYYY-MM-DD") },
             )
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
-            Text("AI 사용 여부")
-            Spacer(Modifier.height(4.dp))
-            Text("AI로 제작된 사진은 체크 해야합니다.")
+            Row {
+                Column {
+                    Text("AI 사용 여부")
+                    Spacer(Modifier.height(4.dp))
+                    Text("AI로 제작된 사진은 체크 해야합니다.")
+                }
+                Spacer(Modifier.weight(1f))
+                Switch(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    checked = aiState,
+                    onCheckedChange = {
+                        aiState = it
+                    }
+                )
+            }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
@@ -260,13 +275,15 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 // 출처 입력
                 value = title,
                 onValueChange = { title = it },
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("출처") },
             )
             Spacer(Modifier.height(40.dp))
             Box(
-                modifier = Modifier.height(70.dp).background(CustomColor.yellow_100),
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .background(CustomColor.yellow_100),
                 contentAlignment = Alignment.Center
             ) {
                 Text("다음")
