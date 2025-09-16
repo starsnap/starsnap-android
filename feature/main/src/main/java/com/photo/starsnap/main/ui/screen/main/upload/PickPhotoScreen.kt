@@ -285,6 +285,7 @@ fun PickPhotoScreen(
                     ) {
                         items(photoList.itemCount) { index ->
                             val galleryImage = photoList[index]
+                            Log.d("photoList", "index: $index, image: $galleryImage")
                             if (galleryImage != null) {
                                 Box(
                                     modifier = Modifier

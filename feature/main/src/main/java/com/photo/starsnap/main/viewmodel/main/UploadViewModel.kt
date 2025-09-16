@@ -32,12 +32,13 @@ class UploadViewModel @Inject constructor(
     val photoList = Pager(
         config = PagingConfig(
             pageSize = GALLERY_PHOTO_SIZE,
+            initialLoadSize = GALLERY_PHOTO_SIZE,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
             CustomGalleryPagingSource(
                 photoRepository = photoRepository,
-                currnetLocation = "" // 모든 위치의 사진 가져오기
+                currentLocation = "" // 모든 위치의 사진 가져오기
             )
         }
     ).flow.cachedIn(viewModelScope)
@@ -45,6 +46,7 @@ class UploadViewModel @Inject constructor(
     val starList = Pager(
         config = PagingConfig(
             pageSize = STAR_SIZE,
+            initialLoadSize = STAR_SIZE,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
@@ -57,6 +59,7 @@ class UploadViewModel @Inject constructor(
     val starGroupList = Pager(
         config = PagingConfig(
             pageSize = STAR_GROUP_SIZE,
+            initialLoadSize = STAR_GROUP_SIZE,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {

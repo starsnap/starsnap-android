@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.utils.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.photo.starsnap.main.utils.constant.Constant.GALLERY_PHOTO_SIZE
@@ -8,7 +9,7 @@ import com.photo.starsnap.model.photo.PhotoRepository
 
 class CustomGalleryPagingSource(
     private val photoRepository: PhotoRepository,
-    private val currnetLocation: String?
+    private val currentLocation: String?
 ) : PagingSource<Int, GalleryImage>() {
     override suspend fun load(
         params: LoadParams<Int>
@@ -18,12 +19,12 @@ class CustomGalleryPagingSource(
             val data = photoRepository.getAllPhotos(
                 page = position,
                 loadSize = params.loadSize,
-                currentLocation = currnetLocation,
+                currentLocation = currentLocation,
             )
+            Log.d(TAG, "size: ${params.loadSize}, page: $position")
             val endOfPaginationReached = data.isEmpty()
             val prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1
-            val nextKey =
-                if (endOfPaginationReached) null else position + (params.loadSize / GALLERY_PHOTO_SIZE)
+            val nextKey = if (endOfPaginationReached) null else position + 1
             LoadResult.Page(data, prevKey, nextKey)
         } catch (exception: Exception) {
             LoadResult.Error(exception)
@@ -31,9 +32,9 @@ class CustomGalleryPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, GalleryImage>): Int? {
-        return state.anchorPosition?.let { achorPosition ->
-            state.closestPageToPosition(achorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(achorPosition)?.nextKey?.minus(1)
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
