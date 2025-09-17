@@ -9,8 +9,8 @@ class StarApiRepositoryImpl @Inject constructor(
     private val starApi: StarApi
 ) : StarRepository {
     override suspend fun getStarList(
-        page: Int,
-        size: Int
+        size: Int,
+        page: Int
     ): SliceResponseDto<StarResponseDto> {
         return starApi.getStarList(page, size)
     }
