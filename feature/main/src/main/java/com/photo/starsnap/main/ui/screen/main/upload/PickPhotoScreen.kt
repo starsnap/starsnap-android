@@ -374,7 +374,7 @@ fun PickPhotoScreen(
                     Text("사진 접근 권한이 필요해요")
                     Spacer(Modifier.height(8.dp))
 
-                    if (!permanentlyDenied) {
+                    if (permanentlyDenied) {
                         Button(onClick = { permissionLauncher.launch(requiredPermissions) }) {
                             Text("권한 허용 요청")
                         }
