@@ -16,7 +16,7 @@ data class StarResponseDto(
     val id: String,
     val name: String,
     val gender: GenderType,
-    val birthday: LocalDate,
+    val birthday: String,
     val nickname: String,
     val explanation: String?,
     val imageKey: String?,
@@ -27,7 +27,7 @@ data class UpdateStarRequestDto(
     val id: String,
     val name: String, // 이름
     val gender: GenderType, // 성별
-    val birthday: LocalDateTime, // 생일
+    val birthday: LocalDate, // 생일
     val nickname: String, // 닉네임
     val explanation: String? // 설명
 )
