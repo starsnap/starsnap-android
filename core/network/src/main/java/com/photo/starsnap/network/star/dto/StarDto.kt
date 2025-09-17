@@ -1,5 +1,6 @@
 package com.photo.starsnap.network.star.dto
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 
@@ -12,11 +13,14 @@ data class CreateStarRequestDto(
 )
 
 data class StarResponseDto(
+    val id: String,
     val name: String,
     val gender: GenderType,
-    val birthday: LocalDateTime,
+    val birthday: LocalDate,
     val nickname: String,
-    val explanation: String?
+    val explanation: String?,
+    val imageKey: String?,
+    val createdAt: LocalDateTime?
 )
 
 data class UpdateStarRequestDto(
