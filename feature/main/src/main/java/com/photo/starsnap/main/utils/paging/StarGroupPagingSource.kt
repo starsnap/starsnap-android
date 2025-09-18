@@ -39,6 +39,7 @@ class StarGroupPagingSource(
                 nextKey = nextKey
             )
         } catch (exception: Exception) {
+            Log.d(TAG, "load: $exception")
             LoadResult.Error(exception)
         }
     }
