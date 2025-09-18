@@ -16,14 +16,14 @@ import retrofit2.http.Query
 interface StarApi {
     @GET("/api/star")
     suspend fun getStarList(
-        @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
+        @Query("page") page: Int
     ): SliceResponseDto<StarResponseDto>
 
 
     @GET("/api/star-group")
     suspend fun getStarGroupList(
-        @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
+        @Query("page") page: Int
     ): SliceResponseDto<StarGroupResponseDto>
 }
