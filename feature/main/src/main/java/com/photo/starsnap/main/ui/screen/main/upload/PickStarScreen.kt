@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,13 +29,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.airbnb.lottie.model.content.CircleShape
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.utils.clickableSingle
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.photo.starsnap.network.star.dto.StarResponseDto
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
@@ -56,7 +61,8 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(60.dp)
+                    .padding(bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextField(
@@ -80,9 +86,9 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
             }
             LazyVerticalGrid(
                 state = gridState,
-                modifier = Modifier.fillMaxSize().background(CustomColor.success),
+                modifier = Modifier.fillMaxSize(),
                 columns = GridCells.Fixed(1),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(starList.itemCount) { index ->
                     val star = starList[index]
@@ -107,22 +113,31 @@ fun StarItem(
     onClick: () -> Unit
 ) {
     var onClickState by remember { mutableStateOf(false) }
-    var backgroundColor = if (onClickState) CustomColor.yellow_300 else CustomColor.container
+    var backgroundColor = if (onClickState) CustomColor.yellow_200 else CustomColor.container
     Row(
         Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(80.dp)
             .background(shape = RoundedCornerShape(12.dp), color = backgroundColor)
-            .clickableSingle { onClickState = !onClickState }
+            .clickableSingle { onClickState = !onClickState },
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(Modifier.width(16.dp))
         GlideImage(
             modifier = Modifier
-                .size(50.dp)
-                .padding(start = 18.dp),
-            imageModel = { star.imageKey }
+                .size(55.dp)
+                .clip(CircleShape)
+                .background(CustomColor.light_gray),
+            imageModel = { star.imageKey },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            )
         )
         Spacer(Modifier.width(10.dp))
-        Column {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = star.name,
             )
