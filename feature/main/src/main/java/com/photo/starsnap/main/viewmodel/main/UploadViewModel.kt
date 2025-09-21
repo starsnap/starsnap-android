@@ -29,6 +29,10 @@ class UploadViewModel @Inject constructor(
     private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
+    companion object {
+        const val TAG = "UploadViewModel"
+    }
+
     val photoList = Pager(
         config = PagingConfig(
             pageSize = GALLERY_PHOTO_SIZE,
@@ -98,13 +102,18 @@ class UploadViewModel @Inject constructor(
         )
     }
 
+    fun removeSelectImage() {
+        Log.d(TAG, "선택된 사진 해제됨")
+        _selectedImages.value = listOf()
+    }
+
     // star 선택
-    fun setStar(stars: List<String>){
+    fun setStar(stars: List<String>) {
 
     }
 
     // star group 선택
-    fun setStarGroup(starGroups: List<String>){
+    fun setStarGroup(starGroups: List<String>) {
 
     }
 

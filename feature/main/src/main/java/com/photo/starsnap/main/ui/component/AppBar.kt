@@ -52,7 +52,10 @@ fun TopAppBar(title: String, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PickImageTopAppBar(navController: NavController, isNextEnabled: Boolean) {
+fun PickImageTopAppBar(
+    onClose: () -> Unit,
+    onNext: () -> Unit,
+) {
     CenterAlignedTopAppBar(
         windowInsets = WindowInsets(0),
         title = {
@@ -66,7 +69,7 @@ fun PickImageTopAppBar(navController: NavController, isNextEnabled: Boolean) {
         navigationIcon = {
             Box(
                 modifier = Modifier
-                    .clickableSingle(onClick = { navController.popBackStack() })
+                    .clickableSingle(onClick = { onClose() })
                     .padding(start = 20.dp),
             ) {
                 Icon(
@@ -79,7 +82,7 @@ fun PickImageTopAppBar(navController: NavController, isNextEnabled: Boolean) {
             Box(
                 modifier = Modifier
                     .clickableSingle(onClick = {
-                        if (isNextEnabled) navController.navigate(NavigationRoute.SET_SNAP)
+                        onNext()
                     })
                     .padding(end = 20.dp),
             ) {

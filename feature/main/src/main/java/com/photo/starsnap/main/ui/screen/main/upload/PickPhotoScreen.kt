@@ -63,6 +63,7 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.photo.starsnap.main.ui.component.SelectImage
 import com.photo.starsnap.main.ui.component.PickImageTopAppBar
+import com.photo.starsnap.main.utils.NavigationRoute
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.InternalLandscapistApi
@@ -167,7 +168,19 @@ fun PickPhotoScreen(
     when (hasPermission) {
         true -> { // 사진 권한이 있을때
             Scaffold(
-                topBar = { PickImageTopAppBar(navController, selectedPhotos.isNotEmpty()) },
+                topBar = {
+                    PickImageTopAppBar(
+                        onClose = {
+                            navController.popBackStack()
+                            uploadViewModel.removeSelectImage()
+                        },
+                        onNext = {
+                            if (selectedPhotos.isNotEmpty()) {
+                                navController.navigate(NavigationRoute.SET_SNAP)
+                            }
+                        }
+                    )
+                },
             ) { padding ->
                 Column(
                     modifier = Modifier
