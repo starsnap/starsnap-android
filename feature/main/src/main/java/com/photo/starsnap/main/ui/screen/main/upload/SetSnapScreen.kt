@@ -88,8 +88,8 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     // snap 정보
     var title by remember { mutableStateOf("") } // 제목
     var tags by remember { mutableStateOf(listOf<String>()) } // 태그
-    var stars by remember { mutableStateOf(listOf<String>()) } // 스타
-    var starGroups by remember { mutableStateOf(listOf<String>()) } // 스타 그룹
+    var stars = uploadViewModel.selectedStars.collectAsStateWithLifecycle()
+    var starGroups = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
     var aiState by remember { mutableStateOf(false) } // AI 여부
     var commentsEnabled by remember { mutableStateOf(true) } // 댓글 허용 여부
 
@@ -294,6 +294,24 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
+            Row {
+                Column {
+                    Text("댓글 사용 여부")
+                    Spacer(Modifier.height(4.dp))
+                    Text("게시글 댓글 사용을 중지 하려면 체크 해주세요")
+                }
+                Spacer(Modifier.weight(1f))
+                Switch(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    checked = commentsEnabled,
+                    onCheckedChange = {
+                        commentsEnabled = it
+                    }
+                )
+            }
+            Spacer(Modifier.height(15.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(15.dp))
             Text("출처")
             Spacer(Modifier.height(5.dp))
             TextField(
@@ -416,9 +434,4 @@ fun ChipTextField(
             }
         }
     )
-
-    // Backspace로 마지막 태그 삭제 (입력 비어있을 때)
-    LaunchedEffect(Unit) {
-        // 키이벤트가 필요하면 onPreviewKeyEvent를 래핑해서 사용
-    }
 }

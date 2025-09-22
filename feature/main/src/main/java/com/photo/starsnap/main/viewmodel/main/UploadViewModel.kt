@@ -16,6 +16,8 @@ import com.photo.starsnap.main.utils.paging.StarPagingSource
 import com.photo.starsnap.model.photo.PhotoRepository
 import com.photo.starsnap.network.snap.SnapRepository
 import com.photo.starsnap.network.star.StarRepository
+import com.photo.starsnap.network.star.dto.StarGroupResponseDto
+import com.photo.starsnap.network.star.dto.StarResponseDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -78,13 +80,13 @@ class UploadViewModel @Inject constructor(
         get() = _selectedImages
 
 
-    private val _selectedStars = MutableStateFlow<List<String>>(emptyList())
-    val selectedStars: StateFlow<List<String>>
+    private val _selectedStars = MutableStateFlow<List<StarResponseDto>>(emptyList())
+    val selectedStars: StateFlow<List<StarResponseDto>>
         get() = _selectedStars
 
 
-    private val _selectedStarGroups = MutableStateFlow<List<String>>(emptyList())
-    val selectedStarGroups: StateFlow<List<String>>
+    private val _selectedStarGroups = MutableStateFlow<List<StarGroupResponseDto>>(emptyList())
+    val selectedStarGroups: StateFlow<List<StarGroupResponseDto>>
         get() = _selectedStarGroups
 
     // 사진 선택
@@ -108,13 +110,41 @@ class UploadViewModel @Inject constructor(
     }
 
     // star 선택
-    fun setStar(stars: List<String>) {
+    fun selectedStar(star: StarResponseDto) {
+        val current = _selectedStars.value
+        val exists = current.any { it.id == star.id }
+        _selectedStars.value = if (exists) {
+            current.filterNot { it.id == star.id }
+        } else {
+            current + star
+        }
+        Log.d(
+            "UploadViewModel",
+            "selected star: ${star.name}"
+        )
+    }
 
+    fun removeSelectedStar() {
+        _selectedStars.value = listOf()
     }
 
     // star group 선택
-    fun setStarGroup(starGroups: List<String>) {
+    fun selectedStarGroup(starGroup: StarGroupResponseDto) {
+        val current = _selectedStarGroups.value
+        val exists = current.any { it.id == starGroup.id }
+        _selectedStarGroups.value = if (exists) {
+            current.filterNot { it.id == starGroup.id }
+        } else {
+            current + starGroup
+        }
+        Log.d(
+            "UploadViewModel",
+            "selected star-group: ${starGroup.name}"
+        )
+    }
 
+    fun removeSelectedStarGroup() {
+        _selectedStarGroups.value = listOf()
     }
 
     fun uploadSnap() = viewModelScope.launch {
