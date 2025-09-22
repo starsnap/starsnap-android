@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.photo.starsnap.designsystem.CustomColor
@@ -40,10 +41,10 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    var starGroup by remember { mutableStateOf("") }
-    var selectStarGroup by remember { mutableStateOf(listOf("")) }
-    val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems()
-    val gridState = rememberLazyGridState()
+    var starGroup by remember { mutableStateOf("") } // 검색
+    var selectStarGroup = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
+    val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems() // 가져온 star-group
+    val gridState = rememberLazyGridState() // grid 상태
     Scaffold(
         Modifier.padding(horizontal = 22.dp)
     ) { padding ->
@@ -66,7 +67,6 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
                         .align(alignment = Alignment.CenterVertically)
                         .clickableSingle {
                             navController.popBackStack()
-                            uploadViewModel.setStarGroup(selectStarGroup)
                         }) {
                     Text("확인")
                 }
@@ -83,7 +83,9 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
 
                     if(starGroup != null){
                         Log.d("PickStarScreen", "추가")
-                        StarGroupItem(starGroup){}
+                        StarGroupItem(starGroup){
+                            uploadViewModel.selectedStarGroup(starGroup)
+                        }
                     } else {
                         Box(Modifier.fillMaxWidth()
                             .height(170.dp).background(CustomColor.yellow_100))
