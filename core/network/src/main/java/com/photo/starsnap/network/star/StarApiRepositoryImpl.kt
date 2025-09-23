@@ -10,16 +10,18 @@ class StarApiRepositoryImpl @Inject constructor(
 ) : StarRepository {
     override suspend fun getStarList(
         size: Int,
-        page: Int
+        page: Int,
+        starName: String
     ): SliceResponseDto<StarResponseDto> {
-        return starApi.getStarList(size, page)
+        return starApi.getStarList(size, page, starName)
     }
 
     override suspend fun getStarGroupList(
         size: Int,
-        page: Int
+        page: Int,
+        starGroupName: String
     ): SliceResponseDto<StarGroupResponseDto> {
-        return starApi.getStarGroupList(size, page)
+        return starApi.getStarGroupList(size, page, starGroupName)
     }
 
 }

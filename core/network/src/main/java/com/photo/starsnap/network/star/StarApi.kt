@@ -17,13 +17,15 @@ interface StarApi {
     @GET("/api/star")
     suspend fun getStarList(
         @Query("size") size: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("star-name") starName: String
     ): SliceResponseDto<StarResponseDto>
 
 
     @GET("/api/star-group")
     suspend fun getStarGroupList(
         @Query("size") size: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("star-group-name") starGroupName: String
     ): SliceResponseDto<StarGroupResponseDto>
 }
