@@ -7,7 +7,8 @@ import com.photo.starsnap.network.star.StarRepository
 import com.photo.starsnap.network.star.dto.StarResponseDto
 
 class StarPagingSource(
-    private val starRepository: StarRepository
+    private val starRepository: StarRepository,
+    private val starName: String
 ) : PagingSource<Int, StarResponseDto>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StarResponseDto> {
@@ -17,6 +18,7 @@ class StarPagingSource(
             val data = starRepository.getStarList(
                 size = PAGING_SIZE,
                 page = page,
+                starName = starName
             )
             Log.d(TAG, "size: ${PAGING_SIZE}, page: $page")
 

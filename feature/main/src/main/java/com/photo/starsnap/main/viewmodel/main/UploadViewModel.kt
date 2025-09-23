@@ -57,7 +57,8 @@ class UploadViewModel @Inject constructor(
         ),
         pagingSourceFactory = {
             StarPagingSource(
-                starRepository = starRepository
+                starRepository = starRepository,
+                starName = _searchStar.value
             )
         }
     ).flow.cachedIn(viewModelScope)
@@ -70,10 +71,29 @@ class UploadViewModel @Inject constructor(
         ),
         pagingSourceFactory = {
             StarGroupPagingSource(
-                starRepository = starRepository
+                starRepository = starRepository,
+                starGroupName = _searchStarGroup.value
             )
         }
     ).flow.cachedIn(viewModelScope)
+
+    private val _searchStar = MutableStateFlow<String>("")
+    val searchStar: StateFlow<String>
+        get() = _searchStar
+
+    fun updateSearchStar(query: String) {
+        _searchStar.value = query
+    }
+
+
+    private val _searchStarGroup = MutableStateFlow<String>("")
+    val searchStarGroup: StateFlow<String>
+        get() = _searchStarGroup
+
+    fun updateSearchStarGroup(query: String) {
+        _searchStarGroup.value = query
+    }
+
 
     private val _selectedImages = MutableStateFlow<List<CroppingImage>>(emptyList())
     val selectedPhotos: StateFlow<List<CroppingImage>>

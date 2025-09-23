@@ -7,7 +7,8 @@ import com.photo.starsnap.network.star.StarRepository
 import com.photo.starsnap.network.star.dto.StarGroupResponseDto
 
 class StarGroupPagingSource(
-    private val starRepository: StarRepository
+    private val starRepository: StarRepository,
+    private val starGroupName: String
 ) : PagingSource<Int, StarGroupResponseDto>() {
 
     override fun getRefreshKey(state: PagingState<Int, StarGroupResponseDto>): Int? {
@@ -24,6 +25,7 @@ class StarGroupPagingSource(
             val data = starRepository.getStarGroupList(
                 size = PAGING_SIZE,
                 page = page,
+                starGroupName = starGroupName
             )
 
             val snapList = data.content

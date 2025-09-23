@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,39 +40,56 @@ import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.photo.starsnap.network.star.dto.StarGroupResponseDto
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.delay
 
 @Composable
 fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    var starGroup by remember { mutableStateOf("") } // 검색
+    val starGroup by uploadViewModel.searchStarGroup.collectAsStateWithLifecycle()
     var selectStarGroup = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
     val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems() // 가져온 star-group
     val gridState = rememberLazyGridState() // grid 상태
+
+    LaunchedEffect(starGroup) {
+        delay(2000)
+        starGroupList.refresh()
+    }
+
     Scaffold(
-        Modifier.padding(horizontal = 22.dp)
-    ) { padding ->
-        Column(Modifier.padding()) {
+        Modifier
+            .padding(horizontal = 22.dp)
+            .fillMaxSize(),
+        topBar = {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(70.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextField(
-                    value = starGroup,
-                    onValueChange = { starGroup = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text(text = "StarGroup 검색") })
-                Spacer(Modifier.width(20.dp))
                 Box(
                     Modifier
-                        .padding(end = 10.dp)
-                        .align(alignment = Alignment.CenterVertically)
+                        .weight(1F)
+                        .height(50.dp)
+                ) {
+                    SearchTextField("StarGroup 검색") {
+                        uploadViewModel.updateSearchStarGroup(it)
+                    }
+                }
+                Box(
+                    Modifier
+                        .size(height = 70.dp, width = 60.dp)
                         .clickableSingle {
                             navController.popBackStack()
-                        }) {
-                    Text("확인")
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "확인"
+                    )
                 }
             }
+        }
+    ) { padding ->
+        Column(Modifier.padding(padding)) {
             LazyVerticalGrid(
                 state = gridState,
                 modifier = Modifier.fillMaxSize(),
@@ -81,14 +100,18 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
                     val starGroup = starGroupList[index]
                     Log.d("StarGroupList", "index: $index, image: $starGroup")
 
-                    if(starGroup != null){
+                    if (starGroup != null) {
                         Log.d("PickStarScreen", "추가")
-                        StarGroupItem(starGroup){
+                        StarGroupItem(starGroup) {
                             uploadViewModel.selectedStarGroup(starGroup)
                         }
                     } else {
-                        Box(Modifier.fillMaxWidth()
-                            .height(170.dp).background(CustomColor.yellow_100))
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(170.dp)
+                                .background(CustomColor.yellow_100)
+                        )
                     }
                 }
             }
@@ -101,22 +124,21 @@ fun StarGroupItem(starGroup: StarGroupResponseDto, onClick: () -> Unit) {
     Box(
         Modifier
             .fillMaxWidth()
+            .background(color = CustomColor.container, shape = RoundedCornerShape(12.dp))
             .height(170.dp)
-            .clickableSingle { onClick() },
-        contentAlignment = Alignment.CenterStart
+            .clickableSingle { onClick() }, contentAlignment = Alignment.CenterStart
     ) {
         GlideImage(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .clip(RoundedCornerShape(12.dp)),
             imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
+                contentScale = ContentScale.Crop, alignment = Alignment.Center
             ),
             imageModel = { starGroup.imageKey },
         )
         Column(
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.Start
+            verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.Start
         ) {
             Text(starGroup.name)
             Spacer(Modifier.height(2.dp))

@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.airbnb.lottie.model.content.CircleShape
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
@@ -60,24 +59,24 @@ import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.photo.starsnap.network.star.dto.StarResponseDto
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.delay
 
 @Composable
 fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    var star by remember { mutableStateOf("") }
+    val star by uploadViewModel.searchStar.collectAsStateWithLifecycle()
     var selectStars = uploadViewModel.selectedStars.collectAsStateWithLifecycle()
     val starList = uploadViewModel.starList.collectAsLazyPagingItems()
     val gridState = rememberLazyGridState()
 
-
-    LaunchedEffect(starList) {
-        Log.d("PickStarScreen", "starList: ${starList.itemCount}")
+    LaunchedEffect(star) {
+        delay(2000)
+        starList.refresh()
     }
 
     Scaffold(
         Modifier
             .padding(horizontal = 22.dp)
-            .fillMaxSize(),
-        topBar = {
+            .fillMaxSize(), topBar = {
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -89,26 +88,24 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
                         .weight(1F)
                         .height(50.dp)
                 ) {
-                    SearchTextField()
+                    SearchTextField("Star 검색") {
+                        uploadViewModel.updateSearchStar(it)
+                    }
                 }
-                Spacer(Modifier.width(15.dp))
-                Text(
-                    modifier = Modifier
+                Box(
+                    Modifier
+                        .size(height = 70.dp, width = 60.dp)
                         .clickableSingle {
                             navController.popBackStack()
-                        }
-                        .height(50.dp)
-                        .width(40.dp),
-                    text = "확인", textAlign = TextAlign.Center
-                )
+                        }, contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "확인"
+                    )
+                }
             }
-        }
-    ) { padding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
+        }) { padding ->
+        Column(Modifier.padding(padding)) {
             LazyVerticalGrid(
                 state = gridState,
                 modifier = Modifier.fillMaxSize(),
@@ -139,8 +136,7 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
                                 .fillMaxWidth()
                                 .height(80.dp)
                                 .background(
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = CustomColor.container
+                                    shape = RoundedCornerShape(12.dp), color = CustomColor.container
                                 )
                         )
                     }
@@ -172,8 +168,7 @@ fun StarItem(
                 .background(CustomColor.light_gray),
             imageModel = { star.imageKey },
             imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
+                contentScale = ContentScale.Crop, alignment = Alignment.Center
             )
         )
         Spacer(Modifier.width(10.dp))
@@ -192,8 +187,7 @@ fun StarItem(
 }
 
 @Composable
-@Preview
-fun SearchTextField() {
+fun SearchTextField(hint: String, inputText: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     BasicTextField(
         value = text,
@@ -201,6 +195,7 @@ fun SearchTextField() {
         onValueChange = { input ->
             if (100 > input.length) {
                 text = input
+                inputText(text)
             }
         },
         modifier = Modifier
@@ -209,8 +204,7 @@ fun SearchTextField() {
         singleLine = true,
         decorationBox = { innerTextField ->
             Row(
-                modifier = Modifier
-                    .padding(start = 0.dp, end = 15.dp),
+                modifier = Modifier.padding(start = 0.dp, end = 15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.width(11.dp))
@@ -225,9 +219,10 @@ fun SearchTextField() {
                 ) {
                     innerTextField()
                     if (text.isEmpty()) {
-                        TextEditHint("Star 검색")
+                        TextEditHint(hint)
                     }
                 }
             }
-        })
+        }
+    )
 }
