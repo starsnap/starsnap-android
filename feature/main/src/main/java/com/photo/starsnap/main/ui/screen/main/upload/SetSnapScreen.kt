@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.RadioButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -56,10 +58,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +72,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.photo.starsnap.designsystem.CustomColor
+import com.photo.starsnap.designsystem.CustomColor.container
+import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.utils.NavigationRoute
 import com.photo.starsnap.main.utils.clickableSingle
@@ -267,12 +276,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Text("사진 찍은 날짜")
             Spacer(Modifier.height(5.dp))
-            TextField(
-                value = title,
-                onValueChange = { title = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("YYYY-MM-DD") },
-            )
+            DateTextField()
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
@@ -327,7 +331,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     .height(50.dp)
                     .fillMaxWidth()
                     .background(CustomColor.yellow_100)
-                    .clickableSingle{
+                    .clickableSingle {
                         uploadViewModel.uploadSnap()
                     },
                 contentAlignment = Alignment.Center
@@ -371,7 +375,7 @@ fun ChipTextField(
             // 쉼표로도 태그 확정 가능 (e.g. "kotlin,")
             if (text.endsWith(",")) {
                 addTagIfPossible(text.removeSuffix(","))
-            } else if(tags.size < 5){
+            } else if (tags.size < 5) {
                 input = text
             }
         },
@@ -409,7 +413,7 @@ fun ChipTextField(
                             Text(
                                 "✕",
                                 color = Color(0xFF9AA0A6),
-                                modifier = Modifier.clickableSingle{
+                                modifier = Modifier.clickableSingle {
                                     onTagsChange(tags - tag)
                                 }
                             )
@@ -430,6 +434,53 @@ fun ChipTextField(
                     }
                     // 실제 텍스트 입력
                     innerTextField()
+                }
+            }
+        }
+    )
+}
+
+
+@Composable
+@Preview
+fun DateTextField() {
+    var text by remember { mutableStateOf("") }
+    BasicTextField(
+        value = text,
+        textStyle = title2,
+        onValueChange = { input ->
+            if (100 > input.length) {
+                text = input
+            }
+        },
+        modifier = Modifier
+            .height(50.dp),
+        singleLine = true,
+        decorationBox = { innerTextField ->
+            Row(
+                modifier = Modifier
+                    .padding(start = 0.dp, end = 15.dp) // Row 전체 여백
+                    .border(
+                        border = BorderStroke(0.5.dp, CustomColor.light_gray),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.width(11.dp))
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector = ImageVector.vectorResource(R.drawable.calendar_icon),
+                    contentDescription = "calendar_icon",
+                    tint = CustomColor.sub_title
+                )
+                Spacer(modifier = Modifier.width(9.dp))
+                Box(
+                    Modifier.weight(1F)
+                ) {
+                    innerTextField()
+                    if (text.isEmpty()) {
+                        TextEditHint("YYYY-MM-DD")
+                    }
                 }
             }
         }
