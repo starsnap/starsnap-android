@@ -1,5 +1,7 @@
 package com.photo.starsnap.main.ui.screen.main.upload
 
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import android.util.Log
 import android.widget.ToggleButton
 import android.widget.Toast
@@ -28,6 +30,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -40,11 +43,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.RadioButton
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -71,9 +80,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.core.daysOfWeek
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
+import com.photo.starsnap.designsystem.text.CustomTextStyle
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.ui.component.TopAppBar
@@ -83,6 +99,11 @@ import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.delay
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel) {
@@ -99,8 +120,13 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     var tags by remember { mutableStateOf(listOf<String>()) } // 태그
     var stars = uploadViewModel.selectedStars.collectAsStateWithLifecycle()
     var starGroups = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
+    var dateTaken by remember { mutableStateOf("YYYY-MM-DD") }
     var aiState by remember { mutableStateOf(false) } // AI 여부
     var commentsEnabled by remember { mutableStateOf(true) } // 댓글 허용 여부
+
+    var showModalInput by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf<Long?>(null) }
+
 
     LaunchedEffect(pagerState.isScrollInProgress) {
         if (pagerState.isScrollInProgress) {
@@ -276,7 +302,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Text("사진 찍은 날짜")
             Spacer(Modifier.height(5.dp))
-            DateTextField()
+            DateTextField(dateTaken) {
+                showModalInput = true
+            }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
@@ -442,47 +470,125 @@ fun ChipTextField(
 
 
 @Composable
-@Preview
-fun DateTextField() {
-    var text by remember { mutableStateOf("") }
-    BasicTextField(
-        value = text,
-        textStyle = title2,
-        onValueChange = { input ->
-            if (100 > input.length) {
-                text = input
-            }
-        },
+fun DateTextField(text: String, onClick: () -> Unit) {
+    Row(
         modifier = Modifier
-            .height(50.dp),
-        singleLine = true,
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .padding(start = 0.dp, end = 15.dp) // Row 전체 여백
-                    .border(
-                        border = BorderStroke(0.5.dp, CustomColor.light_gray),
-                        shape = RoundedCornerShape(8.dp)
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.width(11.dp))
-                Icon(
-                    modifier = Modifier.size(18.dp),
-                    imageVector = ImageVector.vectorResource(R.drawable.calendar_icon),
-                    contentDescription = "calendar_icon",
-                    tint = CustomColor.sub_title
-                )
-                Spacer(modifier = Modifier.width(9.dp))
-                Box(
-                    Modifier.weight(1F)
-                ) {
-                    innerTextField()
-                    if (text.isEmpty()) {
-                        TextEditHint("YYYY-MM-DD")
-                    }
-                }
-            }
+            .height(40.dp)
+            .border(
+                border = BorderStroke(0.5.dp, CustomColor.light_gray),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickableSingle {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(11.dp))
+        Icon(
+            modifier = Modifier.size(18.dp),
+            imageVector = ImageVector.vectorResource(R.drawable.calendar_icon),
+            contentDescription = "calendar_icon",
+            tint = CustomColor.sub_title
+        )
+        Spacer(modifier = Modifier.width(9.dp))
+        Box(
+            Modifier.weight(1F)
+        ) {
+            TextEditHint("YYYY-MM-DD")
         }
+    }
+}
+
+@Composable
+fun test(selectedDate: (LocalDate?) -> Unit) {
+    val currentMonth = remember { YearMonth.now() } // 현재 날짜 구하기
+    val startMonth = remember { currentMonth.minusYears(10) } // 현재 날짜에서 -10년을 마지막으로
+    val endMonth = remember { YearMonth.now() } // 최대 일을 현재로
+    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() } // Available from the library
+    val daysOfWeek = remember { daysOfWeek() }
+
+    val state = rememberCalendarState(
+        startMonth = startMonth,
+        endMonth = endMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = firstDayOfWeek,
     )
+
+    val coroutineScope = rememberCoroutineScope()
+    val visibleMonth = state.firstVisibleMonth.yearMonth
+    val monthTitle = "${visibleMonth.year}년 ${visibleMonth.month.value}월"
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(18.dp)
+                    .clickableSingle { coroutineScope.launch { state.animateScrollToMonth(visibleMonth.minusMonths(1)) } },
+                imageVector = ImageVector.vectorResource(R.drawable.chevron_left_icon),
+                contentDescription = "chevron_left_icon",
+                tint = CustomColor.sub_title
+            )
+            Text(
+                text = monthTitle,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1F),
+                style = CustomTextStyle.title1
+            )
+            Icon(
+                modifier = Modifier
+                    .size(18.dp)
+                    .clickableSingle { coroutineScope.launch { state.animateScrollToMonth(visibleMonth.plusMonths(1)) } },
+                imageVector = ImageVector.vectorResource(R.drawable.chevron_right_icon),
+                contentDescription = "chevron_right_icon",
+                tint = CustomColor.sub_title
+            )
+        }
+        HorizontalCalendar(
+            state = state,
+            dayContent = { day ->
+                Day(day, isSelected = selectedDate == day.date) { day ->
+                    selectedDate(if (selectedDate == day.date) null else day.date)
+                }
+            },
+            monthHeader = {
+                DaysOfWeekTitle(daysOfWeek = daysOfWeek) // Use the title as month header
+            }
+        )
+    }
+}
+
+@Composable
+fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .clip(CircleShape)
+            .background(color = if (isSelected) Color.Green else Color.Transparent)
+            .clickable(
+                enabled = day.position == DayPosition.MonthDate,
+                onClick = { onClick(day) }
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = day.date.dayOfMonth.toString(), color = if (day.position == DayPosition.MonthDate) CustomColor.light_black else CustomColor.light_gray)
+    }
+}
+
+@Composable
+fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        for (dayOfWeek in daysOfWeek) {
+            Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+            )
+        }
+    }
 }
