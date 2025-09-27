@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -49,11 +50,13 @@ import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -114,6 +117,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     val pagerState = rememberPagerState(pageCount = { selectedPhotos.size })
 
     var showDots by remember { mutableStateOf(false) }
+    var showModalInput by remember { mutableStateOf(false) }
+
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     // snap 정보
     var title by remember { mutableStateOf("") } // 제목
@@ -123,10 +129,6 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     var dateTaken by remember { mutableStateOf("YYYY-MM-DD") }
     var aiState by remember { mutableStateOf(false) } // AI 여부
     var commentsEnabled by remember { mutableStateOf(true) } // 댓글 허용 여부
-
-    var showModalInput by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
-
 
     LaunchedEffect(pagerState.isScrollInProgress) {
         if (pagerState.isScrollInProgress) {
@@ -367,6 +369,32 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 Text("만들기")
             }
         }
+        if (showModalInput) {
+            Dialog(onDismissRequest = { showModalInput = false }) {
+                Surface(shape = RoundedCornerShape(12.dp), color = Color.White) {
+
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        // 달력 모달 본문
+                        test(
+                            currentSelectedDate = selectedDate,
+                            onDateChange = { picked -> selectedDate = picked }
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { showModalInput = false }) { Text("취소") }
+                            Spacer(Modifier.width(8.dp))
+                            TextButton(onClick = {
+                                showModalInput = false
+                                dateTaken = if(selectedDate != null) selectedDate.toString() else "YYYY-MM-DD"
+                            }) { Text("확인") }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -494,13 +522,13 @@ fun DateTextField(text: String, onClick: () -> Unit) {
         Box(
             Modifier.weight(1F)
         ) {
-            TextEditHint("YYYY-MM-DD")
+            TextEditHint(text)
         }
     }
 }
 
 @Composable
-fun test(selectedDate: (LocalDate?) -> Unit) {
+fun test(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
     val currentMonth = remember { YearMonth.now() } // 현재 날짜 구하기
     val startMonth = remember { currentMonth.minusYears(10) } // 현재 날짜에서 -10년을 마지막으로
     val endMonth = remember { YearMonth.now() } // 최대 일을 현재로
@@ -529,7 +557,18 @@ fun test(selectedDate: (LocalDate?) -> Unit) {
             Icon(
                 modifier = Modifier
                     .size(18.dp)
-                    .clickableSingle { coroutineScope.launch { state.animateScrollToMonth(visibleMonth.minusMonths(1)) } },
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) {
+                        coroutineScope.launch {
+                            state.animateScrollToMonth(
+                                visibleMonth.minusMonths(
+                                    1
+                                )
+                            )
+                        }
+                    },
                 imageVector = ImageVector.vectorResource(R.drawable.chevron_left_icon),
                 contentDescription = "chevron_left_icon",
                 tint = CustomColor.sub_title
@@ -543,7 +582,18 @@ fun test(selectedDate: (LocalDate?) -> Unit) {
             Icon(
                 modifier = Modifier
                     .size(18.dp)
-                    .clickableSingle { coroutineScope.launch { state.animateScrollToMonth(visibleMonth.plusMonths(1)) } },
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) {
+                        coroutineScope.launch {
+                            state.animateScrollToMonth(
+                                visibleMonth.plusMonths(
+                                    1
+                                )
+                            )
+                        }
+                    },
                 imageVector = ImageVector.vectorResource(R.drawable.chevron_right_icon),
                 contentDescription = "chevron_right_icon",
                 tint = CustomColor.sub_title
@@ -552,12 +602,18 @@ fun test(selectedDate: (LocalDate?) -> Unit) {
         HorizontalCalendar(
             state = state,
             dayContent = { day ->
-                Day(day, isSelected = selectedDate == day.date) { day ->
-                    selectedDate(if (selectedDate == day.date) null else day.date)
-                }
+                Day(
+                    day = day,
+                    isSelected = currentSelectedDate == day.date,
+                    onClick = { clickedDay ->
+                        val newSelection =
+                            if (currentSelectedDate == clickedDay.date) null else clickedDay.date
+                        onDateChange(newSelection)
+                    }
+                )
             },
             monthHeader = {
-                DaysOfWeekTitle(daysOfWeek = daysOfWeek) // Use the title as month header
+                DaysOfWeekTitle(daysOfWeek = daysOfWeek)
             }
         )
     }
@@ -576,7 +632,10 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = day.date.dayOfMonth.toString(), color = if (day.position == DayPosition.MonthDate) CustomColor.light_black else CustomColor.light_gray)
+        Text(
+            text = day.date.dayOfMonth.toString(),
+            color = if (day.position == DayPosition.MonthDate) CustomColor.light_black else CustomColor.light_gray
+        )
     }
 }
 
