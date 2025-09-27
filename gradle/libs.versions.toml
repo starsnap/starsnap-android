@@ -24,6 +24,7 @@ okhttp = "4.12.0"
 gson = "2.10.1"
 glide = "2.4.7"
 paging = "3.3.6"
+kizitonwoseCalendar = "2.8.0"
 
 #ucrop = "2.2.10"
 
@@ -42,6 +43,7 @@ uiGraphicsAndroid = "1.7.4"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+kizitonwose-calendar-compose = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "kizitonwoseCalendar" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -99,7 +101,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 #ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 
 
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.6.0"}
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.6.0" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 
 airbnb-android-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottieVersion" }

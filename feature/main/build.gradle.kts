@@ -99,6 +99,8 @@ dependencies {
 
     implementation(libs.landscapist.glide)
 
+    implementation(libs.kizitonwose.calendar.compose)
+
 //    implementation(libs.ucrop)
 
     testImplementation(libs.junit)
