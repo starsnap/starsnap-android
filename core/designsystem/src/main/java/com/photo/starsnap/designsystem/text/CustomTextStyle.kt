@@ -68,6 +68,12 @@ object CustomTextStyle {
         fontSize = 9.sp,
         color = CustomColor.title
     )
+    val title8 = TextStyle(
+        fontFamily = pretendard,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 10.sp,
+        color = CustomColor.light_black
+    )
 
     val hint2 = TextStyle(
         fontFamily = pretendard,
