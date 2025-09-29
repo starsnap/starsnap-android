@@ -579,25 +579,28 @@ fun test(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
                 modifier = Modifier.weight(1F),
                 style = CustomTextStyle.title1
             )
-            Icon(
-                modifier = Modifier
-                    .size(18.dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                    ) {
-                        coroutineScope.launch {
-                            state.animateScrollToMonth(
-                                visibleMonth.plusMonths(
-                                    1
+            // Conditionally show right arrow icon or spacer to preserve layout
+            if (visibleMonth.isBefore(endMonth)) {
+                Icon(
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) {
+                            coroutineScope.launch {
+                                state.animateScrollToMonth(
+                                    visibleMonth.plusMonths(1)
                                 )
-                            )
-                        }
-                    },
-                imageVector = ImageVector.vectorResource(R.drawable.chevron_right_icon),
-                contentDescription = "chevron_right_icon",
-                tint = CustomColor.sub_title
-            )
+                            }
+                        },
+                    imageVector = ImageVector.vectorResource(R.drawable.chevron_right_icon),
+                    contentDescription = "chevron_right_icon",
+                    tint = CustomColor.sub_title
+                )
+            } else {
+                Spacer(modifier = Modifier.size(18.dp))
+            }
         }
         HorizontalCalendar(
             state = state,
@@ -621,20 +624,30 @@ fun test(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
 
 @Composable
 fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
+    val isMonthDate = day.position == DayPosition.MonthDate
+    val d = day.date
+
+    val textColor = when {
+        !isMonthDate -> CustomColor.light_gray
+        d.dayOfWeek == java.time.DayOfWeek.SUNDAY -> Color.Red
+        d.dayOfWeek == java.time.DayOfWeek.SATURDAY -> Color.Blue
+        else -> CustomColor.light_black
+    }
+
     Box(
         modifier = Modifier
             .aspectRatio(1f)
             .clip(CircleShape)
             .background(color = if (isSelected) Color.Green else Color.Transparent)
             .clickable(
-                enabled = day.position == DayPosition.MonthDate,
+                enabled = isMonthDate,
                 onClick = { onClick(day) }
             ),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = day.date.dayOfMonth.toString(),
-            color = if (day.position == DayPosition.MonthDate) CustomColor.light_black else CustomColor.light_gray
+            text = d.dayOfMonth.toString(),
+            color = textColor
         )
     }
 }
