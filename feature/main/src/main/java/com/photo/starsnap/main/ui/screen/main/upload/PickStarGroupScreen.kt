@@ -2,6 +2,8 @@ package com.photo.starsnap.main.ui.screen.main.upload
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +47,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadViewModel) {
     val starGroup by uploadViewModel.searchStarGroup.collectAsStateWithLifecycle()
-    var selectStarGroup = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
+    var selectStarGroup =
+        uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
     val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems() // 가져온 star-group
     val gridState = rememberLazyGridState() // grid 상태
 
@@ -121,12 +124,19 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
 
 @Composable
 fun StarGroupItem(starGroup: StarGroupResponseDto, onClick: () -> Unit) {
+    var onClickState by remember { mutableStateOf(false) }
     Box(
         Modifier
             .fillMaxWidth()
             .background(color = CustomColor.container, shape = RoundedCornerShape(12.dp))
             .height(170.dp)
-            .clickableSingle { onClick() }, contentAlignment = Alignment.CenterStart
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
+                onClickState = !onClickState
+            }, contentAlignment = Alignment.CenterStart
     ) {
         GlideImage(
             modifier = Modifier

@@ -2,6 +2,8 @@ package com.photo.starsnap.main.ui.screen.main.upload
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.photo.starsnap.designsystem.CustomColor
@@ -119,7 +122,9 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
 
                         if (star != null) {
                             Log.d("PickStarScreen", "추가")
-                            StarItem(star)
+                            StarItem(star){
+                                uploadViewModel.selectedStar(star)
+                            }
                         } else {
                             Box(
                                 Modifier
@@ -148,7 +153,8 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
 
 @Composable
 fun StarItem(
-    star: StarResponseDto
+    star: StarResponseDto,
+    onClick: () -> Unit
 ) {
     var onClickState by remember { mutableStateOf(false) }
     var backgroundColor = if (onClickState) CustomColor.yellow_200 else CustomColor.container
@@ -157,7 +163,13 @@ fun StarItem(
             .fillMaxWidth()
             .height(80.dp)
             .background(shape = RoundedCornerShape(12.dp), color = backgroundColor)
-            .clickableSingle { onClickState = !onClickState },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
+                onClickState = !onClickState
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(Modifier.width(16.dp))
