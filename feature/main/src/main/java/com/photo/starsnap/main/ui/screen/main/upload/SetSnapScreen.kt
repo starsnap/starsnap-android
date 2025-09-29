@@ -3,11 +3,7 @@ package com.photo.starsnap.main.ui.screen.main.upload
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import android.util.Log
-import android.widget.ToggleButton
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -43,11 +39,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material.RadioButton
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -55,7 +46,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -63,7 +53,6 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,7 +61,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -90,10 +78,11 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.photo.starsnap.designsystem.CustomColor
-import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle
+import com.photo.starsnap.designsystem.text.CustomTextStyle.TitleSmall
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.designsystem.text.CustomTextStyle.title8
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.utils.NavigationRoute
@@ -124,7 +113,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     // snap 정보
     var title by remember { mutableStateOf("") } // 제목
     var tags by remember { mutableStateOf(listOf<String>()) } // 태그
-    var stars = uploadViewModel.selectedStars.collectAsStateWithLifecycle()
+    val stars by uploadViewModel.selectedStars.collectAsStateWithLifecycle()
     var starGroups = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
     var dateTaken by remember { mutableStateOf("YYYY-MM-DD") }
     var aiState by remember { mutableStateOf(false) } // AI 여부
@@ -225,35 +214,72 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             LazyHorizontalGrid(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(65.dp),
+                    .height(100.dp),
                 state = starGridState,
                 rows = GridCells.Fixed(1),
-                horizontalArrangement = Arrangement.spacedBy(1.dp),
-                verticalArrangement = Arrangement.spacedBy(1.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(1) {
-                    Column(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(65.dp)
-                            .clickableSingle {
-                                navController.navigate(NavigationRoute.PICK_STAR)
-                            }) {
-                        Box(
+                // +1 to place the "add" tile at index 0, followed by the selected stars
+                items(stars.size + 1) { index ->
+                    if (index == 0) {
+                        // Add tile
+                        Column(
                             modifier = Modifier
-                                .background(CustomColor.light_gray.copy(alpha = 0.3f))
-                                .width(50.dp)
-                                .height(50.dp), contentAlignment = Alignment.BottomEnd
+                                .width(70.dp)
+                                .clickableSingle { navController.navigate(NavigationRoute.PICK_STAR) }
                         ) {
-                            Text("+")
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        CustomColor.light_gray.copy(alpha = 0.3f),
+                                        shape = CircleShape
+                                    )
+                                    .width(70.dp)
+                                    .height(70.dp),
+                                contentAlignment = Alignment.BottomEnd
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    imageVector = ImageVector.vectorResource(R.drawable.plus_circle_icon),
+                                    contentDescription = "plus_circle_icon",
+                                )
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "추가하기",
+                                maxLines = 1,
+                                style = title2
+                            )
                         }
-                        Spacer(Modifier.height(3.dp))
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = "추가",
-                            maxLines = 1
-                        )
+                    } else {
+                        // Star item from the collected list
+                        val star = stars[index - 1]
+                        Column(
+                            modifier = Modifier
+                                .width(70.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        CustomColor.light_gray.copy(alpha = 0.15f),
+                                        shape = CircleShape
+                                    )
+                                    .width(70.dp)
+                                    .height(70.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = star.name,
+                                maxLines = 1,
+                                style = title2
+                            )
+                        }
                     }
                 }
             }
@@ -274,8 +300,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 items(1) {
                     Column(
                         modifier = Modifier
-                            .width(92.dp)
-                            .height(69.dp)
+                            .width(100.dp)
                             .clickableSingle {
                                 navController.navigate(NavigationRoute.PICK_STAR_GROUP)
                             }) {
@@ -285,16 +310,22 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                     CustomColor.light_gray.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .width(90.dp)
-                                .height(54.dp), contentAlignment = Alignment.BottomEnd
+                                .width(95.dp)
+                                .height(60.dp), contentAlignment = Alignment.BottomEnd
                         ) {
-                            Text("+")
+                            Icon(
+                                modifier = Modifier.size(20.dp),
+                                imageVector = ImageVector.vectorResource(R.drawable.plus_circle_icon),
+                                contentDescription = "plus_circle_icon",
+                            )
                         }
-                        Spacer(Modifier.height(3.dp))
+                        Spacer(Modifier.height(8.dp))
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            text = "추가하기"
+                            text = "추가하기",
+                            maxLines = 1,
+                            style = title2
                         )
                     }
                 }
@@ -388,7 +419,8 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                             Spacer(Modifier.width(8.dp))
                             TextButton(onClick = {
                                 showModalInput = false
-                                dateTaken = if(selectedDate != null) selectedDate.toString() else "YYYY-MM-DD"
+                                dateTaken =
+                                    if (selectedDate != null) selectedDate.toString() else "YYYY-MM-DD"
                             }) { Text("확인") }
                         }
                     }
@@ -663,4 +695,39 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
             )
         }
     }
+}
+
+@Composable
+@Preview
+fun StarProfile() {
+    Column(
+        modifier = Modifier
+            .width(70.dp)
+            .clickableSingle {
+
+            }) {
+        Box(
+            modifier = Modifier
+                .background(CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape)
+                .width(70.dp)
+                .height(70.dp), contentAlignment = Alignment.BottomEnd
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.plus_circle_icon),
+                contentDescription = "plus_circle_icon",
+            )
+        }
+        Spacer(Modifier.height(3.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = "추가하기",
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+fun StarGroup() {
+
 }
