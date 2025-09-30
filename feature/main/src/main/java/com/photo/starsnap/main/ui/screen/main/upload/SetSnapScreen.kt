@@ -114,7 +114,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     var title by remember { mutableStateOf("") } // 제목
     var tags by remember { mutableStateOf(listOf<String>()) } // 태그
     val stars by uploadViewModel.selectedStars.collectAsStateWithLifecycle()
-    var starGroups = uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
+    val starGroups by uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
     var dateTaken by remember { mutableStateOf("YYYY-MM-DD") }
     var aiState by remember { mutableStateOf(false) } // AI 여부
     var commentsEnabled by remember { mutableStateOf(true) } // 댓글 허용 여부
@@ -297,37 +297,73 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 horizontalArrangement = Arrangement.spacedBy(1.dp),
                 verticalArrangement = Arrangement.spacedBy(1.dp)
             ) {
-                items(1) {
-                    Column(
-                        modifier = Modifier
-                            .width(100.dp)
-                            .clickableSingle {
-                                navController.navigate(NavigationRoute.PICK_STAR_GROUP)
-                            }) {
-                        Box(
+
+                items(starGroups.size + 1) { index ->
+                    if (index == 0) {
+                        // Add tile
+                        Column(
                             modifier = Modifier
-                                .background(
-                                    CustomColor.light_gray.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(8.dp)
+                                .width(100.dp)
+                                .clickableSingle {
+                                    navController.navigate(NavigationRoute.PICK_STAR_GROUP)
+                                }) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        CustomColor.light_gray.copy(alpha = 0.3f),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .width(95.dp)
+                                    .height(60.dp), contentAlignment = Alignment.BottomEnd
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    imageVector = ImageVector.vectorResource(R.drawable.plus_circle_icon),
+                                    contentDescription = "plus_circle_icon",
                                 )
-                                .width(95.dp)
-                                .height(60.dp), contentAlignment = Alignment.BottomEnd
-                        ) {
-                            Icon(
-                                modifier = Modifier.size(20.dp),
-                                imageVector = ImageVector.vectorResource(R.drawable.plus_circle_icon),
-                                contentDescription = "plus_circle_icon",
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "추가하기",
+                                maxLines = 1,
+                                style = title2
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = "추가하기",
-                            maxLines = 1,
-                            style = title2
-                        )
+                    } else {
+                        // Star item from the collected list
+                        val starGroup = starGroups[index - 1]
+                        Column(
+                            modifier = Modifier
+                                .width(100.dp)
+                                .clickableSingle {
+//                                    uploadViewModel.selectedStarGroup(starGroup)
+                                }) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        CustomColor.light_gray.copy(alpha = 0.3f),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .width(95.dp)
+                                    .height(60.dp), contentAlignment = Alignment.BottomEnd
+                            ) {
+
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = starGroup.name,
+                                maxLines = 1,
+                                style = title2
+                            )
+                        }
                     }
+                }
+                items(1) {
+
                 }
             }
             Spacer(Modifier.height(15.dp))
