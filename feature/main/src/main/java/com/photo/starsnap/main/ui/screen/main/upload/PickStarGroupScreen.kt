@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadViewModel) {
     val starGroup by uploadViewModel.searchStarGroup.collectAsStateWithLifecycle()
-    var selectStarGroup =
+    var selectStarGroups =
         uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
     val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems() // 가져온 star-group
     val gridState = rememberLazyGridState() // grid 상태
@@ -105,7 +105,9 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
 
                     if (starGroup != null) {
                         Log.d("PickStarScreen", "추가")
-                        StarGroupItem(starGroup) {
+                        val isSelected = selectStarGroups.value.any { it.id == starGroup.id }  // ← 선택 여부 계산
+
+                        StarGroupItem(starGroup, isSelected) {
                             uploadViewModel.selectedStarGroup(starGroup)
                         }
                     } else {
@@ -123,8 +125,8 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
 }
 
 @Composable
-fun StarGroupItem(starGroup: StarGroupResponseDto, onClick: () -> Unit) {
-    var onClickState by remember { mutableStateOf(false) }
+fun StarGroupItem(starGroup: StarGroupResponseDto, selected: Boolean, onClick: () -> Unit) {
+    var onClickState by remember { mutableStateOf(selected) }
     Box(
         Modifier
             .fillMaxWidth()
