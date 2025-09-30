@@ -706,7 +706,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
         modifier = Modifier
             .aspectRatio(1f)
             .clip(CircleShape)
-            .background(color = if (isSelected) Color.Green else Color.Transparent)
+            .background(color = if (isSelected) CustomColor.container else Color.Transparent)
             .clickable(
                 enabled = isMonthDate,
                 onClick = { onClick(day) }
