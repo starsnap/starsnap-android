@@ -122,7 +122,9 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
 
                         if (star != null) {
                             Log.d("PickStarScreen", "추가")
-                            StarItem(star){
+                            val isSelected = selectStars.value.any { it.id == star.id }  // ← 선택 여부 계산
+
+                            StarItem(star, isSelected) {
                                 uploadViewModel.selectedStar(star)
                             }
                         } else {
@@ -154,9 +156,10 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
 @Composable
 fun StarItem(
     star: StarResponseDto,
+    selected: Boolean,
     onClick: () -> Unit
 ) {
-    var onClickState by remember { mutableStateOf(false) }
+    var onClickState by remember { mutableStateOf(selected) }
     var backgroundColor = if (onClickState) CustomColor.yellow_200 else CustomColor.container
     Row(
         Modifier
