@@ -65,10 +65,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -81,7 +83,7 @@ import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle
 import com.photo.starsnap.designsystem.text.CustomTextStyle.TitleSmall
-import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.designsystem.text.CustomTextStyle.title9
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title8
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.ui.component.TopAppBar
@@ -94,7 +96,6 @@ import kotlinx.coroutines.delay
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
@@ -112,6 +113,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
 
     // snap 정보
     var title by remember { mutableStateOf("") } // 제목
+    var source by remember { mutableStateOf("") } // 출처
     var tags by remember { mutableStateOf(listOf<String>()) } // 태그
     val stars by uploadViewModel.selectedStars.collectAsStateWithLifecycle()
     val starGroups by uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle()
@@ -136,7 +138,6 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 22.dp)
                 .verticalScroll(rememberScrollState(), enabled = true, flingBehavior = null),
         ) {
             val starGridState = rememberLazyGridState()
@@ -168,51 +169,53 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     )
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .alpha(dotsAlpha), // 공간 유지 + 페이드 애니메이션
-                horizontalArrangement = Arrangement.Center
-            ) {
-                repeat(selectedPhotos.size) { index ->
-                    val isSelected = pagerState.currentPage == index
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp)
-                            .size(if (isSelected) 10.dp else 8.dp)
-                            .background(
-                                color = if (isSelected) CustomColor.light_black
-                                else CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
-                            )
-                    )
-                }
-            }
-            Spacer(Modifier.height(15.dp))
-            Text("제목")
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 8.dp)
+//                    .alpha(dotsAlpha), // 공간 유지 + 페이드 애니메이션
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//                repeat(selectedPhotos.size) { index ->
+//                    val isSelected = pagerState.currentPage == index
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(horizontal = 4.dp)
+//                            .size(if (isSelected) 10.dp else 8.dp)
+//                            .background(
+//                                color = if (isSelected) CustomColor.light_black
+//                                else CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
+//                            )
+//                    )
+//                }
+//            }
             Spacer(Modifier.height(5.dp))
-            TextField(
-                // 제목 입력
-                value = title,
-                onValueChange = { title = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("제목 추가...") },
-            )
-            Spacer(Modifier.height(15.dp))
-            Divider() // 구분선
-            Spacer(Modifier.height(15.dp))
-            Text("태그")
             ChipTextField(
-                tags = tags,
-                onTagsChange = { tags = it }
-            )
-            Spacer(Modifier.height(15.dp))
+                tags = tags, onTagsChange = { tags = it })
+            Spacer(Modifier.height(5.dp))
             Divider() // 구분선
-            Spacer(Modifier.height(15.dp))
-            Text("Star")
+            Spacer(Modifier.height(10.dp))
+            InputText(modifier = Modifier.padding(horizontal = 22.dp), hint = "제목을 입력하세요") {
+                title = it
+            }
+            Spacer(Modifier.height(10.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(10.dp))
+            InputText(modifier = Modifier.padding(horizontal = 22.dp), hint = "출처를 입력 해주세요") {
+                source = it
+            }
+            Spacer(Modifier.height(10.dp))
+            Divider() // 구분선
+            Spacer(Modifier.height(10.dp))
+            Text(
+                text = "Star",
+                style = CustomTextStyle.title9,
+                modifier = Modifier.padding(horizontal = 22.dp)
+            )
             Spacer(Modifier.height(5.dp))
             LazyHorizontalGrid(
                 modifier = Modifier
+                    .padding(horizontal = 22.dp)
                     .fillMaxWidth()
                     .height(100.dp),
                 state = starGridState,
@@ -226,8 +229,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                         Column(
                             modifier = Modifier
                                 .width(70.dp)
-                                .clickableSingle { navController.navigate(NavigationRoute.PICK_STAR) }
-                        ) {
+                                .clickableSingle { navController.navigate(NavigationRoute.PICK_STAR) }) {
                             Box(
                                 modifier = Modifier
                                     .background(
@@ -250,15 +252,14 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                 textAlign = TextAlign.Center,
                                 text = "추가하기",
                                 maxLines = 1,
-                                style = title2
+                                style = title9
                             )
                         }
                     } else {
                         // Star item from the collected list
                         val star = stars[index - 1]
                         Column(
-                            modifier = Modifier
-                                .width(70.dp)
+                            modifier = Modifier.width(70.dp)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -269,15 +270,14 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                     .width(70.dp)
                                     .height(70.dp),
                                 contentAlignment = Alignment.Center
-                            ) {
-                            }
+                            ) {}
                             Spacer(Modifier.height(8.dp))
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center,
                                 text = star.name,
                                 maxLines = 1,
-                                style = title2
+                                style = title9
                             )
                         }
                     }
@@ -286,10 +286,15 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
-            Text("StarGroup")
+            Text(
+                text = "StarGroup",
+                style = CustomTextStyle.title9,
+                modifier = Modifier.padding(horizontal = 22.dp)
+            )
             Spacer(Modifier.height(5.dp))
             LazyHorizontalGrid(
                 modifier = Modifier
+                    .padding(horizontal = 22.dp)
                     .fillMaxWidth()
                     .height(87.dp),
                 state = starGroupGridState,
@@ -314,7 +319,8 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .width(95.dp)
-                                    .height(60.dp), contentAlignment = Alignment.BottomEnd
+                                    .height(60.dp),
+                                contentAlignment = Alignment.BottomEnd
                             ) {
                                 Icon(
                                     modifier = Modifier.size(20.dp),
@@ -328,7 +334,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                 textAlign = TextAlign.Center,
                                 text = "추가하기",
                                 maxLines = 1,
-                                style = title2
+                                style = title9
                             )
                         }
                     } else {
@@ -347,7 +353,8 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .width(95.dp)
-                                    .height(60.dp), contentAlignment = Alignment.BottomEnd
+                                    .height(60.dp),
+                                contentAlignment = Alignment.BottomEnd
                             ) {
 
                             }
@@ -357,7 +364,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                                 textAlign = TextAlign.Center,
                                 text = starGroup.name,
                                 maxLines = 1,
-                                style = title2
+                                style = title9
                             )
                         }
                     }
@@ -369,7 +376,11 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
-            Text("사진 찍은 날짜")
+            Text(
+                text = "사진 찍은 날짜",
+                style = CustomTextStyle.title9,
+                modifier = Modifier.padding(horizontal = 22.dp)
+            )
             Spacer(Modifier.height(5.dp))
             DateTextField(dateTaken) {
                 showModalInput = true
@@ -377,9 +388,14 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
-            Row {
+            Row(
+                modifier = Modifier.padding(horizontal = 22.dp)
+            ) {
                 Column {
-                    Text("AI 사용 여부")
+                    Text(
+                        text = "AI 사용 여부",
+                        style = CustomTextStyle.title9,
+                    )
                     Spacer(Modifier.height(4.dp))
                     Text("AI로 제작된 사진은 체크 해야합니다.")
                 }
@@ -389,15 +405,16 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     checked = aiState,
                     onCheckedChange = {
                         aiState = it
-                    }
-                )
+                    })
             }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
             Spacer(Modifier.height(15.dp))
-            Row {
+            Row(
+                modifier = Modifier.padding(horizontal = 22.dp)
+            ) {
                 Column {
-                    Text("댓글 사용 여부")
+                    Text(text = "댓글 사용 여부", style = CustomTextStyle.title9)
                     Spacer(Modifier.height(4.dp))
                     Text("게시글 댓글 사용을 중지 하려면 체크 해주세요")
                 }
@@ -407,21 +424,10 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     checked = commentsEnabled,
                     onCheckedChange = {
                         commentsEnabled = it
-                    }
-                )
+                    })
             }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
-            Spacer(Modifier.height(15.dp))
-            Text("출처")
-            Spacer(Modifier.height(5.dp))
-            TextField(
-                // 출처 입력
-                value = title,
-                onValueChange = { title = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("출처") },
-            )
             Spacer(Modifier.height(40.dp))
             Box(
                 modifier = Modifier
@@ -430,8 +436,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     .background(CustomColor.yellow_100)
                     .clickableSingle {
                         uploadViewModel.uploadSnap()
-                    },
-                contentAlignment = Alignment.Center
+                    }, contentAlignment = Alignment.Center
             ) {
                 Text("만들기")
             }
@@ -444,19 +449,23 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                         // 달력 모달 본문
                         test(
                             currentSelectedDate = selectedDate,
-                            onDateChange = { picked -> selectedDate = picked }
-                        )
+                            onDateChange = { picked -> selectedDate = picked })
                         Spacer(Modifier.height(12.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End
                         ) {
+                            TextButton(onClick = {
+                                showModalInput = false
+                                dateTaken = "YYYY-MM-DD"
+                            }) { Text("초기화") }
+                            Spacer(Modifier.weight(1F))
                             TextButton(onClick = { showModalInput = false }) { Text("취소") }
                             Spacer(Modifier.width(8.dp))
                             TextButton(onClick = {
                                 showModalInput = false
                                 dateTaken =
-                                    if (selectedDate != null) selectedDate.toString() else "YYYY-MM-DD"
+                                    selectedDate?.toString() ?: "YYYY-MM-DD"
                             }) { Text("확인") }
                         }
                     }
@@ -469,8 +478,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChipTextField(
-    tags: List<String>,
-    onTagsChange: (List<String>) -> Unit
+    tags: List<String>, onTagsChange: (List<String>) -> Unit
 ) {
     val context = LocalContext.current
     var input by remember { mutableStateOf("") }
@@ -503,11 +511,15 @@ fun ChipTextField(
                 input = text
             }
         },
+        textStyle = TextStyle(
+            color = CustomColor.light_black, fontSize = 13.sp
+        ),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { addTagIfPossible(input) }),
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 22.dp)
             .onPreviewKeyEvent { event ->
                 if (event.key == Key.Backspace && input.isEmpty() && tags.isNotEmpty()) {
                     // remove the last tag when backspace is pressed and there is no input text
@@ -517,19 +529,20 @@ fun ChipTextField(
                     false
                 }
             }
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(vertical = 10.dp),
         decorationBox = { innerTextField ->
             // 필드 안에 Chips + 입력 커서를 함께 배치
             FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 tags.forEach { tag ->
                     Box(
                         modifier = Modifier
                             .background(Color(0xFF3A3D43), RoundedCornerShape(16.dp))
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.CenterStart
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(tag, color = Color.White)
@@ -539,8 +552,7 @@ fun ChipTextField(
                                 color = Color(0xFF9AA0A6),
                                 modifier = Modifier.clickableSingle {
                                     onTagsChange(tags - tag)
-                                }
-                            )
+                                })
                         }
                     }
                 }
@@ -551,17 +563,13 @@ fun ChipTextField(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (input.isEmpty()) {
-                        Text(
-                            text = if (tags.isEmpty()) "태그 입력 후 Enter (쉼표도 가능)" else "",
-                            color = Color(0xFF9AA0A6)
-                        )
+                        TextEditHint(text = if (tags.isEmpty()) "태그 입력 후 Enter (쉼표도 가능)" else "")
                     }
                     // 실제 텍스트 입력
                     innerTextField()
                 }
             }
-        }
-    )
+        })
 }
 
 
@@ -569,6 +577,7 @@ fun ChipTextField(
 fun DateTextField(text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
+            .padding(horizontal = 22.dp)
             .height(40.dp)
             .border(
                 border = BorderStroke(0.5.dp, CustomColor.light_gray),
@@ -576,8 +585,7 @@ fun DateTextField(text: String, onClick: () -> Unit) {
             )
             .clickableSingle {
                 onClick()
-            },
-        verticalAlignment = Alignment.CenterVertically
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(11.dp))
         Icon(
@@ -590,7 +598,8 @@ fun DateTextField(text: String, onClick: () -> Unit) {
         Box(
             Modifier.weight(1F)
         ) {
-            TextEditHint(text)
+            if (text == "YYYY-MM-DD") TextEditHint(text)
+            else Text(text = text, style = CustomTextStyle.body1)
         }
     }
 }
@@ -670,23 +679,18 @@ fun test(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
                 Spacer(modifier = Modifier.size(18.dp))
             }
         }
-        HorizontalCalendar(
-            state = state,
-            dayContent = { day ->
-                Day(
-                    day = day,
-                    isSelected = currentSelectedDate == day.date,
-                    onClick = { clickedDay ->
-                        val newSelection =
-                            if (currentSelectedDate == clickedDay.date) null else clickedDay.date
-                        onDateChange(newSelection)
-                    }
-                )
-            },
-            monthHeader = {
-                DaysOfWeekTitle(daysOfWeek = daysOfWeek)
-            }
-        )
+        HorizontalCalendar(state = state, dayContent = { day ->
+            Day(
+                day = day,
+                isSelected = currentSelectedDate == day.date,
+                onClick = { clickedDay ->
+                    val newSelection =
+                        if (currentSelectedDate == clickedDay.date) null else clickedDay.date
+                    onDateChange(newSelection)
+                })
+        }, monthHeader = {
+            DaysOfWeekTitle(daysOfWeek = daysOfWeek)
+        })
     }
 }
 
@@ -708,14 +712,11 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
             .clip(CircleShape)
             .background(color = if (isSelected) CustomColor.container else Color.Transparent)
             .clickable(
-                enabled = isMonthDate,
-                onClick = { onClick(day) }
-            ),
+                enabled = isMonthDate, onClick = { onClick(day) }),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = d.dayOfMonth.toString(),
-            color = textColor
+            text = d.dayOfMonth.toString(), color = textColor
         )
     }
 }
@@ -727,7 +728,9 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = dayOfWeek.getDisplayName(
+                    java.time.format.TextStyle.SHORT, Locale.getDefault()
+                ),
             )
         }
     }
@@ -744,7 +747,9 @@ fun StarProfile() {
             }) {
         Box(
             modifier = Modifier
-                .background(CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape)
+                .background(
+                    CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
+                )
                 .width(70.dp)
                 .height(70.dp), contentAlignment = Alignment.BottomEnd
         ) {
@@ -766,4 +771,22 @@ fun StarProfile() {
 @Composable
 fun StarGroup() {
 
+}
+
+@Composable
+fun InputText(modifier: Modifier = Modifier, hint: String, inputText: (String) -> Unit) {
+    var text by remember { mutableStateOf("") }
+    BasicTextField(
+        value = text,
+        onValueChange = { it ->
+            text = it
+            inputText(it)
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        decorationBox = { innerTextField ->
+            if (text.isEmpty()) TextEditHint(hint)
+            else innerTextField()
+        })
 }
