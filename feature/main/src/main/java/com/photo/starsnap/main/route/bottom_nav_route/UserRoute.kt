@@ -7,11 +7,12 @@ import androidx.navigation.navigation
 import com.photo.starsnap.main.ui.screen.main.profile.ProfileScreen
 import com.photo.starsnap.main.ui.screen.main.setting.SettingScreen
 import com.photo.starsnap.main.utils.NavigationRoute
+import com.photo.starsnap.main.viewmodel.main.UserViewModel
 
-fun NavGraphBuilder.UserRoute(navController: NavController) {
+fun NavGraphBuilder.UserRoute(navController: NavController, userViewModel: UserViewModel) {
     navigation(startDestination = NavigationRoute.PROFILE, route = NavigationRoute.USER_ROUTE) {
         composable(NavigationRoute.PROFILE) {
-            ProfileScreen(navController)
+            ProfileScreen(navController, userViewModel)
         }
         composable(NavigationRoute.SETTING_ROUTE) {
             SettingScreen(navController)
