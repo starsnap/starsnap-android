@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -45,7 +46,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -82,13 +82,12 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle
-import com.photo.starsnap.designsystem.text.CustomTextStyle.TitleSmall
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title9
-import com.photo.starsnap.designsystem.text.CustomTextStyle.title8
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.ui.component.TopAppBar
 import com.photo.starsnap.main.utils.NavigationRoute
 import com.photo.starsnap.main.utils.clickableSingle
+import com.photo.starsnap.main.viewmodel.main.CroppingImage
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -142,53 +141,9 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
         ) {
             val starGridState = rememberLazyGridState()
             val starGroupGridState = rememberLazyGridState()
+            selectedPhoto(pagerState, selectedPhotos)
 
-            // 사진 위치 상태
-            val dotsAlpha by animateFloatAsState(
-                targetValue = if (showDots) 1f else 0f,
-                animationSpec = tween(durationMillis = 250),
-                label = "dotsAlpha"
-            )
-
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-            ) { page ->
-                val photo = selectedPhotos[page]
-                GlideImage(
-                    modifier = Modifier
-                        .animateContentSize()
-                        .fillMaxSize(),
-                    imageModel = { photo.imageUri },
-                    imageOptions = ImageOptions(
-                        contentScale = ContentScale.FillHeight,
-                        alignment = Alignment.Center,
-                        alpha = 1f
-                    )
-                )
-            }
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 8.dp)
-//                    .alpha(dotsAlpha), // 공간 유지 + 페이드 애니메이션
-//                horizontalArrangement = Arrangement.Center
-//            ) {
-//                repeat(selectedPhotos.size) { index ->
-//                    val isSelected = pagerState.currentPage == index
-//                    Box(
-//                        modifier = Modifier
-//                            .padding(horizontal = 4.dp)
-//                            .size(if (isSelected) 10.dp else 8.dp)
-//                            .background(
-//                                color = if (isSelected) CustomColor.light_black
-//                                else CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
-//                            )
-//                    )
-//                }
-//            }
+            PagerDots(showDots = showDots, pagerState = pagerState, selectedPhotos = selectedPhotos)
             Spacer(Modifier.height(5.dp))
             ChipTextField(
                 tags = tags, onTagsChange = { tags = it })
@@ -435,7 +390,14 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     .fillMaxWidth()
                     .background(CustomColor.yellow_100)
                     .clickableSingle {
-                        uploadViewModel.uploadSnap()
+                        uploadViewModel.uploadSnap(
+                            title,
+                            tags,
+                            source,
+                            dateTaken,
+                            aiState,
+                            commentsEnabled
+                        )
                     }, contentAlignment = Alignment.Center
             ) {
                 Text("만들기")
@@ -447,7 +409,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
 
                     Column(modifier = Modifier.padding(16.dp)) {
                         // 달력 모달 본문
-                        test(
+                        calendar(
                             currentSelectedDate = selectedDate,
                             onDateChange = { picked -> selectedDate = picked })
                         Spacer(Modifier.height(12.dp))
@@ -605,7 +567,7 @@ fun DateTextField(text: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun test(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
+fun calendar(currentSelectedDate: LocalDate?, onDateChange: (LocalDate?) -> Unit) {
     val currentMonth = remember { YearMonth.now() } // 현재 날짜 구하기
     val startMonth = remember { currentMonth.minusYears(10) } // 현재 날짜에서 -10년을 마지막으로
     val endMonth = remember { YearMonth.now() } // 최대 일을 현재로
@@ -787,6 +749,62 @@ fun InputText(modifier: Modifier = Modifier, hint: String, inputText: (String) -
             .padding(vertical = 10.dp),
         decorationBox = { innerTextField ->
             if (text.isEmpty()) TextEditHint(hint)
-            else innerTextField()
+            innerTextField()
         })
+}
+
+
+// 위치 확인 하는
+@Composable
+fun PagerDots(showDots: Boolean, pagerState: PagerState, selectedPhotos: List<CroppingImage>) {
+    // 사진 위치 상태
+    val dotsAlpha by animateFloatAsState(
+        targetValue = if (showDots) 1f else 0f,
+        animationSpec = tween(durationMillis = 250),
+        label = "dotsAlpha"
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+            .alpha(dotsAlpha), // 공간 유지 + 페이드 애니메이션
+        horizontalArrangement = Arrangement.Center
+    ) {
+        repeat(selectedPhotos.size) { index ->
+            val isSelected = pagerState.currentPage == index
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .size(if (isSelected) 8.dp else 6.dp)
+                    .background(
+                        color = if (isSelected) CustomColor.light_black
+                        else CustomColor.light_gray.copy(alpha = 0.3f), shape = CircleShape
+                    )
+            )
+        }
+    }
+}
+
+@Composable
+fun selectedPhoto(pagerState: PagerState, selectedPhotos: List<CroppingImage>) {
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+    ) { page ->
+        val photo = selectedPhotos[page]
+        GlideImage(
+            modifier = Modifier
+                .animateContentSize()
+                .fillMaxSize(),
+            imageModel = { photo.imageUri },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.FillHeight,
+                alignment = Alignment.Center,
+                alpha = 1f
+            )
+        )
+    }
 }
