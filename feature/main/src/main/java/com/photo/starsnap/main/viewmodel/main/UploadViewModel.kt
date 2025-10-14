@@ -2,7 +2,12 @@ package com.photo.starsnap.main.viewmodel.main
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -40,42 +45,31 @@ class UploadViewModel @Inject constructor(
             pageSize = GALLERY_PHOTO_SIZE,
             initialLoadSize = GALLERY_PHOTO_SIZE,
             enablePlaceholders = false
-        ),
-        pagingSourceFactory = {
+        ), pagingSourceFactory = {
             CustomGalleryPagingSource(
-                photoRepository = photoRepository,
-                currentLocation = "" // 모든 위치의 사진 가져오기
+                photoRepository = photoRepository, currentLocation = "" // 모든 위치의 사진 가져오기
             )
-        }
-    ).flow.cachedIn(viewModelScope)
+        }).flow.cachedIn(viewModelScope)
 
     val starList = Pager(
         config = PagingConfig(
-            pageSize = STAR_SIZE,
-            initialLoadSize = STAR_SIZE,
-            enablePlaceholders = false
-        ),
-        pagingSourceFactory = {
+            pageSize = STAR_SIZE, initialLoadSize = STAR_SIZE, enablePlaceholders = false
+        ), pagingSourceFactory = {
             StarPagingSource(
-                starRepository = starRepository,
-                starName = _searchStar.value
+                starRepository = starRepository, starName = _searchStar.value
             )
-        }
-    ).flow.cachedIn(viewModelScope)
+        }).flow.cachedIn(viewModelScope)
 
     val starGroupList = Pager(
         config = PagingConfig(
             pageSize = STAR_GROUP_SIZE,
             initialLoadSize = STAR_GROUP_SIZE,
             enablePlaceholders = false
-        ),
-        pagingSourceFactory = {
+        ), pagingSourceFactory = {
             StarGroupPagingSource(
-                starRepository = starRepository,
-                starGroupName = _searchStarGroup.value
+                starRepository = starRepository, starGroupName = _searchStarGroup.value
             )
-        }
-    ).flow.cachedIn(viewModelScope)
+        }).flow.cachedIn(viewModelScope)
 
     private val _searchStar = MutableStateFlow<String>("")
     val searchStar: StateFlow<String>
@@ -119,8 +113,7 @@ class UploadViewModel @Inject constructor(
             current + CroppingImage(id = id, imageUri = imageUri)
         }
         Log.d(
-            "UploadViewModel",
-            "image id: $id, ${if (exists) "remove" else "select"}"
+            "UploadViewModel", "image id: $id, ${if (exists) "remove" else "select"}"
         )
     }
 
@@ -139,8 +132,7 @@ class UploadViewModel @Inject constructor(
             current + star
         }
         Log.d(
-            "UploadViewModel",
-            "selected star: ${star.name}"
+            "UploadViewModel", "selected star: ${star.name}"
         )
     }
 
@@ -158,8 +150,7 @@ class UploadViewModel @Inject constructor(
             current + starGroup
         }
         Log.d(
-            "UploadViewModel",
-            "selected star-group: ${starGroup.name}"
+            "UploadViewModel", "selected star-group: ${starGroup.name}"
         )
     }
 
@@ -167,8 +158,18 @@ class UploadViewModel @Inject constructor(
         _selectedStarGroups.value = listOf()
     }
 
-    fun uploadSnap() = viewModelScope.launch {
-
+    fun uploadSnap(
+        title: String,
+        tag: List<String>,
+        source: String,
+        dateTaken: String,
+        aiState: Boolean,
+        commentsEnabled: Boolean
+    ) = viewModelScope.launch {
+        Log.d(
+            TAG,
+            "uploadSnap: title=$title, tag=$tag, source=$source, dateTaken=$dateTaken, aiState=$aiState, commentsEnabled=$commentsEnabled, selectedStars=${_selectedStars.value.size}, selectedStarGroups=${_selectedStarGroups.value.size}"
+        )
     }
 }
 
