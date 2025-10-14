@@ -27,6 +27,7 @@ import com.photo.starsnap.main.utils.BottomNavItem
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
 import com.photo.starsnap.main.viewmodel.main.SnapViewModel
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
+import com.photo.starsnap.main.viewmodel.main.UserViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -34,9 +35,11 @@ fun MainScreen(
     rootNavController: NavHostController,
     uploadViewModel: UploadViewModel = hiltViewModel(),
     snapViewModel: SnapViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         Log.d("화면", "MainScreen")
+        userViewModel.getUserData()
     }
     val bottomNavItems = remember {
         listOf(
@@ -95,7 +98,7 @@ fun MainScreen(
             }
         ) {
             HomeRoute(navController, snapViewModel)
-            UserRoute(navController)
+            UserRoute(navController, userViewModel)
             StarHubRoute(navController)
             SearchRoute(navController)
             UploadRoute(navController, snapViewModel, uploadViewModel)
