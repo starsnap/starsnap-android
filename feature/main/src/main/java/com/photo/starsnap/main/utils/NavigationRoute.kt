@@ -1,6 +1,7 @@
 package com.photo.starsnap.main.utils
 
 object NavigationRoute {
+    // root route
     const val AUTH_ROUTE = "auth_route"
     const val MAIN_ROUTE = "main_route"
 
@@ -21,6 +22,9 @@ object NavigationRoute {
 
     const val SEARCH = "main/search" // search screen
 
+    // star hub screen
+    const val STAR_HUB = "main/star_hub"
+
     // snap screen
     const val SNAP = "snap"
 
@@ -28,11 +32,7 @@ object NavigationRoute {
     const val STAR = "star"
     const val STAR_GROUP = "star_group"
 
-    // star hub
-    const val STAR_GROUP_LIST = "main/star_hub/star_group_list" // star group 리스트
-    const val STAR_LIST = "main/star_hub/star_list" // star 리스트
-
-    // setting
+    // setting screen
     const val PROFILE = "profile" // 프로필
     const val FIX_PROFILE = "fix_profile" // 프로필 수정
     const val REPORT_LIST = "main/setting/report_list" // 신고 내역
@@ -41,17 +41,15 @@ object NavigationRoute {
     const val SAVE_LIST = "main/setting/save_list" // 저장 내역
     const val AUTH_SETTING = "main/setting/auth_setting" // 소셜 계정
 
-
-    // star upload
+    // star upload screen
     const val PICK_STAR = "main/upload/pick_star" // star 선택
     const val SET_SNAP = "main/upload/set_snap" // snap 설정
     const val PICK_STAR_GROUP = "main/upload/pick_star_group" // star 선택
     const val PICK_IMAGE = "main/upload/pick_image" // image 선택
 
-    // 알람
+    // alarm screen
     const val ALARM = "main/alarm"
     const val ALARM_SETTING = "main/setting/alarm_setting" // alarm 설정
-
 
     // bottom nav route
     const val HOME_ROUTE = "home_route" // home 라우터
