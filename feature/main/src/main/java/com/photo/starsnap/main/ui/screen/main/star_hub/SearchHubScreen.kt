@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
@@ -47,6 +48,9 @@ import com.photo.starsnap.main.utils.clickableSingle
 @Composable
 @Preview
 fun SearchHubScreen() {
+    // false면 star, true면 stargroup
+    var state by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         Log.d("화면", "SearchHubScreen")
     }
@@ -60,6 +64,10 @@ fun SearchHubScreen() {
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            selectText {
+                state = it
+            }
         }
     }
 }
@@ -117,5 +125,55 @@ fun SearchTopBar(state: Boolean = false) {
                 .background(CustomColor.container)
         ) { }
         Spacer(modifier = Modifier.height(9.dp))
+    }
+}
+
+@Composable
+fun selectText(changeState: (Boolean) -> Unit) {
+    val tempState by remember { mutableStateOf(false) }
+    Row(
+        modifier = Modifier
+            .height(30.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier
+            .clickableSingle {
+                changeState(false)
+            }
+            .weight(1F), contentAlignment = Alignment.Center) {
+            Text(
+                text = "Star",
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = FontFamily(
+                    Font(
+                        R.font.pretendard_semi_bold,
+                        FontWeight.SemiBold,
+                        FontStyle.Normal
+                    )
+                ),
+                color = if (tempState) CustomColor.light_black else CustomColor.sub_title
+            )
+        }
+        Box(modifier = Modifier
+            .clickableSingle {
+                changeState(true)
+            }
+            .weight(1F), contentAlignment = Alignment.Center) {
+            Text(
+                text = "StarGroup",
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = FontFamily(
+                    Font(
+                        R.font.pretendard_semi_bold,
+                        FontWeight.SemiBold,
+                        FontStyle.Normal
+                    )
+                ),
+                color = if (!tempState) CustomColor.light_black else CustomColor.sub_title
+            )
+        }
     }
 }
