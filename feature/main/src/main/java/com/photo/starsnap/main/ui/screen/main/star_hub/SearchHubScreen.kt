@@ -24,6 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.Crossfade
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,31 +43,42 @@ import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title2
+import com.photo.starsnap.designsystem.text.CustomTextStyle.title9
 import com.photo.starsnap.main.ui.component.PasswordEyeCheckBox
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.utils.EditTextType
 import com.photo.starsnap.main.utils.clickableSingle
+import kotlinx.coroutines.delay
 
 @Composable
 @Preview
 fun SearchHubScreen() {
     // false면 star, true면 stargroup
     var state by remember { mutableStateOf(false) }
+    var search by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         Log.d("화면", "SearchHubScreen")
     }
 
+    LaunchedEffect(search) {
+        if(search.isEmpty()) return@LaunchedEffect
+        delay(1000L)
+        Log.d("검색어", search)
+    }
+
     Scaffold(
         modifier = Modifier.padding(horizontal = 22.dp),
-        topBar = { SearchTopBar(state) }
+        topBar = { SearchTopBar(state){
+            search = it
+        } }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             selectText {
                 state = it
             }
@@ -73,22 +87,24 @@ fun SearchHubScreen() {
 }
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SearchTopBar(state: Boolean = false) {
+fun SearchTopBar(state: Boolean = false, searchText: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
-    var hintText = if (state) "StarGroup 검색" else "Star 검색"
+    val hintText = if (state) "StarGroup 검색" else "Star 검색"
     Column(
         modifier = Modifier
-            .height(55.dp)
+            .height(65.dp)
             .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(18.dp))
         BasicTextField(
             value = text,
-            textStyle = title2,
+            textStyle = title9,
             onValueChange = { input ->
                 if (100 > input.length) {
                     text = input
+                    searchText(text)
                 }
             },
             modifier = Modifier
@@ -101,7 +117,7 @@ fun SearchTopBar(state: Boolean = false) {
                         .padding(start = 0.dp, end = 15.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(11.dp))
+                    Spacer(modifier = Modifier.width(13.dp))
                     Icon(
                         modifier = Modifier.size(18.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.search_icon),
@@ -113,7 +129,9 @@ fun SearchTopBar(state: Boolean = false) {
                     ) {
                         innerTextField()
                         if (text.isEmpty()) {
-                            TextEditHint(hintText)
+                            Crossfade(targetState = hintText, label = "hintChange") { animatedHint ->
+                                TextEditHint(animatedHint)
+                            }
                         }
                     }
                 }
@@ -130,7 +148,7 @@ fun SearchTopBar(state: Boolean = false) {
 
 @Composable
 fun selectText(changeState: (Boolean) -> Unit) {
-    val tempState by remember { mutableStateOf(false) }
+    var tempState by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .height(30.dp)
@@ -140,6 +158,7 @@ fun selectText(changeState: (Boolean) -> Unit) {
         Box(modifier = Modifier
             .clickableSingle {
                 changeState(false)
+                tempState = false
             }
             .weight(1F), contentAlignment = Alignment.Center) {
             Text(
@@ -153,12 +172,13 @@ fun selectText(changeState: (Boolean) -> Unit) {
                         FontStyle.Normal
                     )
                 ),
-                color = if (tempState) CustomColor.light_black else CustomColor.sub_title
+                color = if (!tempState) CustomColor.light_black else CustomColor.light_gray
             )
         }
         Box(modifier = Modifier
             .clickableSingle {
                 changeState(true)
+                tempState = true
             }
             .weight(1F), contentAlignment = Alignment.Center) {
             Text(
@@ -172,7 +192,7 @@ fun selectText(changeState: (Boolean) -> Unit) {
                         FontStyle.Normal
                     )
                 ),
-                color = if (!tempState) CustomColor.light_black else CustomColor.sub_title
+                color = if (tempState) CustomColor.light_black else CustomColor.light_gray
             )
         }
     }
