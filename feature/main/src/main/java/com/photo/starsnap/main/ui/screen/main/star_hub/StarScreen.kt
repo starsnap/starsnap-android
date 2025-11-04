@@ -14,7 +14,10 @@ import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.main.ui.component.TopAppBar
 
 @Composable
-fun StarScreen(navController: NavController) {
+fun StarScreen(
+    rootNavController: NavController,
+    searchHubNavController: NavController
+) {
     LaunchedEffect(Unit) {
         Log.d("화면", "StarScreen")
     }
@@ -22,7 +25,7 @@ fun StarScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.snap_top_app_bar_title),
-                navController = navController
+                navController = rootNavController
             )
         },
         containerColor = CustomColor.container,

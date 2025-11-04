@@ -39,6 +39,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
@@ -47,31 +53,44 @@ import com.photo.starsnap.designsystem.text.CustomTextStyle.title9
 import com.photo.starsnap.main.ui.component.PasswordEyeCheckBox
 import com.photo.starsnap.main.ui.component.TextEditHint
 import com.photo.starsnap.main.utils.EditTextType
+import com.photo.starsnap.main.utils.NavigationRoute
 import com.photo.starsnap.main.utils.clickableSingle
+import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import kotlinx.coroutines.delay
+import com.photo.starsnap.main.route.StarHubRoute
+import com.photo.starsnap.main.viewmodel.main.StarViewModel
 
 @Composable
-@Preview
-fun SearchHubScreen() {
+fun SearchHubScreen(
+    navController: NavController, starViewModel: StarViewModel
+) {
+
+    val searchHubNavController = rememberNavController()
+
     // false면 star, true면 stargroup
     var state by remember { mutableStateOf(false) }
-    var search by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         Log.d("화면", "SearchHubScreen")
     }
 
-    LaunchedEffect(search) {
-        if(search.isEmpty()) return@LaunchedEffect
-        delay(1000L)
-        Log.d("검색어", search)
+    LaunchedEffect(state) {
+        if(state)
+            searchHubNavController.navigate(NavigationRoute.SEARCH_STAR_GROUP)
+        else
+            searchHubNavController.navigate(NavigationRoute.SEARCH_STAR)
     }
 
     Scaffold(
         modifier = Modifier.padding(horizontal = 22.dp),
-        topBar = { SearchTopBar(state){
-            search = it
-        } }
+        topBar = {
+            SearchTopBar(state) {
+                if(state)
+                    starViewModel.setSearchStarGroupName(it)
+                else
+                    starViewModel.setSearchStarName(it)
+            }
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -82,6 +101,12 @@ fun SearchHubScreen() {
             selectText {
                 state = it
             }
+        }
+        NavHost(
+            navController = searchHubNavController,
+            startDestination = NavigationRoute.STAR_HUB_ROUTE,
+        ) {
+            StarHubRoute(navController, searchHubNavController, starViewModel)
         }
     }
 }
@@ -104,7 +129,7 @@ fun SearchTopBar(state: Boolean = false, searchText: (String) -> Unit) {
             onValueChange = { input ->
                 if (100 > input.length) {
                     text = input
-                    searchText(text)
+                    searchText(input)
                 }
             },
             modifier = Modifier
@@ -129,7 +154,10 @@ fun SearchTopBar(state: Boolean = false, searchText: (String) -> Unit) {
                     ) {
                         innerTextField()
                         if (text.isEmpty()) {
-                            Crossfade(targetState = hintText, label = "hintChange") { animatedHint ->
+                            Crossfade(
+                                targetState = hintText,
+                                label = "hintChange"
+                            ) { animatedHint ->
                                 TextEditHint(animatedHint)
                             }
                         }
@@ -155,12 +183,13 @@ fun selectText(changeState: (Boolean) -> Unit) {
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier
-            .clickableSingle {
-                changeState(false)
-                tempState = false
-            }
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .clickableSingle {
+                    changeState(false)
+                    tempState = false
+                }
+                .weight(1F), contentAlignment = Alignment.Center) {
             Text(
                 text = "Star",
                 textAlign = TextAlign.Center,
@@ -175,12 +204,13 @@ fun selectText(changeState: (Boolean) -> Unit) {
                 color = if (!tempState) CustomColor.light_black else CustomColor.light_gray
             )
         }
-        Box(modifier = Modifier
-            .clickableSingle {
-                changeState(true)
-                tempState = true
-            }
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .clickableSingle {
+                    changeState(true)
+                    tempState = true
+                }
+                .weight(1F), contentAlignment = Alignment.Center) {
             Text(
                 text = "StarGroup",
                 textAlign = TextAlign.Center,
