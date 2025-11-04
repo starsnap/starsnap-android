@@ -66,12 +66,12 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    val star by uploadViewModel.searchStar.collectAsStateWithLifecycle()
+    var searchStarName by remember { mutableStateOf("") }
     var selectStars = uploadViewModel.selectedStars.collectAsStateWithLifecycle()
-    val starList = uploadViewModel.starList.collectAsLazyPagingItems()
+    val starList = uploadViewModel.starList(searchStarName).collectAsLazyPagingItems()
     val gridState = rememberLazyGridState()
 
-    LaunchedEffect(star) {
+    LaunchedEffect(searchStarName) {
         delay(2000)
         starList.refresh()
     }
@@ -92,7 +92,7 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
                         .height(50.dp)
                 ) {
                     SearchTextField("Star 검색") {
-                        uploadViewModel.updateSearchStar(it)
+                        searchStarName = it
                     }
                 }
                 Box(
@@ -120,21 +120,19 @@ fun PickStarScreen(navController: NavController, uploadViewModel: UploadViewMode
                         val star = starList[index]
                         Log.d("StarList", "index: $index, image: $star")
 
-                        if (star != null) {
+                        star?.let { s ->
                             Log.d("PickStarScreen", "추가")
-                            val isSelected = selectStars.value.any { it.id == star.id }  // ← 선택 여부 계산
+                            val isSelected = selectStars.value.any { it.id == s.id }  // ← 선택 여부 계산
 
-                            StarItem(star, isSelected) {
-                                uploadViewModel.selectedStar(star)
+                            StarItem(s, isSelected) {
+                                uploadViewModel.selectedStar(s)
                             }
-                        } else {
-                            Box(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(70.dp)
-                                    .background(CustomColor.yellow_100)
-                            )
-                        }
+                        } ?: Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(70.dp)
+                                .background(CustomColor.yellow_100)
+                        )
                     }
                 } else {
                     items(20) { index ->

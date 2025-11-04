@@ -46,13 +46,13 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadViewModel) {
-    val starGroup by uploadViewModel.searchStarGroup.collectAsStateWithLifecycle()
+    var searchStarGroupName by remember { mutableStateOf("") }
     var selectStarGroups =
         uploadViewModel.selectedStarGroups.collectAsStateWithLifecycle() // 선택된 star-group
-    val starGroupList = uploadViewModel.starGroupList.collectAsLazyPagingItems() // 가져온 star-group
+    val starGroupList = uploadViewModel.starGroupList(searchStarGroupName).collectAsLazyPagingItems() // 가져온 star-group
     val gridState = rememberLazyGridState() // grid 상태
 
-    LaunchedEffect(starGroup) {
+    LaunchedEffect(searchStarGroupName) {
         delay(2000)
         starGroupList.refresh()
     }
@@ -74,7 +74,7 @@ fun PickStarGroupScreen(navController: NavController, uploadViewModel: UploadVie
                         .height(50.dp)
                 ) {
                     SearchTextField("StarGroup 검색") {
-                        uploadViewModel.updateSearchStarGroup(it)
+                        searchStarGroupName = it
                     }
                 }
                 Box(

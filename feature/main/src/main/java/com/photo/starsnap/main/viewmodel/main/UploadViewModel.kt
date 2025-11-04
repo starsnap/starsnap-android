@@ -51,43 +51,35 @@ class UploadViewModel @Inject constructor(
             )
         }).flow.cachedIn(viewModelScope)
 
-    val starList = Pager(
-        config = PagingConfig(
-            pageSize = STAR_SIZE, initialLoadSize = STAR_SIZE, enablePlaceholders = false
-        ), pagingSourceFactory = {
-            StarPagingSource(
-                starRepository = starRepository, starName = _searchStar.value
-            )
-        }).flow.cachedIn(viewModelScope)
 
-    val starGroupList = Pager(
+    fun starGroupList(starGroupName: String) = Pager(
         config = PagingConfig(
             pageSize = STAR_GROUP_SIZE,
             initialLoadSize = STAR_GROUP_SIZE,
             enablePlaceholders = false
-        ), pagingSourceFactory = {
+        ),
+        pagingSourceFactory = {
             StarGroupPagingSource(
-                starRepository = starRepository, starGroupName = _searchStarGroup.value
+                starRepository = starRepository,
+                starGroupName = starGroupName
             )
-        }).flow.cachedIn(viewModelScope)
-
-    private val _searchStar = MutableStateFlow<String>("")
-    val searchStar: StateFlow<String>
-        get() = _searchStar
-
-    fun updateSearchStar(query: String) {
-        _searchStar.value = query
-    }
+        }
+    ).flow.cachedIn(viewModelScope)
 
 
-    private val _searchStarGroup = MutableStateFlow<String>("")
-    val searchStarGroup: StateFlow<String>
-        get() = _searchStarGroup
-
-    fun updateSearchStarGroup(query: String) {
-        _searchStarGroup.value = query
-    }
-
+    fun starList(starName: String) = Pager(
+        config = PagingConfig(
+            pageSize = STAR_GROUP_SIZE,
+            initialLoadSize = STAR_GROUP_SIZE,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            StarPagingSource(
+                starRepository = starRepository,
+                starName = starName
+            )
+        }
+    ).flow.cachedIn(viewModelScope)
 
     private val _selectedImages = MutableStateFlow<List<CroppingImage>>(emptyList())
     val selectedPhotos: StateFlow<List<CroppingImage>>
