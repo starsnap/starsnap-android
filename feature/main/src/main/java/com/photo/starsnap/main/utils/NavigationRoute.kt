@@ -47,6 +47,10 @@ object NavigationRoute {
     const val PICK_STAR_GROUP = "main/upload/pick_star_group" // star 선택
     const val PICK_IMAGE = "main/upload/pick_image" // image 선택
 
+    // star hub screen
+    const val SEARCH_STAR = "main/star_hub/search_star"
+    const val SEARCH_STAR_GROUP = "main/star_hub/search_star_group"
+
     // alarm screen
     const val ALARM = "main/alarm"
     const val ALARM_SETTING = "main/setting/alarm_setting" // alarm 설정
@@ -60,4 +64,5 @@ object NavigationRoute {
 
     // setting route
     const val SETTING_ROUTE = "setting_route" // setting 라우터
+
 }
