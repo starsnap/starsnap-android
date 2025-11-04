@@ -26,6 +26,7 @@ import com.photo.starsnap.main.route.bottom_nav_route.UserRoute
 import com.photo.starsnap.main.utils.BottomNavItem
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
 import com.photo.starsnap.main.viewmodel.main.SnapViewModel
+import com.photo.starsnap.main.viewmodel.main.StarViewModel
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.photo.starsnap.main.viewmodel.main.UserViewModel
 
@@ -35,7 +36,8 @@ fun MainScreen(
     rootNavController: NavHostController,
     uploadViewModel: UploadViewModel = hiltViewModel(),
     snapViewModel: SnapViewModel = hiltViewModel(),
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel = hiltViewModel(),
+    starViewModel: StarViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         Log.d("화면", "MainScreen")
@@ -99,7 +101,7 @@ fun MainScreen(
         ) {
             HomeRoute(navController, snapViewModel)
             UserRoute(navController, userViewModel)
-            StarHubRoute(navController)
+            StarHubRoute(navController, starViewModel)
             SearchRoute(navController)
             UploadRoute(navController, snapViewModel, uploadViewModel)
         }
