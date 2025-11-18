@@ -101,12 +101,13 @@ fun SearchHubScreen(
             selectText {
                 state = it
             }
-        }
-        NavHost(
-            navController = searchHubNavController,
-            startDestination = NavigationRoute.STAR_HUB_ROUTE,
-        ) {
-            StarHubRoute(navController, searchHubNavController, starViewModel)
+            Spacer(modifier = Modifier.height(10.dp))
+            NavHost(
+                navController = searchHubNavController,
+                startDestination = NavigationRoute.STAR_HUB_ROUTE,
+            ) {
+                StarHubRoute(navController, searchHubNavController, starViewModel)
+            }
         }
     }
 }
