@@ -92,6 +92,7 @@ fun ProfileTopBar(navController: NavController) {
         Spacer(modifier = Modifier.weight(1F))
         Box(
             modifier = Modifier
+                .padding(start = 5.dp)
 //                .clickableSingle(onClick = { navController.popBackStack() })
         ) {
             Icon(

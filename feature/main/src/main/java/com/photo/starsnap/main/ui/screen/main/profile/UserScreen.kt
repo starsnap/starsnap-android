@@ -15,7 +15,6 @@ fun UserScreen() {
         Log.d("화면", "UserScreen")
     }
     Scaffold(
-        containerColor = CustomColor.container
     ) { padding ->
         Column(
             Modifier.padding(padding)
