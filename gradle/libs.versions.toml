@@ -4,7 +4,7 @@ kotlin = "2.1.0"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
 
-composeCompiler = "1.5.11"
+composeCompiler = "1.5.13"
 
 # lottie
 lottieVersion = "5.2.0"
@@ -15,7 +15,7 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.8.2"
 lifecycleLiveDataCore = "2.8.7"
 activityCompose = "1.8.0"
-composeBom = "2024.12.01"
+composeBom = "2025.11.01"
 hilt = "2.51.1"
 appcompat = "1.7.0"
 material = "1.12.0"
