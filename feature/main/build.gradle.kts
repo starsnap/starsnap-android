@@ -34,9 +34,9 @@ android {
     kotlinOptions {
         jvmTarget = "21"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.5.13"
+//    }
 
     buildFeatures {
         compose = true
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.runtime)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
