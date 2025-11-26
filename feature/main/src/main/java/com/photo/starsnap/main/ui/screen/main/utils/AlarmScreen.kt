@@ -1,4 +1,4 @@
-package com.photo.starsnap.main.ui.screen.main
+package com.photo.starsnap.main.ui.screen.main.utils
 
 import android.util.Log
 import androidx.compose.runtime.Composable
