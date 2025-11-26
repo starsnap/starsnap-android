@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,15 +30,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialRequest.Builder
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle.title4
+import com.photo.starsnap.designsystem.text.TextFont.pretendard
 import com.photo.starsnap.main.ui.component.AppIcon
 import com.photo.starsnap.main.ui.component.AppleLoginButton
 import com.photo.starsnap.main.ui.component.EditText
@@ -89,10 +96,18 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(horizontal = 30.dp),
     ) {
-        AppIcon(
-            Modifier
+        Spacer(modifier = Modifier.height(70.dp))
+        Text(
+            modifier = Modifier
                 .padding(vertical = 70.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.Start),
+            text = "StarSnap에서 빛나는\n순간을 공유하세요.",
+            style = TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 30.sp,
+                color = CustomColor.light_black
+            )
         )
 
         EditText(stringResource(R.string.login_edit_text_username_hint)) { username = it }
