@@ -7,10 +7,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.photo.starsnap.designsystem.CustomColor
+import androidx.navigation.NavHostController
 
 @Composable
-fun UserScreen() {
+fun UserScreen(mainNavController: NavHostController) {
     LaunchedEffect(Unit) {
         Log.d("화면", "UserScreen")
     }

@@ -8,20 +8,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.photo.starsnap.main.ui.component.BottomNavigation
 import com.photo.starsnap.main.route.bottom_nav_route.HomeRoute
 import com.photo.starsnap.main.route.bottom_nav_route.SearchRoute
 import com.photo.starsnap.main.route.bottom_nav_route.StarHubRoute
-import com.photo.starsnap.main.route.bottom_nav_route.UploadRoute
 import com.photo.starsnap.main.route.bottom_nav_route.UserRoute
 import com.photo.starsnap.main.utils.BottomNavItem
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
@@ -34,10 +33,12 @@ import com.photo.starsnap.main.viewmodel.main.UserViewModel
 @Composable
 fun MainScreen(
     rootNavController: NavHostController,
-    uploadViewModel: UploadViewModel = hiltViewModel(),
-    snapViewModel: SnapViewModel = hiltViewModel(),
-    userViewModel: UserViewModel = hiltViewModel(),
-    starViewModel: StarViewModel = hiltViewModel()
+    mainNavController: NavHostController,
+    uploadViewModel: UploadViewModel,
+    snapViewModel: SnapViewModel,
+    userViewModel: UserViewModel,
+    starViewModel: StarViewModel,
+    onNavigate: (String) -> Unit
 ) {
     LaunchedEffect(Unit) {
         Log.d("화면", "MainScreen")
@@ -64,7 +65,7 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             if(currentRoute?.startsWith("main/upload") != true) {
-                BottomNavigation(navController, bottomNavItems)
+                BottomNavigation(navController, bottomNavItems, onNavigate = onNavigate)
             }
         }
     ) { padding ->
@@ -99,12 +100,24 @@ fun MainScreen(
                 }
             }
         ) {
-            HomeRoute(navController, snapViewModel)
-            UserRoute(navController, userViewModel)
-            StarHubRoute(navController, starViewModel)
-            SearchRoute(navController)
-            UploadRoute(navController, snapViewModel, uploadViewModel)
+            composable(BottomNavItem.Home.route) {
+                HomeRoute(navController, snapViewModel)
+            }
+            composable(BottomNavItem.User.route) {
+                UserRoute(navController, userViewModel)
+            }
+            composable(BottomNavItem.Star.route) {
+                StarHubRoute(navController, starViewModel)
+            }
+            composable(BottomNavItem.Search.route) {
+                SearchRoute(navController)
+            }
+//            composable(BottomNavItem.AddSnap.route) {
+////                LaunchedEffect(Unit) {
+////                    onNavigate("add_snap")
+////                }
+////                UploadRoute(navController, snapViewModel, uploadViewModel)
+//            }
         }
     }
-
 }

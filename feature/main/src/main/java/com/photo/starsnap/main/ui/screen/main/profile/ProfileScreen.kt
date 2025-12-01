@@ -24,13 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle
-import com.photo.starsnap.main.ui.screen.main.upload.SearchTextField
 import com.photo.starsnap.main.utils.clickableSingle
 import com.photo.starsnap.main.viewmodel.main.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -38,14 +36,14 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun ProfileScreen(navController: NavController, userViewModel: UserViewModel) {
+fun ProfileScreen(mainNavController: NavController, userViewModel: UserViewModel) {
     LaunchedEffect(Unit) {
         Log.d("화면", "ProfileScreen")
     }
     val user by userViewModel.userData.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            ProfileTopBar(navController)
+            ProfileTopBar(mainNavController)
         }
     ) { padding ->
         Column(
