@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,16 +22,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.photo.starsnap.designsystem.CustomColor
+import com.photo.starsnap.main.utils.clickableSingle
 import com.photo.starsnap.main.viewmodel.main.StarViewModel
-import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 import com.photo.starsnap.network.star.dto.StarResponseDto
 import com.skydoves.landscapist.glide.GlideImage
-import java.nio.file.WatchEvent
 
 @Composable
 fun StarListScreen(
@@ -55,8 +52,10 @@ fun StarListScreen(
     ) {
         items(starList.itemCount) { index ->
             val star = starList[index]
-            if(star != null){
-                StarItem(star)
+            if(star != null) {
+                StarItem(star) {
+                    starViewModel.selectStar(star)
+                }
             }
         }
     }
@@ -64,12 +63,15 @@ fun StarListScreen(
 }
 
 @Composable
-fun StarItem(star: StarResponseDto) {
+fun StarItem(star: StarResponseDto, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .height(70.dp)
             .fillMaxWidth()
             .background(color = CustomColor.container, shape = RoundedCornerShape(12.dp))
+            .clickableSingle {
+                onClick()
+            }
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         GlideImage(
