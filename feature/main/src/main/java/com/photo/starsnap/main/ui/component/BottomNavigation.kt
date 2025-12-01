@@ -16,11 +16,13 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.photo.starsnap.main.utils.BottomNavItem
+import com.photo.starsnap.main.utils.NavigationRoute.UPLOAD_ROUTE
 
 @Composable
 fun BottomNavigation(
     navHostController: NavHostController,
-    bottomNavItems: List<BottomNavItem>
+    bottomNavItems: List<BottomNavItem>,
+    onNavigate: (String) -> Unit
 ) {
 
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
@@ -45,7 +47,11 @@ fun BottomNavigation(
                 onClick = {
                     val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                     if (!isSelected) {
-                        navHostController.navigate(item.route)
+                        if(item.route == UPLOAD_ROUTE)
+                            onNavigate("add_snap")
+                        else
+                            navHostController.navigate(item.route)
+
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
