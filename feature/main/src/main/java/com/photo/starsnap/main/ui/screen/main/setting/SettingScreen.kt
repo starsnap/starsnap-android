@@ -13,14 +13,14 @@ import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.main.ui.component.TopAppBar
 
 @Composable
-fun SettingScreen(navController: NavController) {
+fun SettingScreen(mainNavController: NavController) {
     LaunchedEffect(Unit) {
         Log.d("화면", "SettingScreen")
     }
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.setting_top_app_bar_title),
-            navController = navController
+            navController = mainNavController
         )
     }) { padding ->
         Column(Modifier.padding(padding)) {

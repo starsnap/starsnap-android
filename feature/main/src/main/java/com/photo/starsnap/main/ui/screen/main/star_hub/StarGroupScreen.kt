@@ -7,8 +7,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun StarGroupScreen(
-    rootNavController: NavController,
-    searchHubNavController: NavController
+    mainNavController: NavController,
 ) {
     LaunchedEffect(Unit) {
         Log.d("화면", "StarGroupScreen")
