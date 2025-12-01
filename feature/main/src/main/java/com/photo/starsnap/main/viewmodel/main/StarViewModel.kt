@@ -8,12 +8,11 @@ import androidx.paging.cachedIn
 import com.photo.starsnap.main.utils.constant.Constant.STAR_GROUP_SIZE
 import com.photo.starsnap.main.utils.paging.StarGroupPagingSource
 import com.photo.starsnap.main.utils.paging.StarPagingSource
-import com.photo.starsnap.model.photo.PhotoRepository
-import com.photo.starsnap.network.snap.SnapRepository
 import com.photo.starsnap.network.star.StarRepository
+import com.photo.starsnap.network.star.dto.StarGroupResponseDto
+import com.photo.starsnap.network.star.dto.StarResponseDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,13 +20,19 @@ class StarViewModel @Inject constructor(
     private val starRepository: StarRepository,
 ) : ViewModel() {
 
-    private val _searchStarName = MutableStateFlow<String>("")
-    val searchStarName: StateFlow<String>
-        get() = _searchStarName
+    private val _searchStarName = MutableStateFlow("")
+    private val _searchStarGroupName = MutableStateFlow("")
 
-    private val _searchStarGroupName = MutableStateFlow<String>("")
-    val searchStarGroupName: StateFlow<String>
-        get() = _searchStarGroupName
+    private val selectedStarGroup = MutableStateFlow<StarGroupResponseDto?>(null)
+    private val selectedStar = MutableStateFlow<StarResponseDto?>(null)
+
+    fun selectStarGroup(starGroup: StarGroupResponseDto) {
+        selectedStarGroup.value = starGroup
+    }
+
+    fun selectStar(star: StarResponseDto) {
+        selectedStar.value = star
+    }
 
     fun setSearchStarName(name: String) {
         _searchStarName.value = name
