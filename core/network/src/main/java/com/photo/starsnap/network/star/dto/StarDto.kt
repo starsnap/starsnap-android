@@ -20,7 +20,8 @@ data class StarResponseDto(
     val nickname: String,
     val explanation: String?,
     val imageKey: String?,
-    val createdAt: LocalDateTime?
+    val createdAt: LocalDateTime?,
+    val starGroup: StarGroupResponseDto?
 )
 
 data class UpdateStarRequestDto(
