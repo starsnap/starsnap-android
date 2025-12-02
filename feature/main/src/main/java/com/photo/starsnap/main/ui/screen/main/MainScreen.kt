@@ -44,11 +44,12 @@ fun MainScreen(
         Log.d("화면", "MainScreen")
         userViewModel.getUserData()
     }
+
     val bottomNavItems = remember {
         listOf(
             BottomNavItem.Home,
-            BottomNavItem.AddSnap,
             BottomNavItem.Star,
+            BottomNavItem.AddSnap,
             BottomNavItem.Search,
             BottomNavItem.User
         )
