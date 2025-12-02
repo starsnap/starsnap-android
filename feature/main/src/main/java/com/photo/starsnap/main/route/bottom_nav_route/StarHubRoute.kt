@@ -41,7 +41,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.CustomColor.container
 import com.photo.starsnap.designsystem.R
@@ -99,19 +98,14 @@ fun StarHubRoute(
             Spacer(modifier = Modifier.height(10.dp))
             NavHost(
                 navController = searchHubNavController,
-                startDestination = NavigationRoute.STAR_HUB_ROUTE,
+                startDestination = NavigationRoute.SEARCH_STAR_GROUP
             ) {
-                navigation(
-                    startDestination = NavigationRoute.SEARCH_STAR,
-                    route = NavigationRoute.STAR_HUB_ROUTE
-                ) {
-                    composable(NavigationRoute.SEARCH_STAR) {
-                        StarListScreen(rootNavController, starViewModel, onNavigate)
-                    }
+                composable(NavigationRoute.SEARCH_STAR) {
+                    StarListScreen(rootNavController, starViewModel, onNavigate)
+                }
 
-                    composable(NavigationRoute.SEARCH_STAR_GROUP) {
-                        StarGroupListScreen(rootNavController, starViewModel, onNavigate)
-                    }
+                composable(NavigationRoute.SEARCH_STAR_GROUP) {
+                    StarGroupListScreen(rootNavController, starViewModel, onNavigate)
                 }
             }
         }

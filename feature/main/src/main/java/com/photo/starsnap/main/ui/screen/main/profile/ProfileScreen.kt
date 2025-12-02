@@ -75,19 +75,10 @@ fun ProfileTopBar(navController: NavController) {
     Row(
         Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(50.dp)
             .padding(horizontal = 22.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .clickableSingle(onClick = { navController.popBackStack() })
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.back_arrow_icon),
-                contentDescription = "back_arrow_icon"
-            )
-        }
         Spacer(modifier = Modifier.weight(1F))
         Box(
             modifier = Modifier

@@ -10,9 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.photo.starsnap.main.ui.component.BottomNavigation
 import com.photo.starsnap.main.route.bottom_nav_route.HomeRoute
 import com.photo.starsnap.main.route.bottom_nav_route.StarHubRoute
-import com.photo.starsnap.main.route.bottom_nav_route.UserRoute
+import com.photo.starsnap.main.ui.screen.main.profile.ProfileScreen
 import com.photo.starsnap.main.ui.screen.main.search.SearchScreen
 import com.photo.starsnap.main.utils.BottomNavItem
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
@@ -72,39 +69,13 @@ fun MainScreen(
         NavHost(
             navController = navController,
             startDestination = HOME_ROUTE,
-            modifier = Modifier.padding(padding), enterTransition = {
-                if (targetState.destination.route == "main/upload/pick_image") {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Up,
-                        tween(300)
-                    )
-                } else {
-                    fadeIn(animationSpec = tween(500))
-                }
-            },
-            exitTransition = {
-                fadeOut(animationSpec = tween(500))
-            },
-            popEnterTransition = {
-                fadeIn(animationSpec = tween(500))
-            },
-            popExitTransition = {
-                if (initialState.destination.route == "main/upload/pick_image") {
-                    // Popping Upload → fade out as well
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Down,
-                        tween(300)
-                    )
-                } else {
-                    fadeOut(animationSpec = tween(500))
-                }
-            }
+            modifier = Modifier.padding(padding)
         ) {
             composable(BottomNavItem.Home.route) {
                 HomeRoute(navController, snapViewModel)
             }
             composable(BottomNavItem.User.route) {
-                UserRoute(navController, userViewModel)
+                ProfileScreen(navController, userViewModel)
             }
             composable(BottomNavItem.Star.route) {
                 StarHubRoute(rootNavController, starViewModel, onNavigate)
