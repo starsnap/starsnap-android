@@ -31,8 +31,8 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun StarGroupListScreen(
     rootNavController: NavController,
-    searchHubNavController: NavController,
-    starViewModel: StarViewModel
+    starViewModel: StarViewModel,
+    onNavigate: (String) -> Unit
 ) {
     val starGroupList = starViewModel.starGroupList.collectAsLazyPagingItems()
     LaunchedEffect(Unit) {
@@ -52,6 +52,7 @@ fun StarGroupListScreen(
             if (starGroup != null) {
                 StarGroupItem(starGroup){
                     starViewModel.selectStarGroup(starGroup)
+                    onNavigate("star_group")
                 }
             }
         }

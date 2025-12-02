@@ -16,7 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -34,8 +34,8 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun StarListScreen(
     rootNavController: NavController,
-    searchHubNavController: NavController,
-    starViewModel: StarViewModel
+    starViewModel: StarViewModel,
+    onNavigate: (String) -> Unit
 ) {
     val starList = starViewModel.starList.collectAsLazyPagingItems()
     LaunchedEffect(Unit) {
@@ -55,6 +55,7 @@ fun StarListScreen(
             if(star != null) {
                 StarItem(star) {
                     starViewModel.selectStar(star)
+                    onNavigate("star")
                 }
             }
         }
