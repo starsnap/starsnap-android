@@ -19,9 +19,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.photo.starsnap.main.ui.component.BottomNavigation
 import com.photo.starsnap.main.route.bottom_nav_route.HomeRoute
-import com.photo.starsnap.main.route.bottom_nav_route.SearchRoute
 import com.photo.starsnap.main.route.bottom_nav_route.StarHubRoute
 import com.photo.starsnap.main.route.bottom_nav_route.UserRoute
+import com.photo.starsnap.main.ui.screen.main.search.SearchScreen
 import com.photo.starsnap.main.utils.BottomNavItem
 import com.photo.starsnap.main.utils.NavigationRoute.HOME_ROUTE
 import com.photo.starsnap.main.viewmodel.main.SnapViewModel
@@ -63,11 +63,10 @@ fun MainScreen(
     LaunchedEffect(currentRoute) {
         Log.d("현재 화면", "MainScreen: $currentRoute")
     }
+
     Scaffold(
         bottomBar = {
-            if(currentRoute?.startsWith("main/upload") != true) {
-                BottomNavigation(navController, bottomNavItems, onNavigate = onNavigate)
-            }
+            BottomNavigation(navController, bottomNavItems, onNavigate = onNavigate)
         }
     ) { padding ->
         NavHost(
@@ -108,17 +107,11 @@ fun MainScreen(
                 UserRoute(navController, userViewModel)
             }
             composable(BottomNavItem.Star.route) {
-                StarHubRoute(navController, starViewModel)
+                StarHubRoute(rootNavController, starViewModel, onNavigate)
             }
             composable(BottomNavItem.Search.route) {
-                SearchRoute(navController)
+                SearchScreen(navController)
             }
-//            composable(BottomNavItem.AddSnap.route) {
-////                LaunchedEffect(Unit) {
-////                    onNavigate("add_snap")
-////                }
-////                UploadRoute(navController, snapViewModel, uploadViewModel)
-//            }
         }
     }
 }

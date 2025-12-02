@@ -10,14 +10,14 @@ import com.photo.starsnap.main.ui.screen.main.upload.PickStarScreen
 import com.photo.starsnap.main.ui.screen.main.upload.SetSnapScreen
 import com.photo.starsnap.main.ui.screen.main.upload.PickStarGroupScreen
 import com.photo.starsnap.main.utils.NavigationRoute
-import com.photo.starsnap.main.viewmodel.main.SnapViewModel
+import com.photo.starsnap.main.viewmodel.main.StarViewModel
 import com.photo.starsnap.main.viewmodel.main.UploadViewModel
 
 @Composable
 fun UploadRoute(
     mainNavController: NavController,
-    snapViewModel: SnapViewModel,
-    uploadViewModel: UploadViewModel
+    uploadViewModel: UploadViewModel,
+    starViewModel: StarViewModel
 ) {
     val navController = rememberNavController()
 
@@ -27,7 +27,7 @@ fun UploadRoute(
         route = NavigationRoute.UPLOAD_ROUTE
     ) {
         composable(NavigationRoute.PICK_IMAGE) {
-            PickPhotoScreen(navController, uploadViewModel)
+            PickPhotoScreen(mainNavController, navController, uploadViewModel)
         }
         composable(NavigationRoute.SET_SNAP) {
             SetSnapScreen(navController, uploadViewModel)

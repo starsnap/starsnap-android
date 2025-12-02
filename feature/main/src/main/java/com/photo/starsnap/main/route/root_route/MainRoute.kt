@@ -42,19 +42,23 @@ fun MainRoute(
                 snapViewModel = snapViewModel,
                 userViewModel = userViewModel,
                 starViewModel = starViewModel
-            ){
+            ) {
                 mainNavController.navigate(it)
             }
         }
         composable("star") {
             StarScreen(
-                mainNavController,
-                starViewModel,
-                userViewModel
+                mainNavController = mainNavController,
+                starViewModel = starViewModel,
+                userViewModel = userViewModel
             )
         }
         composable("star_group") {
-            StarGroupScreen(mainNavController)
+            StarGroupScreen(
+                mainNavController = mainNavController,
+                starViewModel = starViewModel,
+                userViewModel = userViewModel
+            )
         }
         composable("profile") {
             ProfileScreen(mainNavController, userViewModel)
@@ -66,7 +70,11 @@ fun MainRoute(
             SettingScreen(mainNavController)
         }
         composable("add_snap") {
-            UploadRoute(mainNavController, snapViewModel, uploadViewModel)
+            UploadRoute(
+                mainNavController = mainNavController,
+                uploadViewModel = uploadViewModel,
+                starViewModel = starViewModel
+            )
         }
     }
 }
