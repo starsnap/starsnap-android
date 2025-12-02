@@ -30,6 +30,7 @@ import com.photo.starsnap.main.viewmodel.main.UserViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun StarScreen(
@@ -44,14 +45,14 @@ fun StarScreen(
         Log.d("화면", "StarScreen")
     }
     Scaffold(
+        containerColor = Color.White,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = "",
                 navController = mainNavController
             )
-        },
-        containerColor = CustomColor.container,
+        }
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding).fillMaxSize(),

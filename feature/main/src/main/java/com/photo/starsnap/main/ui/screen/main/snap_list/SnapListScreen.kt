@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.main.ui.component.Snap
 import com.photo.starsnap.main.utils.NavigationRoute.SNAP
 import com.photo.starsnap.main.viewmodel.main.SnapViewModel
@@ -67,7 +66,7 @@ fun SnapListScreen(navController: NavController, viewModel: SnapViewModel) {
         }
     }
 
-    Scaffold(containerColor = CustomColor.container) { padding ->
+    Scaffold(containerColor = Color.White) { padding ->
         PullToRefreshBox(
             isRefreshing = refreshing,
             onRefresh = onPullRefresh, // ← 새로 Pager 만들지 말고 refresh()

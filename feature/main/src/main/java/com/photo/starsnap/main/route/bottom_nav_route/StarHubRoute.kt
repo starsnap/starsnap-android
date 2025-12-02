@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
@@ -75,7 +76,7 @@ fun StarHubRoute(
     }
 
     Scaffold(
-        modifier = Modifier.padding(horizontal = 22.dp),
+        containerColor = Color.White,
         topBar = {
             SearchTopBar(state) {
                 if(state)
@@ -88,6 +89,7 @@ fun StarHubRoute(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(horizontal = 22.dp)
                 .padding(padding)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
@@ -123,8 +125,11 @@ fun SearchTopBar(state: Boolean = false, searchText: (String) -> Unit) {
     val hintText = if (state) "StarGroup 검색" else "Star 검색"
     Column(
         modifier = Modifier
+            .padding(horizontal = 22.dp)
             .height(65.dp)
             .fillMaxWidth()
+            .background(color = Color.White)
+
     ) {
         Spacer(modifier = Modifier.height(18.dp))
         BasicTextField(

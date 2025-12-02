@@ -29,10 +29,10 @@ import androidx.navigation.NavController
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.R
 import com.photo.starsnap.designsystem.text.CustomTextStyle
-import com.photo.starsnap.main.utils.clickableSingle
 import com.photo.starsnap.main.viewmodel.main.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -42,6 +42,7 @@ fun ProfileScreen(mainNavController: NavController, userViewModel: UserViewModel
     }
     val user by userViewModel.userData.collectAsStateWithLifecycle()
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             ProfileTopBar(mainNavController)
         }
