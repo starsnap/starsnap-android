@@ -20,17 +20,8 @@ object NavigationRoute {
     // snap list screen(처음 화면)
     const val SNAP_LIST = "main/home/snap_list"
 
-    const val SEARCH = "main/search" // search screen
-
-    // star hub screen
-    const val STAR_HUB = "main/star_hub"
-
     // snap screen
     const val SNAP = "snap"
-
-    // star, star group screen
-    const val STAR = "star"
-    const val STAR_GROUP = "star_group"
 
     // setting screen
     const val PROFILE = "profile" // 프로필
@@ -50,9 +41,6 @@ object NavigationRoute {
     // star hub screen
     const val SEARCH_STAR = "main/star_hub/search_star"
     const val SEARCH_STAR_GROUP = "main/star_hub/search_star_group"
-
-    // alarm screen
-    const val ALARM = "main/alarm"
     const val ALARM_SETTING = "main/setting/alarm_setting" // alarm 설정
 
     // bottom nav route
