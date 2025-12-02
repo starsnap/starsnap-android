@@ -13,6 +13,7 @@ import com.photo.starsnap.network.star.dto.StarGroupResponseDto
 import com.photo.starsnap.network.star.dto.StarResponseDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,15 +24,20 @@ class StarViewModel @Inject constructor(
     private val _searchStarName = MutableStateFlow("")
     private val _searchStarGroupName = MutableStateFlow("")
 
-    private val selectedStarGroup = MutableStateFlow<StarGroupResponseDto?>(null)
-    private val selectedStar = MutableStateFlow<StarResponseDto?>(null)
+    private val _selectedStarGroup = MutableStateFlow<StarGroupResponseDto?>(null)
+    val selectedStarGroup: StateFlow<StarGroupResponseDto?>
+        get() = _selectedStarGroup
+
+    private val _selectedStar = MutableStateFlow<StarResponseDto?>(null)
+    val selectedStar: StateFlow<StarResponseDto?>
+        get() = _selectedStar
 
     fun selectStarGroup(starGroup: StarGroupResponseDto) {
-        selectedStarGroup.value = starGroup
+        _selectedStarGroup.value = starGroup
     }
 
     fun selectStar(star: StarResponseDto) {
-        selectedStar.value = star
+        _selectedStar.value = star
     }
 
     fun setSearchStarName(name: String) {

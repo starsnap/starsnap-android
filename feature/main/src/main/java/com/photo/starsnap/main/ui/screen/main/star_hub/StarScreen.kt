@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.photo.starsnap.designsystem.CustomColor
 import com.photo.starsnap.designsystem.text.TextFont.pretendard
 import com.photo.starsnap.main.ui.component.TopAppBar
@@ -30,15 +29,17 @@ import com.photo.starsnap.main.viewmodel.main.StarViewModel
 import com.photo.starsnap.main.viewmodel.main.UserViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun StarScreen(
     mainNavController: NavController,
     starViewModel: StarViewModel,
-    userViewModel: UserViewModel
-//    rootNavController: NavController,
-//    searchHubNavController: NavController
+    userViewModel: UserViewModel,
 ) {
+    val star = starViewModel.selectedStar.collectAsState().value
+    val birthday = "\uD83C\uDF82" + star?.birthday?.replace("-", ".")
+
     LaunchedEffect(Unit) {
         Log.d("화면", "StarScreen")
     }
@@ -47,7 +48,7 @@ fun StarScreen(
         topBar = {
             TopAppBar(
                 title = "",
-                navController = rememberNavController()
+                navController = mainNavController
             )
         },
         containerColor = CustomColor.container,
@@ -69,21 +70,21 @@ fun StarScreen(
                 )
             )
             Spacer(modifier = Modifier.height(15.dp))
-            Text(text = "\uD83C\uDF82 2006.03.04 ",style = TextStyle(
+            Text(text = birthday ,style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
                 color = CustomColor.sub_title
             ))
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "황주완",style = TextStyle(
+            Text(text = star?.name?:"" ,style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 color = CustomColor.light_black
             ))
             Spacer(modifier = Modifier.height(3.dp))
-            Text(text = "Test",style = TextStyle(
+            Text(text = star?.starGroup?.name?:"" ,style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
