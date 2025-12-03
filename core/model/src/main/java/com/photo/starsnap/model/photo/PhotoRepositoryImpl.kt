@@ -47,45 +47,36 @@ class PhotoRepositoryImpl @Inject constructor(
     override fun getAllPhotos(
         page: Int, loadSize: Int, currentLocation: String?
     ): MutableList<GalleryImage> {
+
         val galleryImageList = mutableListOf<GalleryImage>()
 
-        // 가져올 위치를 지정한다. SQL 쿼리 식과 비슷하게 생성
         var selection: String? = null
         var selectionArgs: Array<String>? = null
-
-        if (currentLocation != null) { // 폴더를 지정하지 않으면
+        if (!currentLocation.isNullOrEmpty()) {
             selection = "${MediaStore.Images.Media.DATA} LIKE ?"
             selectionArgs = arrayOf("%$currentLocation%")
         }
-//        Log.d(TAG, )
 
-        val limit = loadSize // 페이징 사이즈
-        val offset = (page - 1) * loadSize // 초기 시작 위치
+        val limit = loadSize
+        val offset = page * loadSize   // ✅ 여기 수정
         val query = getQuery(offset, limit, selection, selectionArgs)
 
         query?.use { cursor ->
             while (cursor.moveToNext()) {
-                val id =
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID))
-                // 파일 타입
-                val type =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.MIME_TYPE))
-                val filepath =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.RELATIVE_PATH))
-
-                val fileSize =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.SIZE))
-
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID))
+                val type = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.MIME_TYPE))
+                val filepath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.RELATIVE_PATH))
+                val fileSize = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.SIZE))
 
                 val contentUri = ContentUris.withAppendedId(uriExternal, id)
-                val image = GalleryImage(
-                    id = id, uri = contentUri, type = type, filepath = filepath, size = fileSize
+                galleryImageList.add(
+                    GalleryImage(id = id, uri = contentUri, type = type, filepath = filepath, size = fileSize)
                 )
-                galleryImageList.add(image)
             }
         }
         return galleryImageList
     }
+
 
     override fun getFolderList(): ArrayList<String> {
         val folderList = ArrayList<String>()
