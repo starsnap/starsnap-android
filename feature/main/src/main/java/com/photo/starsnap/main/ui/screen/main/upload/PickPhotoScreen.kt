@@ -10,6 +10,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -177,6 +178,8 @@ fun PickPhotoScreen(
                         onNext = {
                             if (selectedPhotos.isNotEmpty()) {
                                 navController.navigate(NavigationRoute.SET_SNAP)
+                            } else {
+                                Toast.makeText(context, "사진을 선택해주세요.", Toast.LENGTH_SHORT).show()
                             }
                         }
                     )
