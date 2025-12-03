@@ -3,6 +3,9 @@ package com.photo.starsnap.main.route.bottom_nav_route
 import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -98,7 +101,19 @@ fun StarHubRoute(
             Spacer(modifier = Modifier.height(10.dp))
             NavHost(
                 navController = searchHubNavController,
-                startDestination = NavigationRoute.SEARCH_STAR_GROUP
+                startDestination = NavigationRoute.SEARCH_STAR_GROUP,
+                enterTransition = {
+                    fadeIn(animationSpec = tween(200))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(200))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(200))
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(200))
+                }
             ) {
                 composable(NavigationRoute.SEARCH_STAR) {
                     StarListScreen(rootNavController, starViewModel, onNavigate)

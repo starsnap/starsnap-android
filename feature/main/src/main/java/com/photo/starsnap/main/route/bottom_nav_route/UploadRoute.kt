@@ -1,5 +1,8 @@
 package com.photo.starsnap.main.route.bottom_nav_route
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -24,7 +27,19 @@ fun UploadRoute(
     NavHost(
         navController =navController,
         startDestination = NavigationRoute.PICK_IMAGE,
-        route = NavigationRoute.UPLOAD_ROUTE
+        route = NavigationRoute.UPLOAD_ROUTE,
+        enterTransition = {
+            fadeIn(animationSpec = tween(200))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(200))
+        },
+        popEnterTransition = {
+            fadeIn(animationSpec = tween(200))
+        },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(200))
+        }
     ) {
         composable(NavigationRoute.PICK_IMAGE) {
             PickPhotoScreen(mainNavController, navController, uploadViewModel)

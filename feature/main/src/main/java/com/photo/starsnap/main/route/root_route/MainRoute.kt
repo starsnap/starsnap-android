@@ -1,5 +1,8 @@
 package com.photo.starsnap.main.route.root_route
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -32,7 +35,19 @@ fun MainRoute(
     NavHost(
         navController = mainNavController,
         startDestination = MAIN,
-        route = MAIN_ROUTE
+        route = MAIN_ROUTE,
+        enterTransition = {
+            fadeIn(animationSpec = tween(200))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(200))
+        },
+        popEnterTransition = {
+            fadeIn(animationSpec = tween(200))
+        },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(200))
+        }
     ) {
         composable(MAIN) {
             MainScreen(
