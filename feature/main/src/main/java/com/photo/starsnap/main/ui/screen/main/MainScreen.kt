@@ -81,7 +81,10 @@ fun MainScreen(
                 StarHubRoute(rootNavController, starViewModel, onNavigate)
             }
             composable(BottomNavItem.Search.route) {
-                SearchScreen(navController)
+                SearchScreen(
+                    mainNavController = navController,
+                    snapViewModel = snapViewModel
+                )
             }
         }
     }
