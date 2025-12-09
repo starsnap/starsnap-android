@@ -12,11 +12,19 @@ import retrofit2.Response
 interface AuthRepository {
     suspend fun send(email: String): StatusDto
     suspend fun verify(verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
+
+    // ----------------------------------------------------------------
+
     suspend fun login(loginDto: LoginDto): TokenDto
     suspend fun signup(signupDto: SignupDto): StatusDto
-    suspend fun delete(): StatusDto
+    suspend fun setPassword(password: String): StatusDto
+    suspend fun deleteUser(): StatusDto
+    suspend fun userRollback(loginDto: LoginDto): TokenDto
     suspend fun reissueToken(refreshToken: String, accessToken: String): Response<TokenDto>
     suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
-    suspend fun checkValidUserName(username: String): StatusDto
-    suspend fun checkValidEmail(email: String): StatusDto
+
+    // ----------------------------------------------------------------
+
+    suspend fun validUsername(username: String): StatusDto
+    suspend fun validEmail(email: String): StatusDto
 }

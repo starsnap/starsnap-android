@@ -26,6 +26,8 @@ interface AuthApi {
     @Headers("Auth: false")
     suspend fun verify(@Body verifyEmailRequestDto: VerifyEmailRequestDto): VerifyEmailResponseDto
 
+    // ----------------------------------------------------------------
+
     @POST("/api/auth/login") // 로그인
     @Headers("Auth: false")
     suspend fun login(@Body loginDto: LoginDto): TokenDto
@@ -34,8 +36,15 @@ interface AuthApi {
     @Headers("Auth: false")
     suspend fun signup(@Body signupDto: SignupDto): StatusDto
 
-    @DELETE("/api/auth") // 유저 삭제
-    suspend fun delete(): StatusDto
+    @PATCH("/api/auth/pw-set")
+    suspend fun setPassword(@Query("password") password: String): StatusDto
+
+    @PATCH("/api/auth/secession") // 유저 삭제
+    suspend fun deleteUser(): StatusDto
+
+    @POST("/api/auth/user/rollback")
+    @Headers("Auth: false")
+    suspend fun userRollback(@Body loginDto: LoginDto): TokenDto
 
     @PATCH("/api/auth/refresh") // 토큰 재발급
     @Headers("Auth: false")
@@ -50,16 +59,18 @@ interface AuthApi {
         @Body changePasswordDto: ChangePasswordDto,
     ): StatusDto
 
+    // ----------------------------------------------------------------
+
     @GET("/api/auth/valid/username") // 닉네임 사용 가능 한지 확인
     @Headers("Auth: false")
-    suspend fun checkValidUsername(
+    suspend fun validUsername(
         @Query("username") username: String
     ): StatusDto
 
 
     @GET("/api/auth/valid/email") // 이메일 사용 가능 한지 확인
     @Headers("Auth: false")
-    suspend fun checkValidEmail(
+    suspend fun validEmail(
         @Query("email") email: String
     ): StatusDto
 }

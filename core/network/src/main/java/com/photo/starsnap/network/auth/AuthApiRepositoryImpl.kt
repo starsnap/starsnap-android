@@ -22,6 +22,8 @@ class AuthApiRepositoryImpl @Inject constructor(
         return authApi.verify(verifyEmailRequestDto)
     }
 
+    // ----------------------------------------------------------------
+
     override suspend fun login(loginDto: LoginDto): TokenDto {
         return authApi.login(loginDto)
     }
@@ -30,8 +32,16 @@ class AuthApiRepositoryImpl @Inject constructor(
         return authApi.signup(signupDto)
     }
 
-    override suspend fun delete(): StatusDto {
-        return authApi.delete()
+    override suspend fun setPassword(password: String): StatusDto {
+        return authApi.setPassword(password)
+    }
+
+    override suspend fun deleteUser(): StatusDto {
+        return authApi.deleteUser()
+    }
+
+    override suspend fun userRollback(loginDto: LoginDto): TokenDto {
+        return authApi.userRollback(loginDto)
     }
 
     override suspend fun reissueToken(
@@ -45,11 +55,11 @@ class AuthApiRepositoryImpl @Inject constructor(
         return authApi.changePassword(changePasswordDto)
     }
 
-    override suspend fun checkValidUserName(username: String): StatusDto {
-        return authApi.checkValidUsername(username)
+    override suspend fun validUsername(username: String): StatusDto {
+        return authApi.validUsername(username)
     }
 
-    override suspend fun checkValidEmail(email: String): StatusDto {
-        return authApi.checkValidEmail(email)
+    override suspend fun validEmail(email: String): StatusDto {
+        return authApi.validEmail(email)
     }
 }
