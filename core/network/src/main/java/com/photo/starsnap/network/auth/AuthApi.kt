@@ -7,6 +7,7 @@ import com.photo.starsnap.network.auth.dto.rs.ChangePasswordDto
 import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -41,7 +42,7 @@ interface AuthApi {
     suspend fun reissueToken(
         @Header("refresh-token") refreshToken: String,
         @Header("access-token") accessToken: String,
-    ): retrofit2.Response<TokenDto>
+    ): Response<TokenDto>
 
     @PATCH("/api/auth/pw-change") // 비밀번호 변경
     @Headers("Auth: false")

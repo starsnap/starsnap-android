@@ -7,6 +7,7 @@ import com.photo.starsnap.network.auth.dto.rs.ChangePasswordDto
 import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
+import retrofit2.Response
 
 interface AuthRepository {
     suspend fun send(email: String): StatusDto
@@ -14,7 +15,7 @@ interface AuthRepository {
     suspend fun login(loginDto: LoginDto): TokenDto
     suspend fun signup(signupDto: SignupDto): StatusDto
     suspend fun delete(): StatusDto
-    suspend fun reissueToken(refreshToken: String, accessToken: String): retrofit2.Response<TokenDto>
+    suspend fun reissueToken(refreshToken: String, accessToken: String): Response<TokenDto>
     suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto
     suspend fun checkValidUserName(username: String): StatusDto
     suspend fun checkValidEmail(email: String): StatusDto

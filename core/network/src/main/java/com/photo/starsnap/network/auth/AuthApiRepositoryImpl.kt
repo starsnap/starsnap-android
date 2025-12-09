@@ -7,6 +7,7 @@ import com.photo.starsnap.network.auth.dto.rs.ChangePasswordDto
 import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
+import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -36,7 +37,7 @@ class AuthApiRepositoryImpl @Inject constructor(
     override suspend fun reissueToken(
         refreshToken: String,
         accessToken: String,
-    ): retrofit2.Response<TokenDto> {
+    ): Response<TokenDto> {
         return authApi.reissueToken(refreshToken, accessToken)
     }
 
