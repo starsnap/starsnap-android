@@ -1,0 +1,16 @@
+package com.photo.starsnap.network.file
+
+import com.photo.starsnap.network.file.dto.rq.UploadFileRequestDto
+import com.photo.starsnap.network.file.dto.rs.UploadFileResponseDto
+import retrofit2.Response
+
+
+interface FileRepository {
+    suspend fun createPhotoPresidentUrl(
+        uploadRequest: UploadFileRequestDto
+    ): Response<UploadFileResponseDto>
+
+    suspend fun createVideoPresidentUrl(
+        uploadRequest: UploadFileRequestDto
+    ): Response<UploadFileResponseDto>
+}
