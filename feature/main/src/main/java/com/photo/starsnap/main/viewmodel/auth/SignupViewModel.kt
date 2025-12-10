@@ -141,7 +141,7 @@ class SignupViewModel @Inject constructor(
             )
             runCatching {
                 delay(300)
-                authRepository.checkValidUserName(username)
+                authRepository.validUsername(username)
             }.onSuccess {
                 _uiState.value = _uiState.value.copy(
                     usernameButtonState = true,
@@ -184,7 +184,7 @@ class SignupViewModel @Inject constructor(
             )
         } else if (isEmailValid) {
             runCatching {
-                authRepository.checkValidEmail(email)
+                authRepository.validEmail(email)
                 _uiState.value = _uiState.value.copy(
                     emailSendButtonState = false, emailValidState = ValidState.LOADING
                 )
