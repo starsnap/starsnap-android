@@ -44,6 +44,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.window.Dialog
@@ -360,7 +361,21 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     checked = aiState,
                     onCheckedChange = {
                         aiState = it
-                    })
+                    },
+                colors = SwitchDefaults.colors(
+                        // 1. 켜졌을 때(Checked) 색상
+                        checkedThumbColor = CustomColor.container, // 동그라미 색 (보라색 예시)
+                        checkedTrackColor = CustomColor.yellow_500, // 배경 색 (연보라색 예시)
+
+                        // 2. 꺼졌을 때(Unchecked) 색상
+                        uncheckedThumbColor = CustomColor.container, // 동그라미 색
+                        uncheckedTrackColor = CustomColor.yellow_200,      // 배경 색
+
+                        // 3. (선택사항) 테두리 색상 - Material 3 등에서 사용
+                        uncheckedBorderColor = CustomColor.container,
+                        checkedBorderColor = CustomColor.container
+                    )
+                )
             }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
@@ -369,7 +384,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                 modifier = Modifier.padding(horizontal = 22.dp)
             ) {
                 Column {
-                    Text(text = "댓글 사용 여부", style = CustomTextStyle.title9)
+                    Text(text = "댓글 사용 여부", style = title9)
                     Spacer(Modifier.height(4.dp))
                     Text("게시글 댓글 사용을 중지 하려면 체크 해주세요")
                 }
@@ -379,7 +394,21 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
                     checked = commentsEnabled,
                     onCheckedChange = {
                         commentsEnabled = it
-                    })
+                    },
+                    colors = SwitchDefaults.colors(
+                        // 1. 켜졌을 때(Checked) 색상
+                        checkedThumbColor = CustomColor.container, // 동그라미 색 (보라색 예시)
+                        checkedTrackColor = CustomColor.yellow_500, // 배경 색 (연보라색 예시)
+
+                        // 2. 꺼졌을 때(Unchecked) 색상
+                        uncheckedThumbColor = CustomColor.container, // 동그라미 색
+                        uncheckedTrackColor = CustomColor.yellow_200,      // 배경 색
+
+                        // 3. (선택사항) 테두리 색상 - Material 3 등에서 사용
+                        uncheckedBorderColor = CustomColor.container,
+                        checkedBorderColor = CustomColor.container
+                    )
+                )
             }
             Spacer(Modifier.height(15.dp))
             Divider() // 구분선
