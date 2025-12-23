@@ -7,7 +7,10 @@ import com.photo.starsnap.network.auth.AuthApi
 import com.photo.starsnap.network.report.ReportApi
 import com.photo.starsnap.network.snap.SnapApi
 import com.photo.starsnap.network.star.StarApi
+import com.photo.starsnap.network.token.TokenApi
+import com.photo.starsnap.network.token.TokenRepository
 import com.photo.starsnap.network.user.UserApi
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+
 object Url {
     const val BASE_URL = "http://10.0.2.2:8080/"
 }
@@ -27,6 +31,10 @@ object Url {
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideTokenApi(retrofit: Retrofit): TokenApi = retrofit.create(TokenApi::class.java)
 
     @Provides
     @Singleton
@@ -61,9 +69,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideAuthAuthenticator(
-        tokenManager: TokenManager
+        tokenManager: TokenManager,
+        tokenRepository: Lazy<TokenRepository> // 여기를 Lazy로 변경
     ): AuthAuthenticator =
-        AuthAuthenticator(tokenManager)
+        AuthAuthenticator(tokenManager, tokenRepository)
 
     @Singleton
     @Provides

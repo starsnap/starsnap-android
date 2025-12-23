@@ -2,72 +2,61 @@ package com.photo.starsnap.di
 
 import android.util.Log
 import com.photo.starsnap.datastore.TokenManager
-import com.photo.starsnap.di.Url.BASE_URL
-import com.photo.starsnap.network.auth.AuthApi
-import com.photo.starsnap.network.auth.dto.rs.TokenDto
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.photo.starsnap.network.token.TokenRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
+import dagger.Lazy
 
 class AuthAuthenticator @Inject constructor(
     private val tokenManager: TokenManager,
+    private val tokenRepository: Lazy<TokenRepository>
 ) : Authenticator {
 
     companion object {
         private const val TAG = "AuthAuthenticator"
-        var expiredRefreshToken: MutableStateFlow<Boolean> = MutableStateFlow(false)
     }
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        val refreshToken = runBlocking { tokenManager.getRefreshToken().first() }
-        val accessToken = runBlocking { tokenManager.getAccessToken().first() }
+        Log.d(TAG, response.toString())
+        // Auth: false이면 jwt token 없이 전달
+        if (response.request.header("Auth") == "false") {
+            return response.request.newBuilder()
+                .removeHeader("Auth")
+                .build()
+        }
+
+        if(response.code != 401)
+            return response.request.newBuilder()
+                .build()
+
         return runBlocking {
-            val reissueToken = reissueToken(refreshToken, accessToken)
+            val refreshToken = tokenManager.getRefreshToken().first()
+            val accessToken = tokenManager.getAccessToken().first()
 
-            if (!reissueToken.isSuccessful || reissueToken.body() == null) {
-                Log.d(TAG, "Refresh Token 만료")
-                tokenManager.deleteData()
-                expiredRefreshToken.value = true
-                return@runBlocking null
-            }
+            runCatching {
+                tokenRepository.get().reissueToken(refreshToken, accessToken)
+            }.fold(
+                onSuccess = {
+                    tokenManager.saveAccessToken(it.accessToken)
+                    tokenManager.saveRefreshToken(it.refreshToken)
 
-            reissueToken.body()?.let {
-                tokenManager.saveAccessToken(it.accessToken)
-                tokenManager.saveRefreshToken(it.refreshToken)
-
-                val token = "Bearer ${it.accessToken}"
-
-                response.request.newBuilder()
-                    .header("Authorization", token)
-                    .build()
-            }
+                    val newToken = "Bearer ${it.accessToken}"
+                    response.request.newBuilder()
+                        .header("Authorization", newToken)
+                        .build()
+                },
+                onFailure = {
+                    // 실패 시: 로그 찍고 데이터 삭제 후 null 반환
+                    Log.d("TAG", "Refresh Token 만료")
+                    tokenManager.deleteData()
+                    null
+                }
+            )
         }
     }
-
-    private suspend fun reissueToken(
-        refreshToken: String,
-        accessToken: String
-    ): retrofit2.Response<TokenDto> {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-        val service = retrofit.create(AuthApi::class.java)
-        return service.reissueToken(refreshToken, accessToken)
-    }
-
 }

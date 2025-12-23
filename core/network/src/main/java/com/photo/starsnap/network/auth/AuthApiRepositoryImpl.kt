@@ -7,7 +7,6 @@ import com.photo.starsnap.network.auth.dto.rs.ChangePasswordDto
 import com.photo.starsnap.network.auth.dto.rs.TokenDto
 import com.photo.starsnap.network.auth.dto.rs.VerifyEmailResponseDto
 import com.photo.starsnap.network.dto.StatusDto
-import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -42,13 +41,6 @@ class AuthApiRepositoryImpl @Inject constructor(
 
     override suspend fun userRollback(loginDto: LoginDto): TokenDto {
         return authApi.userRollback(loginDto)
-    }
-
-    override suspend fun reissueToken(
-        refreshToken: String,
-        accessToken: String,
-    ): Response<TokenDto> {
-        return authApi.reissueToken(refreshToken, accessToken)
     }
 
     override suspend fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
