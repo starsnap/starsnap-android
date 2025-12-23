@@ -10,6 +10,8 @@ import com.photo.starsnap.network.snap.SnapApiRepositoryImpl
 import com.photo.starsnap.network.snap.SnapRepository
 import com.photo.starsnap.network.star.StarApiRepositoryImpl
 import com.photo.starsnap.network.star.StarRepository
+import com.photo.starsnap.network.token.TokenApiRepositoryImpl
+import com.photo.starsnap.network.token.TokenRepository
 import com.photo.starsnap.network.user.UserApiRepositoryImpl
 import com.photo.starsnap.network.user.UserRepository
 import dagger.Module
@@ -21,6 +23,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideTokenRepository(tokenApiRepositoryImpl: TokenApiRepositoryImpl): TokenRepository =
+        tokenApiRepositoryImpl
+
     @Provides
     @Singleton
     fun provideAuthRepository(authApiRepositoryImpl: AuthApiRepositoryImpl): AuthRepository =
@@ -50,5 +58,6 @@ class RepositoryModule {
     @Singleton
     fun providePhotoRepository(photoRepositoryImpl: PhotoRepositoryImpl): PhotoRepository =
         photoRepositoryImpl
+
 
 }
