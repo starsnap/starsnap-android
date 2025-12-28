@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.photo.starsnap.main"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
