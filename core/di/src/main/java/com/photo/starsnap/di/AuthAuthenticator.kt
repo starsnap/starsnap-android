@@ -34,6 +34,11 @@ class AuthAuthenticator @Inject constructor(
             return response.request.newBuilder()
                 .build()
 
+        if (response.request.url.pathSegments.contains("refresh")) {
+            Log.d(TAG, "토큰 재발급 요청 자체가 실패함: 로그아웃 처리 필요")
+            return null
+        }
+
         return runBlocking {
             val refreshToken = tokenManager.getRefreshToken().first()
             val accessToken = tokenManager.getAccessToken().first()
