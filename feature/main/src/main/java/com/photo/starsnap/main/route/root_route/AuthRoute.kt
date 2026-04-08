@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.route.root_route
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -38,16 +39,17 @@ fun AuthRoute(navController: NavHostController) {
             }
         ) {
             LoginScreen(moveSignupNavigation = {
-                navController.navigate(SIGNUP)
+                authController.navigate(SIGNUP)  // authController 사용 (SIGNUP은 authController에 등록됨)
             }, moveMainNavigation = {
-                navController.navigate(MAIN_ROUTE) {
-                    popUpTo(LOGIN) { inclusive = true }
+                navController.navigate(MAIN_ROUTE) {  // 루트 이동은 navController 유지
+                    popUpTo(AUTH_ROUTE) { inclusive = true }
                 }
             })
         }
         composable(SIGNUP) {
             SignupScreen(onNavigateToLogin = {
-                navController.navigate(LOGIN){
+                Log.d("signup", "뒤로가기")
+                authController.navigate(LOGIN) {  // authController 사용 (LOGIN도 authController에 등록됨)
                     popUpTo(LOGIN) { inclusive = true }
                 }
             })
