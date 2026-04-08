@@ -32,7 +32,7 @@ fun SnapScreen(navController: NavController, viewModel: SnapViewModel) {
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.snap_top_app_bar_title),
-                navController = navController
+                onBack = { navController.popBackStack() }
             )
         },
         containerColor = CustomColor.container,

@@ -54,7 +54,9 @@ fun VerifySignupScreen(viewModel: SignupViewModel, navController: NavController)
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.signup_top_bar_title),
-                navController = navController
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         },
         bottomBar = {

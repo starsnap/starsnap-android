@@ -20,7 +20,7 @@ fun SettingScreen(mainNavController: NavController) {
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.setting_top_app_bar_title),
-            navController = mainNavController
+            onBack = { mainNavController.popBackStack() }
         )
     }) { padding ->
         Column(Modifier.padding(padding)) {

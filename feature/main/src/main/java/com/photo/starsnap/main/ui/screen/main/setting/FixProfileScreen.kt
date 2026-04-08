@@ -20,7 +20,7 @@ fun FixProfileScreen(navController: NavController) {
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.fix_profile_top_app_bar_title),
-            navController = navController
+            onBack = { navController.popBackStack() }
         )
     }) { padding ->
         Column(Modifier.padding(padding)) {

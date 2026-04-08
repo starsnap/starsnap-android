@@ -1,5 +1,6 @@
 package com.photo.starsnap.main.ui.screen.auth.signup
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -34,7 +35,10 @@ fun ConsentSignupScreen(viewModel: SignupViewModel, navController: NavController
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.signup_top_bar_title),
-                navController = navController
+                onBack = {
+                    Log.d("SignupBack", "click_back:ConsentSignupScreen")
+                    navController.popBackStack()
+                }
             )
         },
         bottomBar = {

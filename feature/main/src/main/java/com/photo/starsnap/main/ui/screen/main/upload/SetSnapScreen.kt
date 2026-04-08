@@ -132,7 +132,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
     }
 
     Scaffold(
-        topBar = { TopAppBar("새로운 스냅", navController) },
+        topBar = { TopAppBar("새로운 스냅", onBack = { navController.popBackStack() }) },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -165,7 +165,7 @@ fun SetSnapScreen(navController: NavController, uploadViewModel: UploadViewModel
             Spacer(Modifier.height(10.dp))
             Text(
                 text = "Star",
-                style = CustomTextStyle.title9,
+                style = title9,
                 modifier = Modifier.padding(horizontal = 22.dp)
             )
             Spacer(Modifier.height(5.dp))

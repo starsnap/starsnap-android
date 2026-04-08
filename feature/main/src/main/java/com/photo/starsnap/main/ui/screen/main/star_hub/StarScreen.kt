@@ -50,7 +50,7 @@ fun StarScreen(
         topBar = {
             TopAppBar(
                 title = "",
-                navController = mainNavController
+                onBack = { mainNavController.popBackStack() }
             )
         }
     ) { padding ->

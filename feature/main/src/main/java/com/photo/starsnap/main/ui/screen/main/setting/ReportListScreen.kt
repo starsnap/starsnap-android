@@ -20,7 +20,7 @@ fun ReportListScreen(navController: NavController) {
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.report_list_top_app_bar_title),
-            navController = navController
+            onBack = { navController.popBackStack() }
         )
     }) { padding ->
         Column(Modifier.padding(padding)) {

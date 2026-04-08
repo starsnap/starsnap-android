@@ -20,7 +20,7 @@ fun AuthSettingScreen(navController: NavController) {
     Scaffold(topBar = {
         TopAppBar(
             title = stringResource(R.string.auth_setting_top_app_bar_title),
-            navController = navController
+            onBack = { navController.popBackStack() }
         )
     }) { padding ->
         Column(Modifier.padding(padding)) {
